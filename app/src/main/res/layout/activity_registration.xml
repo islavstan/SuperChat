@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/activity_main"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.internship.supercoders.superchat.MainActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+            </android.support.v7.widget.Toolbar>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="SIGN UP"
+                android:textSize="16sp"
+                android:textColor="#FFFFFF"
+                />
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="60dp"
+            app:cardElevation="8dp"
+            app:cardMaxElevation="16dp"
+            app:cardBackgroundColor="#327780"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="100dp"
+                    android:src="@drawable/userpic"
+                    android:layout_marginTop="30dp"
+                    android:id="@+id/photo"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="100dp" />
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_email"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:hintTextAppearance="@style/MyHintText"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/input_email"
+                        android:layout_width="match_parent"
+                        android:theme="@style/MyEditText"
+
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_email" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_password"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:hintTextAppearance="@style/MyHintText"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/input_password"
+                        android:layout_width="match_parent"
+                        android:theme="@style/MyEditText"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_password" />
+
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_password2"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:hintTextAppearance="@style/MyHintText"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/input_confirm_password"
+                        android:layout_width="match_parent"
+                        android:theme="@style/MyEditText"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_password2" />
+
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_fullname"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:hintTextAppearance="@style/MyHintText"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/input_fullname"
+                        android:layout_width="match_parent"
+                        android:theme="@style/MyEditText"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_name" />
+
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_phone"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:hintTextAppearance="@style/MyHintText"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/input_phone"
+                        android:layout_width="match_parent"
+                        android:theme="@style/MyEditText"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_phone" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_website"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:hintTextAppearance="@style/MyHintText"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/input_website"
+                        android:layout_width="match_parent"
+                        android:theme="@style/MyEditText"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_website" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:background="#3A579A"
+                    android:textColor="@color/colorWhite"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:drawableLeft="@drawable/ic_facebook"
+                    android:paddingLeft="10dp"
+                    android:drawablePadding="6dp"
+                    android:gravity="center"
+                    android:paddingRight="10dp"
+
+                    android:id="@+id/link_facebook_btn"
+                    android:textStyle="bold"
+                    android:text="@string/hint_facebook"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:background="#004951"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginBottom="40dp"
+                    android:id="@+id/signup_btn"
+
+                    android:text="@string/hint_signup"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+    </LinearLayout>
+</ScrollView>

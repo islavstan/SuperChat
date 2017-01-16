@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">SuperChat</string>
+    <string name="hint_name">Full Name</string>
+    <string name="hint_website">Website</string>
+    <string name="hint_phone">Phone</string>
+    <string name="hint_email">Email Address</string>
+    <string name="hint_facebook">Link Facebook</string>
+    <string name="hint_signup">sign up</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_password2">Confirm Password</string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="err_msg_name">Enter your full name</string>
+    <string name="err_msg_email">Enter valid email address</string>
+    <string name="err_msg_password">Enter the password</string>
 </resources>
