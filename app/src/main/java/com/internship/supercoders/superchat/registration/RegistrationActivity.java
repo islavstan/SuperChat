@@ -25,6 +25,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     TextInputLayout input_layout_password, input_layout_conf_password, input_layout_email;
     RegistrationPresenter registrationPresenter;
     ProgressBar progressbar;
+    //hello
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
