@@ -24,6 +24,8 @@ public interface RegistrationView {
 
     void registrationError();
 
+    void  openImageChooser();
+
 }
 
 

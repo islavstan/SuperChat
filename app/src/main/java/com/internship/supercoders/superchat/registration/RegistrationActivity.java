@@ -1,10 +1,12 @@
 package com.internship.supercoders.superchat.registration;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +16,9 @@ import android.widget.Toast;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.registration.RegistrationView;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -25,7 +30,10 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     TextInputLayout input_layout_password, input_layout_conf_password, input_layout_email;
     RegistrationPresenter registrationPresenter;
     ProgressBar progressbar;
-    //hello
+    private static final int SELECT_PICTURE = 100;
+    Uri selectedImageUri;
+    boolean bool_image = false; //проверяем было ли выбрано фото из галереи
+    File photo_file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,16 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         input_layout_conf_password =(TextInputLayout)findViewById(R.id.input_layout_password2);
         input_layout_email =(TextInputLayout)findViewById(R.id.input_layout_email);
         progressbar=(ProgressBar)findViewById(R.id.progressbar);
+
+        userPhoto =(CircleImageView)findViewById(R.id.photo) ;
+        userPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openImageChooser();
+            }
+        });
+
+
 
         registrationPresenter =new RegistrationPresenterImpl(this);
 
@@ -92,7 +110,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public void setBlankFields() {
         Toast.makeText(this,"fields cannot be blank",Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -110,16 +127,14 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void registration() {
+
         String  email = emailET.getText().toString();
         String  password = passwordET.getText().toString();
         String conf_password = conf_passwET.getText().toString();
         String fullname =fullnameET.getText().toString();
         String phone = phoneET.getText().toString();
         String website = websiteET.getText().toString();
-
-
-
-
+        Log.d("stas","bool image = "+bool_image);
             if (email.equals("") || password.equals("") || conf_password.equals("")) {
                 setBlankFields();
             }
@@ -132,12 +147,37 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                 setPasswordError();
             }
 
-        else registrationPresenter.validateData(email,password,fullname,phone,website);
+
+        else registrationPresenter.validateData(photo_file, email, password, fullname, phone, website);
+
+
         hidePasswordError();
     }
 
     @Override
     public void registrationError() {
         Toast.makeText(this,"Registration Error",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void openImageChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                 selectedImageUri = data.getData();
+                Picasso.with(this).load(selectedImageUri).into(userPhoto);
+                bool_image = true;
+                photo_file=new File(selectedImageUri.getPath());
+
+
+            }
+        }
     }
 }

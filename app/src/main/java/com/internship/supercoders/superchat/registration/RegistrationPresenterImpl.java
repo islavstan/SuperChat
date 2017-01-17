@@ -1,6 +1,8 @@
 package com.internship.supercoders.superchat.registration;
 
 
+import java.io.File;
+
 public class RegistrationPresenterImpl implements RegistrationPresenter,RegistrationInteractor.RegistrationFinishedListener{
 
    private RegistrationView registrationView;
@@ -27,16 +29,23 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
     }
 
     @Override
-    public void validateData(String email, String password, String fullname, String phone, String website) {
+    public void validateData(File file,String email, String password, String fullname, String phone, String website) {
         if (registrationView != null) {
             registrationView.showProgress();
         }
 
-        regInteractor.authorization(email, password, fullname, phone, website, this);
+        regInteractor.authorization(true,email, password, fullname, phone, website, this);
     }
 
 
- @Override
+
+    @Override
+    public void addUserAva() {
+
+    }
+
+
+    @Override
     public void onDestroy() {
 
     }
