@@ -5,17 +5,24 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.internship.supercoders.superchat"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        jackOptions {
+            enabled true
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -29,9 +36,12 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.code.gson:gson:2.6.1'
     compile 'com.squareup.okhttp:okhttp:2.7.2'
+    compile 'io.reactivex:rxjava:1.1.2'
+    compile 'io.reactivex:rxandroid:1.1.0'
     testCompile 'junit:junit:4.12'
 }
