@@ -18,4 +18,5 @@
     <string name="sign_in">SIGN IN</string>
     <string name="hint_sign_in">sign in</string>
     <string name="keep_me_signed_in">Keep me signed in</string>
+    <string name="forgot_password">Forgot password</string>
 </resources>

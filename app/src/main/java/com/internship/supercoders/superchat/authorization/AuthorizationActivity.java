@@ -1,9 +1,11 @@
-package com.internship.supercoders.superchat;
+package com.internship.supercoders.superchat.authorization;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.internship.supercoders.superchat.R;
+
+public class AuthorizationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
