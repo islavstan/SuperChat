@@ -16,11 +16,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.registration.RegistrationView;
 import com.squareup.picasso.Picasso;
 
+import io.fabric.sdk.android.Fabric;
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -41,6 +43,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_registration);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
