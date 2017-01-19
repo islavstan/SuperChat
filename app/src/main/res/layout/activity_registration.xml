@@ -182,29 +182,33 @@
                     android:text="@string/hint_facebook"
                     android:layout_marginRight="24dp"
                     android:layout_height="wrap_content" />
+
+
                 <Button
                     android:layout_width="match_parent"
                     android:layout_marginLeft="24dp"
                     android:layout_marginTop="16dp"
                     android:background="#004951"
                     android:textColor="@color/colorWhite"
-                    android:layout_marginBottom="40dp"
+                    android:layout_marginBottom="24dp"
                     android:id="@+id/signup_btn"
-
                     android:text="@string/hint_signup"
                     android:layout_marginRight="24dp"
                     android:layout_height="wrap_content" />
+                    <ProgressBar
+                        android:layout_width="24dp"
+                        android:layout_centerInParent="true"
+                        android:id="@+id/progressbar"
+                        android:visibility="invisible"
+                        android:layout_gravity="center_horizontal"
+                       android:layout_marginBottom="24dp"
+                        android:theme="@style/CircularProgress"
+                        android:layout_height="24dp" />
 
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
-<ProgressBar
-    android:layout_width="wrap_content"
-    android:layout_centerInParent="true"
-    android:id="@+id/progressbar"
-    android:visibility="invisible"
-    android:theme="@style/CircularProgress"
-    android:layout_height="wrap_content" />
+
 
     </RelativeLayout>
 </ScrollView>

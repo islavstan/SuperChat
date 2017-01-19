@@ -9,13 +9,16 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
-/**
- * Created by islav on 17.01.2017.
- */
 
-public interface SignInPoint {
-    @POST("/login.json")
-    Call<Objects> signIn(@Header("Content-Type")String cont, @Header("QuickBlox-REST-API-Version")String version, @Header("QB-Token")String token, @Body LogAndPas logAndPas);
+public interface DeclaringFileUploadedPoint {
+
+    @PUT("/blobs/{id}/complete.json")
+    Call<Objects> declaringUpload(@Path("id")String id,@Header("Content-Type")String cont, @Header("QuickBlox-REST-API-Version")String version, @Header("QB-Token")String token, @Body Blob blob);
 
 }
+
+
+

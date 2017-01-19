@@ -12,6 +12,16 @@ public class BlobData {
     @SerializedName("blob_object_access")
     BlobObjectAccess blobObjectAccess;
 
+    @SerializedName("size")
+    String size;
+
+    @SerializedName("id")
+    String id;
+
+    public String getId() {
+        return id;
+    }
+
     public BlobData(String content_type, String name) {
         this.content_type = content_type;
         this.name = name;
@@ -19,5 +29,9 @@ public class BlobData {
 
     public BlobObjectAccess getBlobObjectAccess() {
         return blobObjectAccess;
+    }
+
+    public BlobData(String size) {
+        this.size = size;
     }
 }

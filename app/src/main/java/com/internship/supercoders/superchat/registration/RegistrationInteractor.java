@@ -1,6 +1,8 @@
 package com.internship.supercoders.superchat.registration;
 
 
+import android.content.Context;
+
 import java.io.File;
 
 public interface RegistrationInteractor {
@@ -11,19 +13,24 @@ public interface RegistrationInteractor {
 
         void onSuccess(String token);
 
+        Context getContext();
+
     }
 
-    void registration(boolean image, String token, String email, String password, String fullname, String phone, String website, RegistrationFinishedListener listener);
 
-    void authorization(boolean image, String email, String password, String fullname, String phone, String website, RegistrationFinishedListener listener);
 
-    void createFile(String token, RegistrationFinishedListener listener);
+    void registration(File file, String token, String email, String password, String fullname, String phone, String website, RegistrationFinishedListener listener);
+
+    void authorization(File file, String email, String password, String fullname, String phone, String website, RegistrationFinishedListener listener);
+
+    void createFile(File file,String token, RegistrationFinishedListener listener);
 
     void userAuthorization(String email, String password, RegistrationFinishedListener listener);
 
-    void signIn(String token, String email, String password, RegistrationFinishedListener listener);
+    void signIn(File file,String token, String email, String password, RegistrationFinishedListener listener);
 
-    void uploadFile(String contentType, String expires, String acl, String key, String policy, String success_action_status, String x_amz_algorithm
+    void uploadFile( String image_id,String token,RegistrationFinishedListener listener,String contentType, String expires, String acl, String key, String policy, String success_action_status, String x_amz_algorithm
             , String x_amz_credential, String x_amz_date, String x_amz_signature, File file);
 
+    void declaringFileUploaded(String image_id, String token,File file,RegistrationFinishedListener listener);
 }
