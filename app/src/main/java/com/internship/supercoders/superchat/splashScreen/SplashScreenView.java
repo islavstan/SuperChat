@@ -6,5 +6,6 @@ package com.internship.supercoders.superchat.splashScreen;
 
 public interface SplashScreenView {
     void navigateToMainScreen();
+
     void navigateToAuthorScreen();
 }

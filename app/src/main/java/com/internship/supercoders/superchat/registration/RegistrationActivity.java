@@ -23,14 +23,15 @@ import com.internship.supercoders.superchat.registration.RegistrationView;
 import com.squareup.picasso.Picasso;
 
 import io.fabric.sdk.android.Fabric;
+
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationView {
-   private EditText emailET, passwordET, conf_passwET, fullnameET, phoneET, websiteET;
-   private Button facebookBtn, signupBtn;
-   private CircleImageView userPhoto;
+    private EditText emailET, passwordET, conf_passwET, fullnameET, phoneET, websiteET;
+    private Button facebookBtn, signupBtn;
+    private CircleImageView userPhoto;
     private Toolbar toolbar;
     TextInputLayout input_layout_password, input_layout_conf_password, input_layout_email;
     RegistrationPresenter registrationPresenter;
@@ -47,23 +48,23 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         setContentView(R.layout.activity_registration);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
 
-        emailET=(EditText)findViewById(R.id.input_email);
-        passwordET=(EditText)findViewById(R.id.input_password);
-        conf_passwET=(EditText)findViewById(R.id.input_confirm_password);
-        fullnameET=(EditText)findViewById(R.id.input_fullname);
-        phoneET=(EditText)findViewById(R.id.input_phone);
-        websiteET=(EditText)findViewById(R.id.input_website);
-        userPhoto =(CircleImageView)findViewById(R.id.photo);
-        signupBtn =(Button)findViewById(R.id.signup_btn);
-        input_layout_password =(TextInputLayout)findViewById(R.id.input_layout_password);
-        input_layout_conf_password =(TextInputLayout)findViewById(R.id.input_layout_password2);
-        input_layout_email =(TextInputLayout)findViewById(R.id.input_layout_email);
-        progressbar=(ProgressBar)findViewById(R.id.progressbar);
+        emailET = (EditText) findViewById(R.id.input_email);
+        passwordET = (EditText) findViewById(R.id.input_password);
+        conf_passwET = (EditText) findViewById(R.id.input_confirm_password);
+        fullnameET = (EditText) findViewById(R.id.input_fullname);
+        phoneET = (EditText) findViewById(R.id.input_phone);
+        websiteET = (EditText) findViewById(R.id.input_website);
+        userPhoto = (CircleImageView) findViewById(R.id.photo);
+        signupBtn = (Button) findViewById(R.id.signup_btn);
+        input_layout_password = (TextInputLayout) findViewById(R.id.input_layout_password);
+        input_layout_conf_password = (TextInputLayout) findViewById(R.id.input_layout_password2);
+        input_layout_email = (TextInputLayout) findViewById(R.id.input_layout_email);
+        progressbar = (ProgressBar) findViewById(R.id.progressbar);
 
-        userPhoto =(CircleImageView)findViewById(R.id.photo) ;
+        userPhoto = (CircleImageView) findViewById(R.id.photo);
         userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,15 +73,13 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         });
 
 
-
-        registrationPresenter =new RegistrationPresenterImpl(this);
-
+        registrationPresenter = new RegistrationPresenterImpl(this);
 
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            registration();
+                registration();
             }
         });
 
@@ -88,7 +87,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void showProgress() {
-      progressbar.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -115,14 +114,14 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void setBlankFields() {
-        Toast.makeText(this,"fields cannot be blank",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "fields cannot be blank", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void navigateToLogin(String token) {
-        Toast.makeText(this,"registration successfully",Toast.LENGTH_SHORT).show();
-        Intent intent =new Intent(RegistrationActivity.this, MainActivity.class);
-        intent.putExtra("token",token);
+        Toast.makeText(this, "registration successfully", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        intent.putExtra("token", token);
         startActivity(intent);
     }
 
@@ -134,27 +133,24 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public void registration() {
 
-        String  email = emailET.getText().toString();
-        String  password = passwordET.getText().toString();
+        String email = emailET.getText().toString();
+        String password = passwordET.getText().toString();
         String conf_password = conf_passwET.getText().toString();
-        String fullname =fullnameET.getText().toString();
+        String fullname = fullnameET.getText().toString();
         String phone = phoneET.getText().toString();
         String website = websiteET.getText().toString();
-        Log.d("stas","bool image = "+bool_image);
-            if (email.equals("") || password.equals("") || conf_password.equals("")) {
-                setBlankFields();
-            }
-            else if (!email.contains("@")) {
-                setEmailError();
-            } else {
-                hideEmailError();
-            }
-             if (!password.equals(conf_password)) {
-                setPasswordError();
-            }
-
-
-        else registrationPresenter.validateData(photo_file, email, password, fullname, phone, website);
+        Log.d("stas", "bool image = " + bool_image);
+        if (email.equals("") || password.equals("") || conf_password.equals("")) {
+            setBlankFields();
+        } else if (!email.contains("@")) {
+            setEmailError();
+        } else {
+            hideEmailError();
+        }
+        if (!password.equals(conf_password)) {
+            setPasswordError();
+        } else
+            registrationPresenter.validateData(photo_file, email, password, fullname, phone, website);
 
 
         hidePasswordError();
@@ -162,7 +158,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void registrationError() {
-        Toast.makeText(this,"Registration Error",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Registration Error", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -175,15 +171,15 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public Context getContext() {
-       return RegistrationActivity.this;
+        return RegistrationActivity.this;
     }
 
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
@@ -195,17 +191,16 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
-                 selectedImageUri = data.getData();
+                selectedImageUri = data.getData();
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
                 bool_image = true;
-                photo_file=new File(getRealPathFromURI(this,selectedImageUri));
-                if(photo_file.exists())
-                    Log.d("stas","file ok");
+                photo_file = new File(getRealPathFromURI(this, selectedImageUri));
+                if (photo_file.exists())
+                    Log.d("stas", "file ok");
 
 
             }

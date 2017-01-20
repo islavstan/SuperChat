@@ -6,5 +6,6 @@ package com.internship.supercoders.superchat.splashScreen;
 
 public interface SplashScreenPresenter {
     void sleep(final long milliseconds);
+
     void unsubscribe();
 }

@@ -17,8 +17,8 @@ import static java.security.AccessController.getContext;
 
 public class SplashScreenActivity extends AppCompatActivity implements SplashScreenView {
 
-    private static final String TAG = "SplashScreenActivity" ;
-    private  SplashScreenPresenterImpl presenter;
+    private static final String TAG = "SplashScreenActivity";
+    private SplashScreenPresenterImpl presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +34,10 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
 
     @Override
     public void navigateToMainScreen() {
-        Intent intent =new Intent(SplashScreenActivity.this, MainActivity.class);
+        Intent intent = new Intent(SplashScreenActivity.this, RegistrationActivity.class);
         startActivity(intent);
     }
+
     @Override
     public void navigateToAuthorScreen() {
 

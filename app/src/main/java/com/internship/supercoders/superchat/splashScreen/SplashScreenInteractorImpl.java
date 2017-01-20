@@ -5,4 +5,5 @@ package com.internship.supercoders.superchat.splashScreen;
  */
 
 public class SplashScreenInteractorImpl implements SplashScreenInteractor {
+
 }

@@ -5,7 +5,8 @@ import rx.Observable;
 public class SplashScreenPresenterImpl implements SplashScreenPresenter {
     private SplashScreenView splashScreenView;
     private SplashScreenInteractor splashScreenInteractor;
-    SplashScreenPresenterImpl(SplashScreenView view){
+
+    SplashScreenPresenterImpl(SplashScreenView view) {
         splashScreenView = view;
         splashScreenInteractor = new SplashScreenInteractorImpl();
     }
@@ -18,8 +19,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
 
     @Override
     public void sleep(final long milliseconds) {
-       Thread sleepThread =  new Thread()
-        {
+        Thread sleepThread = new Thread() {
             public void run() {
                 try {
                     Thread.sleep(milliseconds);

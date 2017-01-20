@@ -10,7 +10,6 @@
     </style>
 
 
-
     <!--Floating label text style-->
     <style name="MyHintText" parent="TextAppearance.AppCompat.Small">
         <item name="android:textColor">@color/colorWhite</item>
