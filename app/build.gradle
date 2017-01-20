@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 25
@@ -40,8 +55,15 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'io.reactivex:rxjava:1.1.2'
     compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.android.volley:volley:1.0.0'
     testCompile 'junit:junit:4.12'
+
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
 }

@@ -1,6 +1,7 @@
 package com.internship.supercoders.superchat.registration;
 
 
+import android.content.Context;
 
 public interface RegistrationView {
 
@@ -23,6 +24,10 @@ public interface RegistrationView {
     void registration();
 
     void registrationError();
+
+    void  openImageChooser();
+
+Context getContext();
 
 }
 

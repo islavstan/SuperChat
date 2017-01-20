@@ -1,8 +1,13 @@
 package com.internship.supercoders.superchat.registration;
 
 
+import android.content.Context;
+
+import java.io.File;
+
 public class RegistrationPresenterImpl implements RegistrationPresenter,RegistrationInteractor.RegistrationFinishedListener{
 
+    Context context;
    private RegistrationView registrationView;
     private RegistrationInteractor regInteractor;
 
@@ -10,6 +15,7 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
         this.registrationView = registrationView;
         regInteractor = new RegistrInteractorImpl();
     }
+
 
     @Override
     public void onError() {
@@ -27,17 +33,29 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
     }
 
     @Override
-    public void validateData(String email, String password, String fullname, String phone, String website) {
+    public void validateData(File file,String email, String password, String fullname, String phone, String website) {
         if (registrationView != null) {
             registrationView.showProgress();
         }
 
-        regInteractor.authorization(email, password, fullname, phone, website, this);
+        regInteractor.authorization(file,email, password, fullname, phone, website, this);
     }
 
 
- @Override
+
+    @Override
+    public void addUserAva() {
+
+    }
+
+
+    @Override
     public void onDestroy() {
 
+    }
+
+    @Override
+    public Context getContext() {
+       return  registrationView.getContext();
     }
 }
