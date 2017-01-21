@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".registration.RegistrationActivity">
+        <activity android:name=".authorization.AuthorizationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +18,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".authorization.AuthorizationActivity"></activity>
+        <activity android:name=".registration.RegistrationActivity"></activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="cb34282d7442515b6f58308a9ff0b0c3e4320812" />
     </application>
 
 </manifest>
