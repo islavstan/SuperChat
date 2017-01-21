@@ -9,6 +9,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,23 +48,23 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         setContentView(R.layout.activity_registration);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
 
-        emailET=(EditText)findViewById(R.id.input_email);
-        passwordET=(EditText)findViewById(R.id.input_password);
-        conf_passwET=(EditText)findViewById(R.id.input_confirm_password);
-        fullnameET=(EditText)findViewById(R.id.input_fullname);
-        phoneET=(EditText)findViewById(R.id.input_phone);
-        websiteET=(EditText)findViewById(R.id.input_website);
-        userPhoto =(CircleImageView)findViewById(R.id.photo);
-        signupBtn =(Button)findViewById(R.id.signup_btn);
-        input_layout_password =(TextInputLayout)findViewById(R.id.input_layout_password);
-        input_layout_conf_password =(TextInputLayout)findViewById(R.id.input_layout_password2);
-        input_layout_email =(TextInputLayout)findViewById(R.id.input_layout_email);
-        progressbar=(ProgressBar)findViewById(R.id.progressbar);
+        emailET = (EditText) findViewById(R.id.input_email);
+        passwordET = (EditText) findViewById(R.id.input_password);
+        conf_passwET = (EditText) findViewById(R.id.input_confirm_password);
+        fullnameET = (EditText) findViewById(R.id.input_fullname);
+        phoneET = (EditText) findViewById(R.id.input_phone);
+        websiteET = (EditText) findViewById(R.id.input_website);
+        userPhoto = (CircleImageView) findViewById(R.id.photo);
+        signupBtn = (Button) findViewById(R.id.signup_btn);
+        input_layout_password = (TextInputLayout) findViewById(R.id.input_layout_password);
+        input_layout_conf_password = (TextInputLayout) findViewById(R.id.input_layout_password2);
+        input_layout_email = (TextInputLayout) findViewById(R.id.input_layout_email);
+        progressbar = (ProgressBar) findViewById(R.id.progressbar);
 
-        userPhoto =(CircleImageView)findViewById(R.id.photo) ;
+        userPhoto = (CircleImageView) findViewById(R.id.photo);
         userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,15 +73,13 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         });
 
 
-
-        registrationPresenter =new RegistrationPresenterImpl(this);
-
+        registrationPresenter = new RegistrationPresenterImpl(this);
 
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            registration();
+                registration();
             }
         });
 
@@ -98,7 +97,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void setEmailError() {
-        input_layout_email.setError("invalid email");
+        input_layout_email.setError("Invalid email");
     }
 
     @Override
@@ -111,6 +110,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public void hidePasswordError() {
         input_layout_conf_password.setError("");
+        input_layout_password.setError("");
     }
 
     @Override
@@ -134,30 +134,21 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public void registration() {
 
-        String  email = emailET.getText().toString();
-        String  password = passwordET.getText().toString();
-        String conf_password = conf_passwET.getText().toString();
-        String fullname =fullnameET.getText().toString();
-        String phone = phoneET.getText().toString();
-        String website = websiteET.getText().toString();
-        Log.d("stas","bool image = "+bool_image);
-            if (email.equals("") || password.equals("") || conf_password.equals("")) {
-                setBlankFields();
-            }
-            else if (!email.contains("@")) {
-                setEmailError();
-            } else {
-                hideEmailError();
-            }
-             if (!password.equals(conf_password)) {
-                setPasswordError();
-            }
+        String email = emailET.getText().toString().trim();
+        String password = passwordET.getText().toString().trim();
+        String conf_password = conf_passwET.getText().toString().trim();
+        String fullname = fullnameET.getText().toString().trim();
+        String phone = phoneET.getText().toString().trim();
+        String website = websiteET.getText().toString().trim();
 
+        boolean valid_data = isValidData(email, password, conf_password);
+        Log.d("stas","valid data = "+valid_data);
+        if(valid_data) {
+            registrationPresenter.validateData(photo_file, email, password, fullname, phone, website);
+            hidePasswordError();
+            hideEmailError();
+        }
 
-        else registrationPresenter.validateData(photo_file, email, password, fullname, phone, website);
-
-
-        hidePasswordError();
     }
 
     @Override
@@ -173,6 +164,33 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
 
+    @Override
+    public boolean isValidData(String email, String password, String confirm_password) {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirm_password) ||
+                !TextUtils.equals(password, confirm_password) || !email.contains("@")) {
+            if (TextUtils.isEmpty(email)) {
+                input_layout_email.setError("This field cannot be blank");
+            }
+
+            if (TextUtils.isEmpty(password)) {
+                input_layout_password.setError("This field cannot be blank");
+            }
+
+            if (TextUtils.isEmpty(confirm_password)) {
+                input_layout_conf_password.setError("This field cannot be blank");
+            }
+
+            if (!TextUtils.equals(password, confirm_password)) {
+                input_layout_conf_password.setError("Password is not the same");
+            }
+            if (!email.contains("@")) {
+                input_layout_email.setError("Invalid email");
+            }
+            return false;
+
+        }
+        return true;
+    }
     @Override
     public Context getContext() {
        return RegistrationActivity.this;

@@ -51,7 +51,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'com.android.volley:volley:1.0.0'
     testCompile 'junit:junit:4.12'
-
+    testCompile "org.mockito:mockito-core:2.+"
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;

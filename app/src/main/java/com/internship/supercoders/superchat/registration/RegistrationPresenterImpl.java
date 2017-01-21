@@ -43,10 +43,7 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
 
 
 
-    @Override
-    public void addUserAva() {
 
-    }
 
 
     @Override
