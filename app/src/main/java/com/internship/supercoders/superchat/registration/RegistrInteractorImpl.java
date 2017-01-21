@@ -339,8 +339,14 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
             @Override
             protected void onPostExecute(okhttp3.Response response) {
-                if (response != null)
+                if (response != null) {
                     declaringFileUploaded(image_id, token, file, listener);
+
+
+                }
+
+
+
                 else listener.onError();
             }
         }.execute();
@@ -352,11 +358,14 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
         long fileSize = file.length();
         Log.d("stas", "file size = " + Long.toString(fileSize));
         final DeclaringFileUploadedPoint apiDecUpl = ApiClient.getRetrofit().create(DeclaringFileUploadedPoint.class);
-        Call<Objects> call = apiDecUpl.declaringUpload(image_id,"application/json", "0.1.0", token, new Blob(new BlobData(Long.toString(fileSize))));
+        Call<Objects> call = apiDecUpl.declaringUpload(image_id, "application/json", "0.1.0", token, new Blob(new BlobData(Long.toString(fileSize))));
         call.enqueue(new Callback<Objects>() {
+
             @Override
             public void onResponse(Call<Objects> call, Response<Objects> response) {
+                Log.d("stas", response + "");
                 if (response.isSuccessful()) {
+
                     listener.onSuccess(token);
                 } else
                     try {

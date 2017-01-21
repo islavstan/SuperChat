@@ -27,6 +27,8 @@ public interface RegistrationView {
 
     void  openImageChooser();
 
+    boolean isValidData(String email, String password, String confirm_password);
+
 Context getContext();
 
 }
