@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class LogAndPas {
     @SerializedName("email")
-    String email;
+    public String email;
     @SerializedName("password")
-    String password;
+    public String password;
 
     public LogAndPas(String email, String password) {
         this.email = email;
