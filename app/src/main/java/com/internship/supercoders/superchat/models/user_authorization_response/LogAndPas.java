@@ -8,12 +8,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class LogAndPas {
     @SerializedName("email")
-    public String email;
+    String email;
     @SerializedName("password")
-    public String password;
+    String password;
 
     public LogAndPas(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

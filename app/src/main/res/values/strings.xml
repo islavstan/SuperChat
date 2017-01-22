@@ -19,4 +19,9 @@
     <string name="hint_sign_in">sign in</string>
     <string name="keep_me_signed_in">Keep me signed in</string>
     <string name="forgot_password">Forgot password</string>
+    <string name="invalid_email">Email is invalid</string>
+    <string name="invalid_password">Password is incorrect</string>
+    <string name="fill_fields">Please fill fields</string>
+    <string name="empty_email_error">Please, fill your email</string>
+    <string name="empty_password_error">Please, fill in password</string>
 </resources>

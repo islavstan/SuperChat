@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.internship.supercoders.superchat.api.ApiCall;
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.RequestBuilder;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
@@ -20,9 +19,8 @@ import com.internship.supercoders.superchat.points.CreateFilePoint;
 import com.internship.supercoders.superchat.points.DeclaringFileUploadedPoint;
 import com.internship.supercoders.superchat.points.RegistrationPoint;
 import com.internship.supercoders.superchat.points.SignInPoint;
-import com.internship.supercoders.superchat.points.UploadFilePoint;
 import com.internship.supercoders.superchat.points.UserAuthorizatoinPoint;
-import com.internship.supercoders.superchat.tools.HmacSha1Signature;
+import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 
 
 import org.json.JSONObject;
@@ -38,7 +36,6 @@ import java.util.Objects;
 import java.util.Random;
 
 import okhttp3.HttpUrl;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;

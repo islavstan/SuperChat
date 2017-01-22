@@ -2,12 +2,12 @@ package com.internship.supercoders.superchat.authorization;
 
 import android.content.Context;
 
+import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+
 /**
  * Created by RON on 21.01.2017.
  */
 public interface AuthContract {
-
-
 
     interface View {
 
@@ -33,24 +33,30 @@ public interface AuthContract {
 
         void openRecoveryPasswordDialog();
 
-        void onBtnSignIp();
+        void onBtnSignIn();
 
         void onBtnSignUp();
 
-        void writeUserDataToDB();
+        void writeUserAuthDataToDB(LogAndPas logAndPas);
 
         void navigateToLogin(String token);
 
-        boolean isValidData(String email, String password, String confirm_password);
+        boolean isEmailValid(String email);
+
+        boolean isPasswordValid(String password);
 
         Context getContext();
     }
 
     interface Presenter {
 
+        void onError();
+
+        void onSuccess(String token);
+
         void onDestroy();
 
-        void validateData(String email, String password);
+        void validateData(LogAndPas logAndPas);
     }
 
 }

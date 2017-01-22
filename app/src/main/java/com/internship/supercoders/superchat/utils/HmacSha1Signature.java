@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.tools;
+package com.internship.supercoders.superchat.utils;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;

@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import static com.internship.supercoders.superchat.data.AppData.LOG_TAG;
+import static com.internship.supercoders.superchat.data.AppConsts.LOG_TAG;
 
 /**
  * Created by RON on 21.01.2017.
