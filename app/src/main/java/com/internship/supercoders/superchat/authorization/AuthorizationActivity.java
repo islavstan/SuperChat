@@ -68,7 +68,6 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
 
