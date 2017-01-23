@@ -1,19 +1,14 @@
 package com.internship.supercoders.superchat.splashScreen;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.registration.RegistrationActivity;
-
-import static java.security.AccessController.getContext;
 
 public class SplashScreenActivity extends AppCompatActivity implements SplashScreenView {
 
@@ -33,8 +28,9 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
     }
 
     @Override
-    public void navigateToMainScreen() {
-        Intent intent = new Intent(SplashScreenActivity.this, RegistrationActivity.class);
+    public void navigateToMainScreen(String token) {
+        Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        intent.putExtra("token", token);
         startActivity(intent);
     }
 

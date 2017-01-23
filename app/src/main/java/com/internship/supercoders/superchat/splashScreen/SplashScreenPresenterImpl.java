@@ -1,13 +1,17 @@
 package com.internship.supercoders.superchat.splashScreen;
 
+import android.content.Context;
+
 import rx.Observable;
 
-public class SplashScreenPresenterImpl implements SplashScreenPresenter {
+public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashScreenInteractor.UserAuthorizationFinishedListener {
+    Context context;
     private SplashScreenView splashScreenView;
     private SplashScreenInteractor splashScreenInteractor;
+    private String token = null;
 
     SplashScreenPresenterImpl(SplashScreenView view) {
-        splashScreenView = view;
+        this.splashScreenView = view;
         splashScreenInteractor = new SplashScreenInteractorImpl();
     }
 
@@ -26,10 +30,22 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                splashScreenView.navigateToMainScreen();
+                splashScreenView.navigateToMainScreen(token);
             }
         };
         sleepThread.start();
+        splashScreenInteractor.userAuthorization("max@g.com", "testtest", this);
 
+
+    }
+
+    @Override
+    public void onError() {
+
+    }
+
+    @Override
+    public void onSuccess(String token) {
+        this.token = token;
     }
 }

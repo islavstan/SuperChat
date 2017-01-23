@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.internship.supercoders.superchat.api.ApiCall;
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.RequestBuilder;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
@@ -20,7 +19,6 @@ import com.internship.supercoders.superchat.points.CreateFilePoint;
 import com.internship.supercoders.superchat.points.DeclaringFileUploadedPoint;
 import com.internship.supercoders.superchat.points.RegistrationPoint;
 import com.internship.supercoders.superchat.points.SignInPoint;
-import com.internship.supercoders.superchat.points.UploadFilePoint;
 import com.internship.supercoders.superchat.points.UserAuthorizatoinPoint;
 import com.internship.supercoders.superchat.tools.HmacSha1Signature;
 
@@ -38,7 +36,6 @@ import java.util.Objects;
 import java.util.Random;
 
 import okhttp3.HttpUrl;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
@@ -48,7 +45,7 @@ import retrofit2.Response;
 public class RegistrInteractorImpl implements RegistrationInteractor {
     private Long tsLong = System.currentTimeMillis() / 1000;
     private String ts = tsLong.toString();
-    private int randonId = new Random().nextInt();
+    private int randomId = new Random().nextInt();
     private String signature;
     final String application_id = "52262";
     final String auth_key = "Mer3vGU4AOrw2zc";
@@ -57,7 +54,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     @Override
     public void authorization(final File file, final String email, final String password, final String fullname, final String phone, final String website, final RegistrationFinishedListener listener) {
         String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
-                52262, "Mer3vGU4AOrw2zc", randonId, ts);
+                52262, "Mer3vGU4AOrw2zc", randomId, ts);
         try {
             signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, "EeVbNGc82eJZOLS");
             Log.d("stas", "signat = " + signature);
@@ -76,8 +73,8 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
         params.put("auth_key",auth_key );
         params.put("timestamp", ts);
         Log.d("stas",ts);
-        params.put("nonce", Integer.toString(randonId));
-        Log.d("stas",randonId+"");
+        params.put("nonce", Integer.toString(randomId));
+        Log.d("stas", randomId +"");
         params.put("signature", signature);
         Log.d("stas",signature);
         Call<Session> call = apiService.getSession(params);
@@ -228,7 +225,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     @Override
     public void userAuthorization(String email, String password, final RegistrationFinishedListener listener) {
         String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s&user[email]=%s&user[password]=%s",
-                52262, "Mer3vGU4AOrw2zc", randonId, ts, email, password);
+                52262, "Mer3vGU4AOrw2zc", randomId, ts, email, password);
         try {
             signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, "EeVbNGc82eJZOLS");
 
@@ -240,7 +237,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             e.printStackTrace();
         }
         final UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(UserAuthorizatoinPoint.class);
-        Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(application_id, auth_key, ts, Integer.toString(randonId), signature, new LogAndPas(email, password)));
+        Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(application_id, auth_key, ts, Integer.toString(randomId), signature, new LogAndPas(email, password)));
         call.enqueue(new Callback<Session>() {
             @Override
             public void onResponse(Call<Session> call, Response<Session> response) {
