@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 public interface RegistrationPoint {
 
     @POST("/users.json")
-    Call <Objects>registration(@Header("Content-Type")String cont, @Header("QuickBlox-REST-API-Version")String version, @Header("QB-Token")String token, @Body ReqUser user);
+    Call <Object>registration(@Header("Content-Type")String cont, @Header("QuickBlox-REST-API-Version")String version, @Header("QB-Token")String token, @Body ReqUser user);
 }
 
 

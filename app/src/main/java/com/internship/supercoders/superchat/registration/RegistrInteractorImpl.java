@@ -115,11 +115,11 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     public void registration(final File file, final String token, final String email, final String password, String fullname, String phone, String website, final RegistrationFinishedListener listener) {
 
                 final RegistrationPoint apiServRegistr = ApiClient.getRetrofit().create(RegistrationPoint.class);
-                Call<Objects> regCall = apiServRegistr.registration("application/json", "0.1.0", token, new ReqUser(new ReqUserData(password,
+                Call<Object> regCall = apiServRegistr.registration("application/json", "0.1.0", token, new ReqUser(new ReqUserData(password,
                         email,fullname,phone,website)));
-              regCall.enqueue(new Callback<Objects>() {
+              regCall.enqueue(new Callback<Object>() {
                   @Override
-                  public void onResponse(Call<Objects> call, Response<Objects> response) {
+                  public void onResponse(Call<Object> call, Response<Object> response) {
 
                       if (response.isSuccessful()) {
                           if(file==null) {
@@ -140,7 +140,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                   }
 
                   @Override
-                  public void onFailure(Call<Objects> call, Throwable t) {
+                  public void onFailure(Call<Object> call, Throwable t) {
 
                   }
               });

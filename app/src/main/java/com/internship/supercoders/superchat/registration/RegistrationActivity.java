@@ -23,15 +23,16 @@ import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.registration.RegistrationView;
 import com.squareup.picasso.Picasso;
 
+import id.zelory.compressor.Compressor;
 import io.fabric.sdk.android.Fabric;
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationView {
-   private EditText emailET, passwordET, conf_passwET, fullnameET, phoneET, websiteET;
-   private Button facebookBtn, signupBtn;
-   private CircleImageView userPhoto;
+    private EditText emailET, passwordET, conf_passwET, fullnameET, phoneET, websiteET;
+    private Button facebookBtn, signupBtn;
+    private CircleImageView userPhoto;
     private Toolbar toolbar;
     TextInputLayout input_layout_password, input_layout_conf_password, input_layout_email;
     RegistrationPresenter registrationPresenter;
@@ -87,7 +88,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void showProgress() {
-      progressbar.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -115,14 +116,14 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void setBlankFields() {
-        Toast.makeText(this,"fields cannot be blank",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "fields cannot be blank", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void navigateToLogin(String token) {
-        Toast.makeText(this,"registration successfully",Toast.LENGTH_SHORT).show();
-        Intent intent =new Intent(RegistrationActivity.this, MainActivity.class);
-        intent.putExtra("token",token);
+        Toast.makeText(this, "registration successfully", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        intent.putExtra("token", token);
         startActivity(intent);
     }
 
@@ -142,8 +143,8 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         String website = websiteET.getText().toString().trim();
 
         boolean valid_data = isValidData(email, password, conf_password);
-        Log.d("stas","valid data = "+valid_data);
-        if(valid_data) {
+        Log.d("stas", "valid data = " + valid_data);
+        if (valid_data) {
             registrationPresenter.validateData(photo_file, email, password, fullname, phone, website);
             hidePasswordError();
             hideEmailError();
@@ -153,7 +154,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void registrationError() {
-        Toast.makeText(this,"Registration Error",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Registration Error", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -191,17 +192,18 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         }
         return true;
     }
+
     @Override
     public Context getContext() {
-       return RegistrationActivity.this;
+        return RegistrationActivity.this;
     }
 
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
@@ -213,17 +215,17 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
-                 selectedImageUri = data.getData();
+                selectedImageUri = data.getData();
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
                 bool_image = true;
-                photo_file=new File(getRealPathFromURI(this,selectedImageUri));
-                if(photo_file.exists())
-                    Log.d("stas","file ok");
+                File default_photo = new File(getRealPathFromURI(this, selectedImageUri));
+                photo_file = Compressor.getDefault(this).compressToFile(default_photo);
+                if (photo_file.exists())
+                    Log.d("stas", "file ok");
 
 
             }
