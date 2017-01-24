@@ -51,13 +51,18 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     final String auth_key = "Mer3vGU4AOrw2zc";
 
 
+
+    public RegistrInteractorImpl(){
+
+    }
+
     @Override
     public void authorization(final File file, final String email, final String password, final String fullname, final String phone, final String website, final RegistrationFinishedListener listener) {
         String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
                 52262, "Mer3vGU4AOrw2zc", randonId, ts);
         try {
             signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, "EeVbNGc82eJZOLS");
-            Log.d("stas", "signat = " + signature);
+//            Log.d("stas", "signat = " + signature);
         } catch (SignatureException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -92,10 +97,10 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Log.d("stas", "authorization error = " + jObjError.getString("errors"));
+                       // Log.d("stas", "authorization error = " + jObjError.getString("errors"));
                         listener.onError();
                     } catch (Exception e) {
-                        Log.d("stas", e.getMessage());
+                       // Log.d("stas", e.getMessage());
                     }
 
                 }
@@ -180,13 +185,13 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     Uri uri =Uri.parse(params);
 
                     String contentType = uri.getQueryParameter("Content-Type");
-                   // Log.d("stas",contentType);
+                    Log.d("stas",contentType);
                     String expires = uri.getQueryParameter("Expires");
-                   // Log.d("stas",expires);
+                    Log.d("stas",expires);
                     String acl = uri.getQueryParameter("acl");
                     String key = uri.getQueryParameter("key");
                     String policy = uri.getQueryParameter("policy");
-                  //  Log.d("stas",policy);
+                    Log.d("stas",policy);
                     String success_action_status = uri.getQueryParameter("success_action_status");
                     String x_amz_algorithm = uri.getQueryParameter("x-amz-algorithm");
                     String x_amz_credential = uri.getQueryParameter("x-amz-credential");
@@ -337,7 +342,9 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             @Override
             protected void onPostExecute(okhttp3.Response response) {
                 if (response != null) {
-                    declaringFileUploaded(image_id, token, file, listener);
+                    long fileSize = file.length();
+                    Log.d("stas", "file size = " + Long.toString(fileSize));
+                 //   declaringFileUploaded(image_id, token, file, listener);
 
 
                 }

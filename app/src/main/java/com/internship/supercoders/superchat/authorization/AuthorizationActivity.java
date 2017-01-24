@@ -187,6 +187,16 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         Log.d(AppConsts.LOG_TAG, "openRecoveryPasswordDialog");
     }
 
+
+
+
+
+    @OnClick(R.id.forgot_password)
+    @Override
+    public void showChangePasswordDialog(){
+        authPresenter.changePassword();
+    }
+
     @OnClick(R.id.btn_sign_in)
     @Override
     public void onBtnSignIn() {

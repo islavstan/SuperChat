@@ -1,5 +1,7 @@
 package com.internship.supercoders.superchat.authorization;
 
+import android.app.AlertDialog;
+
 import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
 
 /**
@@ -29,6 +31,11 @@ public class AuthPresenter implements AuthContract.Presenter {
 
     @Override
     public void onDestroy() {
+
+    }
+
+    @Override
+    public void changePassword() {
 
     }
 

@@ -11,6 +11,9 @@ public interface AuthContract {
 
     interface View {
 
+
+        void showChangePasswordDialog();
+
         void showProgress();
 
         void hideProgress();
@@ -55,6 +58,7 @@ public interface AuthContract {
         void onSuccess(String token);
 
         void onDestroy();
+        void changePassword();
 
         void validateData(LogAndPas logAndPas);
     }

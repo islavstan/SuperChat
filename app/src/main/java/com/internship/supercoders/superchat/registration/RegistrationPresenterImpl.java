@@ -11,9 +11,9 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
    private RegistrationView registrationView;
     private RegistrationInteractor regInteractor;
 
-    public RegistrationPresenterImpl(RegistrationView registrationView) {
+    public RegistrationPresenterImpl(RegistrationView registrationView,RegistrationInteractor regInteractor) {
         this.registrationView = registrationView;
-        regInteractor = new RegistrInteractorImpl();
+        this.regInteractor = regInteractor;
     }
 
 
@@ -33,8 +33,10 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
     }
 
     @Override
-    public void validateData(File file,String email, String password, String fullname, String phone, String website) {
+    public void validateData( File file,String email, String password, String fullname, String phone, String website) {
         if (registrationView != null) {
+            registrationView.hideEmailError();
+            registrationView.hidePasswordError();
             registrationView.showProgress();
         }
 

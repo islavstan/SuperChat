@@ -8,7 +8,7 @@ public class DBInfo {
 
     public String authTableName = "authData";
 
-    public String emailRow  = "email";
+    public String emailRow = "email";
     public String passRow = "password";
 
 }

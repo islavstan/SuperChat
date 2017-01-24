@@ -3,6 +3,8 @@ package com.internship.supercoders.superchat.registration;
 
 import android.content.Context;
 
+import com.internship.supercoders.superchat.points.RegistrationPoint;
+
 import java.io.File;
 
 public interface RegistrationInteractor {
@@ -19,7 +21,7 @@ public interface RegistrationInteractor {
 
 
 
-    void registration(File file, String token, String email, String password, String fullname, String phone, String website, RegistrationFinishedListener listener);
+    void registration( File file, String token, String email, String password, String fullname, String phone, String website, RegistrationFinishedListener listener);
 
     void authorization(File file, String email, String password, String fullname, String phone, String website, RegistrationFinishedListener listener);
 

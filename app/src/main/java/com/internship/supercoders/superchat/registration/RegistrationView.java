@@ -3,6 +3,8 @@ package com.internship.supercoders.superchat.registration;
 
 import android.content.Context;
 
+import java.io.File;
+
 public interface RegistrationView {
 
     void showProgress();
@@ -21,7 +23,7 @@ public interface RegistrationView {
 
     void hideEmailError();
 
-    void registration();
+    void registration(File photo, String email, String password, String conf_password, String fullname, String phone, String website);
 
     void registrationError();
 

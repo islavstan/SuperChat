@@ -39,8 +39,8 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     ProgressBar progressbar;
     private static final int SELECT_PICTURE = 100;
     Uri selectedImageUri;
-    boolean bool_image = false; //проверяем было ли выбрано фото из галереи
     File photo_file;
+    File actualImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +73,19 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             }
         });
 
-
-        registrationPresenter = new RegistrationPresenterImpl(this);
+        registrationPresenter = new RegistrationPresenterImpl(this, new RegistrInteractorImpl());
 
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registration();
+                String email = emailET.getText().toString().trim();
+                String password = passwordET.getText().toString().trim();
+                String conf_password = conf_passwET.getText().toString().trim();
+                String fullname = fullnameET.getText().toString().trim();
+                String phone = phoneET.getText().toString().trim();
+                String website = websiteET.getText().toString().trim();
+                registration(photo_file,email,password,conf_password,fullname,phone,website);
             }
         });
 
@@ -133,23 +138,11 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
-    public void registration() {
-
-        String email = emailET.getText().toString().trim();
-        String password = passwordET.getText().toString().trim();
-        String conf_password = conf_passwET.getText().toString().trim();
-        String fullname = fullnameET.getText().toString().trim();
-        String phone = phoneET.getText().toString().trim();
-        String website = websiteET.getText().toString().trim();
+    public void registration( File photo, String email, String password, String conf_password, String fullname, String phone,String website ) {
 
         boolean valid_data = isValidData(email, password, conf_password);
-        Log.d("stas", "valid data = " + valid_data);
-        if (valid_data) {
-            registrationPresenter.validateData(photo_file, email, password, fullname, phone, website);
-            hidePasswordError();
-            hideEmailError();
-        }
-
+        if (valid_data)
+            registrationPresenter.validateData(photo, email, password, fullname, phone, website);
     }
 
     @Override
@@ -167,21 +160,21 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public boolean isValidData(String email, String password, String confirm_password) {
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirm_password) ||
-                !TextUtils.equals(password, confirm_password) || !email.contains("@")) {
-            if (TextUtils.isEmpty(email)) {
+        if (email.equals("") || password.equals("") || confirm_password.equals("") ||
+                !password.equals(confirm_password) || !email.contains("@")) {
+            if (email.equals("")) {
                 input_layout_email.setError("This field cannot be blank");
             }
 
-            if (TextUtils.isEmpty(password)) {
+            if ( password.equals("")) {
                 input_layout_password.setError("This field cannot be blank");
             }
 
-            if (TextUtils.isEmpty(confirm_password)) {
+            if (confirm_password.equals("")) {
                 input_layout_conf_password.setError("This field cannot be blank");
             }
 
-            if (!TextUtils.equals(password, confirm_password)) {
+            if (!password.equals(confirm_password)) {
                 input_layout_conf_password.setError("Password is not the same");
             }
             if (!email.contains("@")) {
@@ -221,9 +214,8 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             if (requestCode == SELECT_PICTURE) {
                 selectedImageUri = data.getData();
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
-                bool_image = true;
-                File default_photo = new File(getRealPathFromURI(this, selectedImageUri));
-                photo_file = Compressor.getDefault(this).compressToFile(default_photo);
+                actualImage = new File(getRealPathFromURI(this, selectedImageUri));
+                photo_file = Compressor.getDefault(this).compressToFile(actualImage);
                 if (photo_file.exists())
                     Log.d("stas", "file ok");
 

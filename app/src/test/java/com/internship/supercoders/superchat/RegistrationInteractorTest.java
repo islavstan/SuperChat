@@ -33,6 +33,8 @@ public class RegistrationInteractorTest {
     RegistrationPoint regPoint;
     @Mock
     ReqUser user;
+    @Mock
+    RegistrationInteractor.RegistrationFinishedListener listener;
     @InjectMocks
     RegistrInteractorImpl regInterImpl;
     @Captor
@@ -44,7 +46,7 @@ public class RegistrationInteractorTest {
         Object obj = new Object();
         String data = "data";
         File file = new File("path");
-        RegistrationInteractor.RegistrationFinishedListener listener = mock(RegistrationInteractor.RegistrationFinishedListener.class);
+       // RegistrationInteractor.RegistrationFinishedListener listener = mock(RegistrationInteractor.RegistrationFinishedListener.class);
         Response<Object> response = Response.success(obj);
         when(regPoint.registration(data, data, data, user)).thenReturn(mockObjectCall);
         regInterImpl.registration(file, data, data, data, data, data, data, listener);
@@ -52,6 +54,13 @@ public class RegistrationInteractorTest {
         Mockito.verify(mockObjectCall).enqueue(objCallBack.capture());
         objCallBack.getValue().onResponse(mockObjectCall, response);
         Mockito.verify(listener).onSuccess(data);
+
+
+    }
+
+
+    @Test
+    public void authorizationTest() throws Exception {
 
 
     }

@@ -27,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    private void createAuthTable(SQLiteDatabase db){
+    private void createAuthTable(SQLiteDatabase db) {
         DBInfo dbInfo = new DBInfo();
         db.execSQL("create table " + dbInfo.authTableName + " ("
                 + "id integer primary key autoincrement,"
