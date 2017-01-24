@@ -40,7 +40,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     ProgressBar progressbar;
     private static final int SELECT_PICTURE = 100;
     Uri selectedImageUri;
-    boolean bool_image = false; //проверяем было ли выбрано фото из галереи
     File photo_file;
     File actualImage;
 
@@ -51,7 +50,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         setContentView(R.layout.activity_registration);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
 
         emailET = (EditText) findViewById(R.id.input_email);
@@ -75,14 +74,19 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             }
         });
 
-
-        registrationPresenter = new RegistrationPresenterImpl(this);
+        registrationPresenter = new RegistrationPresenterImpl(this, new RegistrInteractorImpl());
 
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registration();
+                String email = emailET.getText().toString().trim();
+                String password = passwordET.getText().toString().trim();
+                String conf_password = conf_passwET.getText().toString().trim();
+                String fullname = fullnameET.getText().toString().trim();
+                String phone = phoneET.getText().toString().trim();
+                String website = websiteET.getText().toString().trim();
+                registration(photo_file,email,password,conf_password,fullname,phone,website);
             }
         });
 
@@ -113,11 +117,12 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public void hidePasswordError() {
         input_layout_conf_password.setError("");
+        input_layout_password.setError("");
     }
 
     @Override
     public void setBlankFields() {
-        Toast.makeText(this,"fields cannot be blank",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "fields cannot be blank", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -134,29 +139,11 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
-    public void registration() {
+    public void registration( File photo, String email, String password, String conf_password, String fullname, String phone,String website ) {
 
-        String email = emailET.getText().toString();
-        String password = passwordET.getText().toString();
-        String conf_password = conf_passwET.getText().toString();
-        String fullname = fullnameET.getText().toString();
-        String phone = phoneET.getText().toString();
-        String website = websiteET.getText().toString();
-        Log.d("stas", "bool image = " + bool_image);
-        if (email.equals("") || password.equals("") || conf_password.equals("")) {
-            setBlankFields();
-        } else if (!email.contains("@")) {
-            setEmailError();
-        } else {
-            hideEmailError();
-        }
-        if (!password.equals(conf_password)) {
-            setPasswordError();
-        } else
-            registrationPresenter.validateData(photo_file, email, password, fullname, phone, website);
-
-
-        hidePasswordError();
+        boolean valid_data = isValidData(email, password, conf_password);
+        if (valid_data)
+            registrationPresenter.validateData(photo, email, password, fullname, phone, website);
     }
 
     @Override
@@ -170,6 +157,34 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
+
+    @Override
+    public boolean isValidData(String email, String password, String confirm_password) {
+        if (email.equals("") || password.equals("") || confirm_password.equals("") ||
+                !password.equals(confirm_password) || !email.contains("@")) {
+            if (email.equals("")) {
+                input_layout_email.setError("This field cannot be blank");
+            }
+
+            if ( password.equals("")) {
+                input_layout_password.setError("This field cannot be blank");
+            }
+
+            if (confirm_password.equals("")) {
+                input_layout_conf_password.setError("This field cannot be blank");
+            }
+
+            if (!password.equals(confirm_password)) {
+                input_layout_conf_password.setError("Password is not the same");
+            }
+            if (!email.contains("@")) {
+                input_layout_email.setError("Invalid email");
+            }
+            return false;
+
+        }
+        return true;
     }
 
     @Override
@@ -200,8 +215,8 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             if (requestCode == SELECT_PICTURE) {
                 selectedImageUri = data.getData();
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
-                bool_image = true;
-                photo_file = new File(getRealPathFromURI(this, selectedImageUri));
+                actualImage = new File(getRealPathFromURI(this, selectedImageUri));
+                photo_file = Compressor.getDefault(this).compressToFile(actualImage);
                 if (photo_file.exists())
                     Log.d("stas", "file ok");
 

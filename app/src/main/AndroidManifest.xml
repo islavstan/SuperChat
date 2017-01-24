@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".registration.RegistrationActivity" />
+        <activity android:name=".authorization.AuthorizationActivity" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cb34282d7442515b6f58308a9ff0b0c3e4320812" />

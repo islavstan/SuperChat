@@ -30,7 +30,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                splashScreenView.navigateToMainScreen(token);
+                splashScreenView.navigateToAuthorScreen();
             }
         };
         sleepThread.start();

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
 import com.internship.supercoders.superchat.registration.RegistrationActivity;
 
 public class SplashScreenActivity extends AppCompatActivity implements SplashScreenView {
@@ -36,7 +37,8 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
 
     @Override
     public void navigateToAuthorScreen() {
-
+        Intent intent = new Intent(SplashScreenActivity.this, AuthorizationActivity.class);
+        startActivity(intent);
     }
 
     @Override

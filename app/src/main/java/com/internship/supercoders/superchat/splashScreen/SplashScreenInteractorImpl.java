@@ -10,7 +10,7 @@ import com.internship.supercoders.superchat.models.user_authorization_response.L
 import com.internship.supercoders.superchat.points.AuthorizationPoint;
 import com.internship.supercoders.superchat.points.SignInPoint;
 import com.internship.supercoders.superchat.points.UserAuthorizatoinPoint;
-import com.internship.supercoders.superchat.tools.HmacSha1Signature;
+import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 
 import org.json.JSONObject;
 
@@ -29,7 +29,7 @@ import retrofit2.Response;
 
 public class SplashScreenInteractorImpl implements SplashScreenInteractor {
     private static final String TAG = "SPLASH";
-    //    private Long tsLong = System.currentTimeMillis() / 1000;
+        //private Long tsLong = System.currentTimeMillis() / 1000;
 //    private String ts = tsLong.toString();
 //    private int randomId = new Random().nextInt();
     private String signature;
