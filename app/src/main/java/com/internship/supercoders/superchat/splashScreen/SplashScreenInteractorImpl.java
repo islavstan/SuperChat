@@ -64,6 +64,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("stas", "userAuthorization error = " + jObjError.getString("errors"));
+                        authorizationListener.onError();
                     } catch (Exception e) {
                         Log.d("stas", e.getMessage());
                     }

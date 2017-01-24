@@ -9,6 +9,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
     private SplashScreenView splashScreenView;
     private SplashScreenInteractor splashScreenInteractor;
     private String token = null;
+    private boolean autorized = true;
 
     SplashScreenPresenterImpl(SplashScreenView view) {
         this.splashScreenView = view;
@@ -30,7 +31,13 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                splashScreenView.navigateToAuthorScreen();
+                if(autorized){
+                    splashScreenView.navigateToMainScreen(token);
+                }
+                else{
+                    splashScreenView.navigateToAuthorScreen();
+                }
+
             }
         };
         sleepThread.start();
@@ -41,7 +48,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
 
     @Override
     public void onError() {
-
+        autorized = false;
     }
 
     @Override
