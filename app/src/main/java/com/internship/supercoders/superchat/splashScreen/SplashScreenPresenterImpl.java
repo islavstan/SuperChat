@@ -1,19 +1,18 @@
 package com.internship.supercoders.superchat.splashScreen;
 
-import android.content.Context;
+import android.util.Log;
 
-import rx.Observable;
+import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
 
 public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashScreenInteractor.UserAuthorizationFinishedListener {
-    Context context;
     private SplashScreenView splashScreenView;
     private SplashScreenInteractor splashScreenInteractor;
     private String token = null;
-    private boolean autorized = true;
+    private boolean authorize = false;
 
     SplashScreenPresenterImpl(SplashScreenView view) {
         this.splashScreenView = view;
-        splashScreenInteractor = new SplashScreenInteractorImpl();
+        this.splashScreenInteractor = new SplashScreenInteractorImpl();
     }
 
     @Override
@@ -24,6 +23,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
 
     @Override
     public void sleep(final long milliseconds) {
+        authorize = splashScreenView.isAuth();
         Thread sleepThread = new Thread() {
             public void run() {
                 try {
@@ -31,24 +31,30 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if(autorized){
+                if (authorize) {
+                    Log.i("Splash", "ToMainScreen");
                     splashScreenView.navigateToMainScreen(token);
-                }
-                else{
+                } else {
+                    Log.i("Splash", "ToAuth");
                     splashScreenView.navigateToAuthorScreen();
                 }
 
             }
         };
         sleepThread.start();
-        splashScreenInteractor.userAuthorization("max@g.com", "testtest", this);
+        if (authorize) {
+            LogAndPas user;
+            user = splashScreenView.getLogAndPas();
+            Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
+            splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword(), this);
+        }
 
 
     }
 
     @Override
     public void onError() {
-        autorized = false;
+        authorize = false;
     }
 
     @Override

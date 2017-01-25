@@ -2,19 +2,22 @@ package com.internship.supercoders.superchat.splashScreen;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
-import com.internship.supercoders.superchat.registration.RegistrationActivity;
+import com.internship.supercoders.superchat.db.DBMethods;
+import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.utils.UserPreferences;
 
 public class SplashScreenActivity extends AppCompatActivity implements SplashScreenView {
 
     private static final String TAG = "SplashScreenActivity";
     private SplashScreenPresenterImpl presenter;
+    private UserPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,21 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
     }
 
     @Override
+    public boolean isAuth() {
+        preferences = new UserPreferences(this);
+        return preferences.isUserSignedIn();
+    }
+
+    @Override
+    public LogAndPas getLogAndPas() {
+        DBMethods db = new DBMethods(this);
+        return db.getAuthData();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         presenter.unsubscribe();
+        preferences = null;
     }
 }
