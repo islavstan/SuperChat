@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.splashScreen;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -54,6 +55,11 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
     public LogAndPas getLogAndPas() {
         DBMethods db = new DBMethods(this);
         return db.getAuthData();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 
     @Override

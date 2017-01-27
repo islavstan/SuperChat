@@ -1,5 +1,7 @@
 package com.internship.supercoders.superchat.splashScreen;
 
+import android.content.Context;
+
 import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
 
 /**
@@ -14,4 +16,6 @@ public interface SplashScreenView {
     boolean isAuth();
 
     LogAndPas getLogAndPas();
+
+    Context getContext();
 }

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".App"
@@ -23,6 +24,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".registration.RegistrationActivity" />
         <activity android:name=".authorization.AuthorizationActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cb34282d7442515b6f58308a9ff0b0c3e4320812" />

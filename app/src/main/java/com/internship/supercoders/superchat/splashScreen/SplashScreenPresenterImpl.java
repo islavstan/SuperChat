@@ -1,8 +1,10 @@
 package com.internship.supercoders.superchat.splashScreen;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.utils.InternetConnection;
 
 public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashScreenInteractor.UserAuthorizationFinishedListener {
     private SplashScreenView splashScreenView;
@@ -23,7 +25,10 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
 
     @Override
     public void sleep(final long milliseconds) {
-        authorize = splashScreenView.isAuth();
+        if (InternetConnection.hasConnection(splashScreenView.getContext())) {
+            Toast.makeText(splashScreenView.getContext(), "Online", Toast.LENGTH_LONG).show();
+        } else
+            Toast.makeText(splashScreenView.getContext(), "Offline", Toast.LENGTH_LONG).show();
         Thread sleepThread = new Thread() {
             public void run() {
                 try {
@@ -42,14 +47,13 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
             }
         };
         sleepThread.start();
+        authorize = splashScreenView.isAuth();
         if (authorize) {
             LogAndPas user;
             user = splashScreenView.getLogAndPas();
             Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
             splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword(), this);
         }
-
-
     }
 
     @Override
