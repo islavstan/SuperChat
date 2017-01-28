@@ -13,7 +13,7 @@ public class BlobData {
     BlobObjectAccess blobObjectAccess;
 
     @SerializedName("size")
-    String size;
+    int size;
 
     @SerializedName("id")
     String id;
@@ -31,7 +31,7 @@ public class BlobData {
         return blobObjectAccess;
     }
 
-    public BlobData(String size) {
+    public BlobData(int size) {
         this.size = size;
     }
 }

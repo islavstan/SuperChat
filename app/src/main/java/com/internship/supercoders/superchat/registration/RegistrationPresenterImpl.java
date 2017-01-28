@@ -3,6 +3,9 @@ package com.internship.supercoders.superchat.registration;
 
 import android.content.Context;
 
+import com.facebook.CallbackManager;
+import com.facebook.login.widget.LoginButton;
+
 import java.io.File;
 
 public class RegistrationPresenterImpl implements RegistrationPresenter,RegistrationInteractor.RegistrationFinishedListener{
@@ -21,6 +24,7 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
     public void onError() {
         if (registrationView != null) {
             registrationView.registrationError();
+            registrationView.hideProgress();
         }
     }
 
@@ -33,19 +37,23 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
     }
 
     @Override
-    public void validateData( File file,String email, String password, String fullname, String phone, String website) {
+    public void onSuccessFacebookLogin(String id) {
+        registrationView.changeFacebookBtnText(id);
+    }
+
+    @Override
+    public void validateData( File file,String email, String password, String fullname, String phone, String website,String facebookId) {
         if (registrationView != null) {
-            registrationView.hideEmailError();
-            registrationView.hidePasswordError();
             registrationView.showProgress();
         }
 
-        regInteractor.authorization(file,email, password, fullname, phone, website, this);
+        regInteractor.authorization(file,email, password, fullname, phone, website,facebookId, this);
     }
 
-
-
-
+    @Override
+    public void facebookLogin(LoginButton logBtn, CallbackManager callbackManager) {
+        regInteractor.facebookLogin(logBtn,callbackManager,this);
+    }
 
 
     @Override

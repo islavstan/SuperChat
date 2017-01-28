@@ -59,6 +59,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'io.reactivex:rxjava:1.1.2'
     compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.jakewharton.rxbinding:rxbinding-design:0.4.0'
     compile 'com.android.volley:volley:1.0.0'
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:2.+"
@@ -70,4 +71,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'id.zelory:compressor:1.0.4'
+
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+
+    compile 'com.vicmikhailau:MaskedEditText:2.0.1'
 }

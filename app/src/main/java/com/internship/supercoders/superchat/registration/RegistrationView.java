@@ -11,27 +11,41 @@ public interface RegistrationView {
 
     void hideProgress();
 
-    void setEmailError();
-
-    void setPasswordError();
-
-    void hidePasswordError();
-
-    void setBlankFields();
-
     void navigateToLogin(String token);
 
-    void hideEmailError();
-
-    void registration(File photo, String email, String password, String conf_password, String fullname, String phone, String website);
+    void registration(File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId);
 
     void registrationError();
 
-    void  openImageChooser();
+    void openImageChooser();
 
-    boolean isValidData(String email, String password, String confirm_password);
+    void changeFacebookBtnText(String facebookId);
 
-Context getContext();
+
+    Context getContext();
+
+
+    void hideError(int layout);
+
+    void showConfirmPasswordError();
+
+    void showPasswordLengthError(int layout);
+
+    void showPasswordError(int layout);
+
+    void showEmailError();
+
+    boolean validatePassword(String password);
+
+    boolean validateEmail(String email);
+
+    void enableSignUp();
+
+    void disableSignUp();
+
+    void dialogForCameraOrGallery();
+
+    void cameraIntent();
 
 }
 

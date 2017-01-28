@@ -3,8 +3,15 @@ package com.internship.supercoders.superchat.registration;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.RequestBuilder;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
@@ -14,15 +21,11 @@ import com.internship.supercoders.superchat.models.registration_request.ReqUser;
 import com.internship.supercoders.superchat.models.registration_request.ReqUserData;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
-import com.internship.supercoders.superchat.points.AuthorizationPoint;
-import com.internship.supercoders.superchat.points.CreateFilePoint;
-import com.internship.supercoders.superchat.points.DeclaringFileUploadedPoint;
-import com.internship.supercoders.superchat.points.RegistrationPoint;
-import com.internship.supercoders.superchat.points.SignInPoint;
-import com.internship.supercoders.superchat.points.UserAuthorizatoinPoint;
+import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -51,13 +54,12 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     final String auth_key = "Mer3vGU4AOrw2zc";
 
 
-
-    public RegistrInteractorImpl(){
+    public RegistrInteractorImpl() {
 
     }
 
     @Override
-    public void authorization(final File file, final String email, final String password, final String fullname, final String phone, final String website, final RegistrationFinishedListener listener) {
+    public void authorization(final File file, final String email, final String password, final String fullname, final String phone, final String website, String facebookId, final RegistrationFinishedListener listener) {
         String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
                 52262, "Mer3vGU4AOrw2zc", randomId, ts);
         try {
@@ -72,39 +74,40 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
         }
 
 
-        final AuthorizationPoint apiService = ApiClient.getRetrofit().create(AuthorizationPoint.class);
+        final Points.AuthorizationPoint apiService = ApiClient.getRetrofit().create(Points.AuthorizationPoint.class);
         Map<String, String> params = new HashMap<>();
-        params.put("application_id",application_id);
-        params.put("auth_key",auth_key );
+        params.put("application_id", application_id);
+        params.put("auth_key", auth_key);
         params.put("timestamp", ts);
-        Log.d("stas",ts);
+        Log.d("stas", ts);
         params.put("nonce", Integer.toString(randomId));
-        Log.d("stas", randomId +"");
+        Log.d("stas", randomId + "");
         params.put("signature", signature);
-        Log.d("stas",signature);
+        Log.d("stas", signature);
         Call<Session> call = apiService.getSession(params);
         call.enqueue(new Callback<Session>() {
             @Override
             public void onResponse(Call<Session> call, Response<Session> response) {
                 if (response.isSuccessful()) {
                     Session session = response.body();
-                  String  token = session.getData().getToken();
+                    String token = session.getData().getToken();
                     Log.d("stas", "token = " + token);
 
 
-                    registration(file,token,email,password,fullname,phone,website,listener);
+                    registration(file, token, email, password, fullname, phone, website, facebookId, listener);
 
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                       // Log.d("stas", "authorization error = " + jObjError.getString("errors"));
+                        // Log.d("stas", "authorization error = " + jObjError.getString("errors"));
                         listener.onError();
                     } catch (Exception e) {
-                       // Log.d("stas", e.getMessage());
+                        // Log.d("stas", e.getMessage());
                     }
 
                 }
             }
+
             @Override
             public void onFailure(Call<Session> call, Throwable t) {
 
@@ -115,45 +118,97 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
 
+    @Override
+    public void facebookLogin(LoginButton logBtn, CallbackManager callbackManager, RegistrationFinishedListener listener) {
+        logBtn.performClick();
+        logBtn.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                String accessToken = loginResult.getAccessToken()
+                        .getToken();
+                Log.d("stas", "accessToken = " + accessToken);
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        (object, response) -> {
+
+                            try {
+                              String facebookId = object.getString("id");
+                                listener.onSuccessFacebookLogin(facebookId);
+                                Log.d("stas", "id = " + facebookId);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields",
+                        "id");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
-    public void registration(final File file, final String token, final String email, final String password, String fullname, String phone, String website, final RegistrationFinishedListener listener) {
+    public void registration(final File file, final String token, final String email, final String password, String fullname, String phone, String website, String facebookId, final RegistrationFinishedListener listener) {
 
-                final RegistrationPoint apiServRegistr = ApiClient.getRetrofit().create(RegistrationPoint.class);
-                Call<Object> regCall = apiServRegistr.registration("application/json", "0.1.0", token, new ReqUser(new ReqUserData(password,
-                        email,fullname,phone,website)));
-              regCall.enqueue(new Callback<Object>() {
-                  @Override
-                  public void onResponse(Call<Object> call, Response<Object> response) {
+        final Points.RegistrationPoint apiServRegistr = ApiClient.getRetrofit().create(Points.RegistrationPoint.class);
+        Call<Object> regCall = apiServRegistr.registration("application/json", "0.1.0", token, new ReqUser(new ReqUserData(password,
+                email, fullname, phone, website, facebookId)));
+        regCall.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
 
-                      if (response.isSuccessful()) {
-                          if(file==null) {
-                              listener.onSuccess(token);
+                if (response.isSuccessful()) {
+                    if (file == null) {
+                        listener.onSuccess(token);
 
-                          }else signIn(file,token,email,password,listener);
-                      }
-                      else {
-                          try {
-                              JSONObject jObjError = new JSONObject(response.errorBody().string());
-                              Log.d("stas", "registration error = " + jObjError.getString("errors"));
-                              listener.onError();
-                          } catch (Exception e) {
-                              Log.d("stas", e.getMessage());
-                          }
+                    } else signIn(file, token, email, password, listener);
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("stas", "registration error = " + jObjError.getString("errors"));
+                        listener.onError();
+                    } catch (Exception e) {
+                        Log.d("stas", e.getMessage());
+                    }
 
-                      }
-                  }
+                }
+            }
 
-                  @Override
-                  public void onFailure(Call<Object> call, Throwable t) {
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
 
-                  }
-              });
+            }
+        });
 
 
     }
 
-    public String randomName(){
+    public String randomName() {
         Random r = new Random(); // just create one and keep it around
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
@@ -164,51 +219,46 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
         }
         String randomName = sb.toString();
 
-       return randomName+".jpeg";
+        return randomName + ".jpeg";
     }
 
 
     @Override
-    public void createFile(final File file,final String token, final RegistrationFinishedListener listener) {
-        Log.d("stas","createfile");
+    public void createFile(final File file, final String token, final RegistrationFinishedListener listener) {
+        Log.d("stas", "createfile");
         String name = randomName();
-      final CreateFilePoint apiCreateFile = ApiClient.getRetrofit().create(CreateFilePoint.class);
-        Call<Blob> blobCall = apiCreateFile.createFile("application/json","0.1.0",token,new Blob(new BlobData("image/jpeg",name)));
+        final Points.CreateFilePoint apiCreateFile = ApiClient.getRetrofit().create(Points.CreateFilePoint.class);
+        Call<Blob> blobCall = apiCreateFile.createFile("application/json", "0.1.0", token, new Blob(new BlobData("image/jpeg", name)));
         blobCall.enqueue(new Callback<Blob>() {
             @Override
             public void onResponse(Call<Blob> call, Response<Blob> response) {
                 if (response.isSuccessful()) {
-                    Blob blob =response.body();
-                    String image_id =blob.getBlobData().getId();
-                    Log.d("stas","image id = "+image_id );
-                    String params =blob.getBlobData().getBlobObjectAccess().getParams();
-                    Uri uri =Uri.parse(params);
+                    Blob blob = response.body();
+                    String image_id = blob.getBlobData().getId();
+                    Log.d("stas", "image id = " + image_id);
+                    String params = blob.getBlobData().getBlobObjectAccess().getParams();
+                    Uri uri = Uri.parse(params);
 
                     String contentType = uri.getQueryParameter("Content-Type");
-                    Log.d("stas",contentType);
+                    Log.d("stas", contentType);
                     String expires = uri.getQueryParameter("Expires");
-                    Log.d("stas",expires);
+                    Log.d("stas", expires);
                     String acl = uri.getQueryParameter("acl");
                     String key = uri.getQueryParameter("key");
                     String policy = uri.getQueryParameter("policy");
-                    Log.d("stas",policy);
+                    Log.d("stas", policy);
                     String success_action_status = uri.getQueryParameter("success_action_status");
                     String x_amz_algorithm = uri.getQueryParameter("x-amz-algorithm");
                     String x_amz_credential = uri.getQueryParameter("x-amz-credential");
                     String x_amz_date = uri.getQueryParameter("x-amz-date");
                     String x_amz_signature = uri.getQueryParameter("x-amz-signature");
-                   // Log.d("stas",x_amz_signature);
-                    Log.d("stas","params = "+params);
-                    uploadFile(image_id,token, listener, contentType, expires, acl, key, policy, success_action_status, x_amz_algorithm,
+                    // Log.d("stas",x_amz_signature);
+                    Log.d("stas", "params = " + params);
+                    uploadFile(image_id, token, listener, contentType, expires, acl, key, policy, success_action_status, x_amz_algorithm,
                             x_amz_credential, x_amz_date, x_amz_signature, file);
 
 
-
-
-
-
-
-                }else {
+                } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("stas", "createFile error = " + jObjError.getString("errors"));
@@ -241,7 +291,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
-        final UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(UserAuthorizatoinPoint.class);
+        final Points.UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(Points.UserAuthorizatoinPoint.class);
         Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(application_id, auth_key, ts, Integer.toString(randomId), signature, new LogAndPas(email, password)));
         call.enqueue(new Callback<Session>() {
             @Override
@@ -274,8 +324,8 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
     @Override
-    public void signIn(final File file,final String token, String email, String password, final RegistrationFinishedListener listener) {
-        final SignInPoint apiSignIn = ApiClient.getRetrofit().create(SignInPoint.class);
+    public void signIn(final File file, final String token, String email, String password, final RegistrationFinishedListener listener) {
+        final Points.SignInPoint apiSignIn = ApiClient.getRetrofit().create(Points.SignInPoint.class);
         Call<Objects> call = apiSignIn.signIn("application/json", "0.1.0", token, new LogAndPas(email, password));
         call.enqueue(new Callback<Objects>() {
             @Override
@@ -302,9 +352,6 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             }
         });
     }
-
-
-
 
 
     @Override
@@ -344,14 +391,10 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 if (response != null) {
                     long fileSize = file.length();
                     Log.d("stas", "file size = " + Long.toString(fileSize));
-                 //   declaringFileUploaded(image_id, token, file, listener);
+                    declaringFileUploaded(image_id, token, file, listener);
 
 
-                }
-
-
-
-                else listener.onError();
+                } else listener.onError();
             }
         }.execute();
 
@@ -361,16 +404,19 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     public void declaringFileUploaded(String image_id, final String token, File file, final RegistrationFinishedListener listener) {
         long fileSize = file.length();
         Log.d("stas", "file size = " + Long.toString(fileSize));
-        final DeclaringFileUploadedPoint apiDecUpl = ApiClient.getRetrofit().create(DeclaringFileUploadedPoint.class);
-        Call<Objects> call = apiDecUpl.declaringUpload(image_id, "application/json", "0.1.0", token, new Blob(new BlobData(Long.toString(fileSize))));
+        final Points.DeclaringFileUploadedPoint apiDecUpl = ApiClient.getRetrofit().create(Points.DeclaringFileUploadedPoint.class);
+        Call<Objects> call = apiDecUpl.declaringUpload(Integer.parseInt(image_id), "application/json", "0.1.0", token, new Blob(new BlobData((int) fileSize)));
+
+
         call.enqueue(new Callback<Objects>() {
+
 
             @Override
             public void onResponse(Call<Objects> call, Response<Objects> response) {
                 Log.d("stas", response + "");
                 if (response.isSuccessful()) {
-
                     listener.onSuccess(token);
+
                 } else
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -383,101 +429,14 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
             @Override
             public void onFailure(Call<Objects> call, Throwable t) {
-
+                Log.d("stas", "onFailure = " + t.getMessage());
+                listener.onSuccess(token);
             }
         });
+
+
     }
 }
-
-
-
-
-
-
-  /*   HashMap<String, String> params = new HashMap<String, String>();
-        String url = "https://qbprod.s3.amazonaws.com/";
-        String image_path = file.getPath();
-        params.put("Content-Type",contentType);
-        params.put("Expires",expires);
-        params.put("acl",acl);
-        params.put("key",key);
-        params.put("policy",policy);
-        params.put("success_action_status",success_action_status);
-        params.put("x-amz-algorithm",x_amz_algorithm);
-        params.put("x-amz-credential",x_amz_credential);
-        params.put("x-amz-date",x_amz_date);
-        params.put("x-amz-signature",x_amz_signature);
-
-
-
-        MultipartRequest multipartRequest = new MultipartRequest(url, params, image_path, new com.android.volley.Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e("stas", "Success Response: " + response.toString());
-            }
-        }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-            });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(listener.getContext());
-        requestQueue.add(multipartRequest);
-        requestQueue.start();*//*
-*/
-      /*  final UploadFilePoint apiUpload = ApiClient.getRetrofit(ApiClient.URL_FOR_UPLOAD_AVA).create(UploadFilePoint.class);
-        Call<Objects>call = apiUpload.uploadFile( contentType,  expires,  acl,  key,  policy,  success_action_status,
-                x_amz_algorithm,  x_amz_credential,  x_amz_date,  x_amz_signature,  file);*/
-
-// final UploadFilePoint apiUpload = ApiClient.getRetrofit(ApiClient.URL_FOR_UPLOAD_AVA).create(UploadFilePoint.class);
-//  okhttp3.RequestBody requestFile = okhttp3.RequestBody.create(okhttp3.MediaType.parse("multipart/form-data"), file);
-//  MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-/*
-
-        RequestBody rcontentType = RequestBody.create(MediaType.parse("text/plain"), contentType);
-        RequestBody rexpires = RequestBody.create(MediaType.parse("text/plain"), expires);
-        RequestBody racl = RequestBody.create(MediaType.parse("text/plain"), acl);
-        RequestBody rkey = RequestBody.create(MediaType.parse("text/plain"), key);
-        RequestBody rpolicy = RequestBody.create(MediaType.parse("text/plain"), policy);
-        RequestBody rsuccess_action_status = RequestBody.create(MediaType.parse("text/plain"), success_action_status);
-        RequestBody rx_amz_algorithm = RequestBody.create(MediaType.parse("text/plain"), x_amz_algorithm);
-        RequestBody rx_amz_credential = RequestBody.create(MediaType.parse("text/plain"), x_amz_credential);
-        RequestBody rx_amz_date = RequestBody.create(MediaType.parse("text/plain"), x_amz_date);
-        RequestBody rx_amz_signature = RequestBody.create(MediaType.parse("text/plain"), x_amz_signature);
-        RequestBody rfile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-
-        Call<Objects>call = apiUpload.uploadFile( rcontentType,  rexpires,  racl,  rkey,  rpolicy,  rsuccess_action_status,
-                rx_amz_algorithm,  rx_amz_credential,  rx_amz_date,  rx_amz_signature,  rfile);
-
-          Log.d("stas","start upload");
-        call.enqueue(new Callback<Objects>() {
-            @Override
-            public void onResponse(Call<Objects> call, Response<Objects> response) {
-                Log.d("stas","onresponse");
-                if (response.isSuccessful()) {
-                    listener.onSuccess(token);
-
-                }else {
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Log.d("stas", "uploadFile error = " + jObjError.getString("errors"));
-                        listener.onError();
-                    } catch (Exception e) {
-                        Log.d("stas", e.getMessage());
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Objects> call, Throwable t) {
-
-            }
-        });
-
-    }*/
-
 
 
 

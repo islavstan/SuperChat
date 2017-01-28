@@ -7,9 +7,7 @@ import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
-import com.internship.supercoders.superchat.points.AuthorizationPoint;
-import com.internship.supercoders.superchat.points.SignInPoint;
-import com.internship.supercoders.superchat.points.UserAuthorizatoinPoint;
+import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 
 import org.json.JSONObject;
@@ -17,10 +15,7 @@ import org.json.JSONObject;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +44,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
-        final UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(UserAuthorizatoinPoint.class);
+        final Points.UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(Points.UserAuthorizatoinPoint.class);
         Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.TS, Integer.toString(ApiConstant.RANDOM_ID), signature, new LogAndPas(email, password)));
         call.enqueue(new Callback<Session>() {
             @Override
@@ -83,7 +78,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
 
     void signIn(String token) {
         Log.d("Splash", "signIn start");
-        final SignInPoint apiSignIn = ApiClient.getRetrofit().create(SignInPoint.class);
+        final Points.SignInPoint apiSignIn = ApiClient.getRetrofit().create(Points.SignInPoint.class);
         Call<Objects> call = apiSignIn.signIn("application/json", "0.1.0", token, new LogAndPas("max@g.com", "testtest"));
         call.enqueue(new Callback<Objects>() {
             @Override

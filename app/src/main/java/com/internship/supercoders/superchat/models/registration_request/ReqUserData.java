@@ -17,12 +17,15 @@ public class ReqUserData {
     String phone;
     @SerializedName("website")
     String website;
+    @SerializedName("facebook_id")
+    String facebookId;
 
-    public ReqUserData(String password, String email, String fullname, String phone, String website) {
+    public ReqUserData(String password, String email, String fullname, String phone, String website, String facebookId) {
         this.password = password;
         this.email = email;
         this.fullname = fullname;
         this.phone = phone;
         this.website = website;
+        this.facebookId = facebookId;
     }
 }

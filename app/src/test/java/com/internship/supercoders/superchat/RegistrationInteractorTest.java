@@ -1,7 +1,6 @@
 package com.internship.supercoders.superchat;
 
 import com.internship.supercoders.superchat.models.registration_request.ReqUser;
-import com.internship.supercoders.superchat.points.RegistrationPoint;
 import com.internship.supercoders.superchat.registration.RegistrInteractorImpl;
 import com.internship.supercoders.superchat.registration.RegistrationInteractor;
 

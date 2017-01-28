@@ -26,4 +26,18 @@
     <string name="fill_fields">Please fill fields</string>
     <string name="empty_email_error">Please, fill your email</string>
     <string name="empty_password_error">Please, fill in password</string>
+
+
+    <!--FACEBOOK-->
+    <string name="facebook_app_id">344609745932521</string>
+    <string name="fb_login_protocol_scheme">fb344609745932521</string>
+    <string name="linked_facebook_btn">Linked</string>
+
+    <!--REGISTRATION-->
+    <string name="password_is_weak">Password is weak. Please use at least two digits and two capitalized letters</string>
+    <string name="password_length_error">Password length should be 8-12 symbols</string>
+    <string name="password_is_not_the_same">Password is not the same</string>
+
+
+
 </resources>
