@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
@@ -30,7 +29,6 @@ import com.internship.supercoders.superchat.utils.ViewUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.fabric.sdk.android.Fabric;
 
 public class AuthorizationActivity extends AppCompatActivity implements AuthContract.View {
 
@@ -213,6 +211,8 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
             hidePasswordError();
             hideEmailError();
             writeUserAuthDataToDB(logAndPas);
+            keepMeSignedIn();
+            Log.i(AppConsts.LOG_TAG, "Check Sign IN: " + Boolean.toString(userPreferences.isUserSignedIn()));
         }
     }
 

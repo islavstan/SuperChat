@@ -61,10 +61,14 @@ public class DBMethods {
             Log.d(AppConsts.LOG_TAG, "0 rows");
         c.close();
     }
-
-    // TODO (1) write method (Maxim), use id = 1
     public LogAndPas getAuthData(){
-
-        return new LogAndPas(null, null);
+        String email;
+        String password;
+        Cursor c = db.query(dbInfo.authTableName, null, null, null, null, null, null);
+        c.moveToFirst();
+        email = c.getString(c.getColumnIndex(dbInfo.emailRow));
+        password = c.getString(c.getColumnIndex(dbInfo.passRow));
+        c.close();
+        return new LogAndPas(email, password);
     }
 }
