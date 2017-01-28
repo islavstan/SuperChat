@@ -43,8 +43,9 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                     Log.i("Splash", "ToAuth");
                     splashScreenView.navigateToAuthorScreen();
                 }
-
+                splashScreenView.finish();
             }
+
         };
         sleepThread.start();
         authorize = splashScreenView.isAuth();

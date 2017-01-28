@@ -18,4 +18,6 @@ public interface SplashScreenView {
     LogAndPas getLogAndPas();
 
     Context getContext();
+
+    void finish();
 }
