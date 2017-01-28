@@ -34,6 +34,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.utils.InternetConnection;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.squareup.picasso.Picasso;
 import com.vicmikhailau.maskededittext.MaskedEditText;
@@ -87,6 +88,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     private Pattern pattern = android.util.Patterns.EMAIL_ADDRESS;
     private Matcher matcher;
     CompositeSubscription compositeSubscription;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +126,14 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         registrationPresenter = new RegistrationPresenterImpl(this, new RegistrInteractorImpl());
 
 
-        facebookBtn.setOnClickListener(view -> registrationPresenter.facebookLogin(logBtn, callbackManager));
+        facebookBtn.setOnClickListener(view -> {
+                    if (InternetConnection.hasConnection(RegistrationActivity.this))
+                        registrationPresenter.facebookLogin(logBtn, callbackManager);
+                    else showInternetConnectionError();
+                }
+
+
+        );
 
         Observable<CharSequence> emailChangeObservable = RxTextView.textChanges(emailET);
         Observable<CharSequence> passwordChangeObservable = RxTextView.textChanges(passwordET);
@@ -255,7 +264,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                 });
 
 
-        CompositeSubscription compositeSubscription = new CompositeSubscription();
+        compositeSubscription = new CompositeSubscription();
         compositeSubscription.add(confirmPasswordSubscrioption);
         compositeSubscription.add(passwordSubscrioption);
         compositeSubscription.add(emailSubscription);
@@ -263,17 +272,28 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
 
         signupBtn.setOnClickListener(view -> {
-            String email = emailET.getText().toString().trim();
-            String password = passwordET.getText().toString().trim();
-            String conf_password = confPassET.getText().toString().trim();
-            String fullname = fullnameET.getText().toString().trim();
-            String phone = "380" + phoneET.getUnMaskedText();
-            String website = websiteET.getText().toString().trim();
-            registration(photoFile, email, password, conf_password, fullname, phone, website, facebookId);
+            if (InternetConnection.hasConnection(this)) {
+
+
+                String email = emailET.getText().toString().trim();
+                String password = passwordET.getText().toString().trim();
+                String conf_password = confPassET.getText().toString().trim();
+                String fullname = fullnameET.getText().toString().trim();
+                String phone = "380" + phoneET.getUnMaskedText();
+                String website = websiteET.getText().toString().trim();
+                registration(photoFile, email, password, conf_password, fullname, phone, website, facebookId);
+            } else showInternetConnectionError();
         });
 
     }
 
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        compositeSubscription.unsubscribe();
+    }
 
     @Override
     public void showProgress() {
@@ -292,6 +312,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
         intent.putExtra("token", token);
         startActivity(intent);
+        finish();
     }
 
 
@@ -403,6 +424,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public void disableSignUp() {
         signupBtn.setEnabled(false);
+
     }
 
 
@@ -436,6 +458,11 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     public void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    public void showInternetConnectionError() {
+        Toast.makeText(this, "internet connection error", Toast.LENGTH_SHORT).show();
     }
 
 

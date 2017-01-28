@@ -47,6 +47,8 @@ public interface RegistrationView {
 
     void cameraIntent();
 
+    void showInternetConnectionError();
+
 }
 
 

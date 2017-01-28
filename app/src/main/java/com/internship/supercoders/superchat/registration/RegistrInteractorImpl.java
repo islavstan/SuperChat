@@ -13,6 +13,7 @@ import com.facebook.GraphRequest;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.internship.supercoders.superchat.api.ApiClient;
+import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.api.RequestBuilder;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.blob.Blob;
@@ -46,13 +47,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegistrInteractorImpl implements RegistrationInteractor {
-    private Long tsLong = System.currentTimeMillis() / 1000;
+   /* private Long tsLong = System.currentTimeMillis() / 1000;
     private String ts = tsLong.toString();
     private int randomId = new Random().nextInt();
     private String signature;
     final String application_id = "52262";
-    final String auth_key = "Mer3vGU4AOrw2zc";
-
+    final String auth_key = "Mer3vGU4AOrw2zc";*/
+   private String signature;
 
     public RegistrInteractorImpl() {
 
@@ -61,9 +62,9 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     @Override
     public void authorization(final File file, final String email, final String password, final String fullname, final String phone, final String website, String facebookId, final RegistrationFinishedListener listener) {
         String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
-                52262, "Mer3vGU4AOrw2zc", randomId, ts);
+                ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.RANDOM_ID, ApiConstant.TS);
         try {
-            signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, "EeVbNGc82eJZOLS");
+            signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, ApiConstant.AUTH_SECRET);
 //            Log.d("stas", "signat = " + signature);
         } catch (SignatureException e) {
             e.printStackTrace();
@@ -76,12 +77,12 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
         final Points.AuthorizationPoint apiService = ApiClient.getRetrofit().create(Points.AuthorizationPoint.class);
         Map<String, String> params = new HashMap<>();
-        params.put("application_id", application_id);
-        params.put("auth_key", auth_key);
-        params.put("timestamp", ts);
-        Log.d("stas", ts);
-        params.put("nonce", Integer.toString(randomId));
-        Log.d("stas", randomId + "");
+        params.put("application_id",  ApiConstant.APPLICATION_ID);
+        params.put("auth_key", ApiConstant.AUTH_KEY);
+        params.put("timestamp", ApiConstant.TS);
+        Log.d("stas", ApiConstant.TS);
+        params.put("nonce", Integer.toString(ApiConstant.RANDOM_ID));
+        Log.d("stas", ApiConstant.RANDOM_ID + "");
         params.put("signature", signature);
         Log.d("stas", signature);
         Call<Session> call = apiService.getSession(params);
@@ -280,7 +281,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     @Override
     public void userAuthorization(String email, String password, final RegistrationFinishedListener listener) {
         String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s&user[email]=%s&user[password]=%s",
-                52262, "Mer3vGU4AOrw2zc", randomId, ts, email, password);
+                ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.RANDOM_ID, ApiConstant.TS, email, password);
         try {
             signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, "EeVbNGc82eJZOLS");
 
@@ -292,7 +293,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             e.printStackTrace();
         }
         final Points.UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(Points.UserAuthorizatoinPoint.class);
-        Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(application_id, auth_key, ts, Integer.toString(randomId), signature, new LogAndPas(email, password)));
+        Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(  ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY,  ApiConstant.TS, Integer.toString(ApiConstant.RANDOM_ID), signature, new LogAndPas(email, password)));
         call.enqueue(new Callback<Session>() {
             @Override
             public void onResponse(Call<Session> call, Response<Session> response) {
