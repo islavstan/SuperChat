@@ -11,4 +11,6 @@
     <color name="colorCardBackground">#327780</color>
     <color name="colorSignUpButton">#165258</color>
     <color name="colorSignInButton">#004951</color>
+    <color name="grey">#BDBDBD</color>
+
 </resources>

@@ -26,6 +26,7 @@
     <string name="fill_fields">Please fill fields</string>
     <string name="empty_email_error">Please, fill your email</string>
     <string name="empty_password_error">Please, fill in password</string>
+    <string name="change_password_hint">Email Address</string>
 
 
     <!--FACEBOOK-->

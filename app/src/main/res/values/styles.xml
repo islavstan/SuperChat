@@ -33,4 +33,9 @@
         <item name="colorControlActivated">@color/colorWhite</item>
     </style>
 
+
+    <style name="editTextThemeForForgotPassword">
+        <item name="colorAccent">@color/grey</item>
+    </style>
+
 </resources>

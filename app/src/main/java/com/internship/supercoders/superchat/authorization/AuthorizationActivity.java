@@ -1,14 +1,18 @@
 package com.internship.supercoders.superchat.authorization;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -191,8 +195,25 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
 
     @OnClick(R.id.forgot_password)
     @Override
-    public void showChangePasswordDialog(){
-        authPresenter.changePassword();
+    public void showChangePasswordDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_change_password, null);
+        dialogBuilder.setView(dialogView);
+        final EditText edt = (EditText) dialogView.findViewById(R.id.emailET);
+        dialogBuilder.setTitle("Restore Password");
+        dialogBuilder.setPositiveButton("Send", (dialog, whichButton) -> authPresenter.changePassword());
+        dialogBuilder.setNegativeButton("Cancel", (dialog, whichButton) -> {
+            //pass
+        });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+        Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        button.setTextColor(getResources().getColor(R.color.colorPrimary));
+        Button button2 = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        button2.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+
     }
 
     @OnClick(R.id.btn_sign_in)
