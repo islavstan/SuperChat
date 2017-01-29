@@ -3,7 +3,6 @@ package com.internship.supercoders.superchat.authorization;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -72,6 +71,9 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        String token = intent.getStringExtra("token");
+        Log.i(AppConsts.LOG_TAG, "Session token " + token);
 
         viewUtils = new ViewUtils(this);
         authPresenter = new AuthPresenter(this);

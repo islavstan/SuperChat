@@ -1,7 +1,5 @@
 package com.internship.supercoders.superchat.splashScreen;
 
-import android.content.Context;
-
 /**
  * Created by Max on 17.01.2017.
  */
@@ -16,4 +14,6 @@ public interface SplashScreenInteractor {
     }
 
     void userAuthorization(String email, String password, UserAuthorizationFinishedListener listener);
+
+    void authorization(UserAuthorizationFinishedListener authorizationListener);
 }

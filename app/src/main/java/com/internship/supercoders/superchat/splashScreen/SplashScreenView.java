@@ -1,6 +1,7 @@
 package com.internship.supercoders.superchat.splashScreen;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
 
@@ -9,9 +10,9 @@ import com.internship.supercoders.superchat.models.user_authorization_response.L
  */
 
 public interface SplashScreenView {
-    void navigateToMainScreen(String token);
+    void navigateToMainScreen(@Nullable String token);
 
-    void navigateToAuthorScreen();
+    void navigateToAuthorScreen(@Nullable String token);
 
     boolean isAuth();
 

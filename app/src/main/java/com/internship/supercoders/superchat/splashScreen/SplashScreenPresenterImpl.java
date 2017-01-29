@@ -9,7 +9,7 @@ import com.internship.supercoders.superchat.utils.InternetConnection;
 public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashScreenInteractor.UserAuthorizationFinishedListener {
     private SplashScreenView splashScreenView;
     private SplashScreenInteractor splashScreenInteractor;
-    private String token = null;
+    private volatile String token = null;
     private boolean authorize = false;
 
     SplashScreenPresenterImpl(SplashScreenView view) {
@@ -41,11 +41,10 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                     splashScreenView.navigateToMainScreen(token);
                 } else {
                     Log.i("Splash", "ToAuth");
-                    splashScreenView.navigateToAuthorScreen();
+                    splashScreenView.navigateToAuthorScreen(token);
                 }
                 splashScreenView.finish();
             }
-
         };
         sleepThread.start();
         authorize = splashScreenView.isAuth();
@@ -54,16 +53,20 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
             user = splashScreenView.getLogAndPas();
             Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
             splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword(), this);
+        } else {
+            splashScreenInteractor.authorization(this);
         }
     }
 
     @Override
     public void onError() {
         authorize = false;
+        Log.i("Splash", "Error");
     }
 
     @Override
     public void onSuccess(String token) {
         this.token = token;
+        Log.i("Splash", "token: " + token);
     }
 }

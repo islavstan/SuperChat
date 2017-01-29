@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -33,15 +34,16 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
     }
 
     @Override
-    public void navigateToMainScreen(String token) {
+    public void navigateToMainScreen(@Nullable String token) {
         Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
         intent.putExtra("token", token);
         startActivity(intent);
     }
 
     @Override
-    public void navigateToAuthorScreen() {
+    public void navigateToAuthorScreen(@Nullable String token) {
         Intent intent = new Intent(SplashScreenActivity.this, AuthorizationActivity.class);
+        intent.putExtra("token", token);
         startActivity(intent);
     }
 
