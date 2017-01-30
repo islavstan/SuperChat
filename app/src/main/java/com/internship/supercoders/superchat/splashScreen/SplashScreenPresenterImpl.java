@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.splashScreen;
 
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,11 +37,15 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                Handler mainHandler = new Handler(splashScreenView.getContext().getMainLooper());
+                mainHandler.post(() -> splashScreenView.fadeIn());
                 if (authorize) {
                     Log.i("Splash", "ToMainScreen");
+                    //splashScreenView.fadeIn();
                     splashScreenView.navigateToMainScreen(token);
                 } else {
                     Log.i("Splash", "ToAuth");
+                    //splashScreenView.fadeIn();
                     splashScreenView.navigateToAuthorScreen(token);
                 }
                 splashScreenView.finish();

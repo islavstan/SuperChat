@@ -6,8 +6,10 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.internship.supercoders.superchat.AnimateElement;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
@@ -20,6 +22,7 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
     private static final String TAG = "SplashScreenActivity";
     private SplashScreenPresenterImpl presenter;
     private UserPreferences preferences;
+    private RelativeLayout rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,5 +72,13 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
         super.onDestroy();
         presenter.unsubscribe();
         preferences = null;
+    }
+
+    @Override
+    public void fadeIn() {
+        rootView = (RelativeLayout) findViewById(R.id.activity_splash_screen);
+//        rootView.clearAnimation();
+//        rootView.startAnimation(a);
+        AnimateElement.run(this, rootView, R.anim.fadein);
     }
 }

@@ -27,4 +27,6 @@ public interface SplashScreenView {
 
     // TODO: 1/30/17 [Code Review] leave some comment what this method is used for
     void finish();
+
+    void fadeIn();
 }

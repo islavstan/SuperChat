@@ -1,17 +1,15 @@
 package com.internship.supercoders.superchat.registration;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,13 +22,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
@@ -38,12 +31,6 @@ import com.internship.supercoders.superchat.utils.InternetConnection;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.squareup.picasso.Picasso;
 import com.vicmikhailau.maskededittext.MaskedEditText;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import id.zelory.compressor.Compressor;
-import io.fabric.sdk.android.Fabric;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -55,16 +42,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
+import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func3;
 import rx.subscriptions.CompositeSubscription;
-
-import static android.R.attr.thumbnail;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationView {
     private EditText emailET, passwordET, confPassET, fullnameET, websiteET;
