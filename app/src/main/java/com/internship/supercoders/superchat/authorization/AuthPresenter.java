@@ -31,7 +31,7 @@ public class AuthPresenter implements AuthContract.Presenter {
 
     @Override
     public void onDestroy() {
-
+        // TODO: 1/30/17 [Code Review] Nullify view instance here!
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.io.File;
 
 public class RegistrationPresenterImpl implements RegistrationPresenter,RegistrationInteractor.RegistrationFinishedListener{
 
+    // TODO: 1/30/17 [Code Review] context is redundant
     Context context;
    private RegistrationView registrationView;
     private RegistrationInteractor regInteractor;
@@ -58,7 +59,7 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
 
     @Override
     public void onDestroy() {
-
+        // TODO: 1/30/17 [Code Review] nullify view reference here
     }
 
     @Override

@@ -77,6 +77,8 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
 
         viewUtils = new ViewUtils(this);
         authPresenter = new AuthPresenter(this);
+
+        // TODO: 1/30/17 [Code Review] You should use this instance in Presenter layer
         userPreferences = new UserPreferences(this);
 
 //        viewUtils.hideKeyboard();
@@ -198,11 +200,14 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     @OnClick(R.id.forgot_password)
     @Override
     public void showChangePasswordDialog() {
+        // TODO: 1/30/17 [Code Review] Make separate Fragment (extend from DialogFragment)
+        // and make its own MVP layer
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_change_password, null);
         dialogBuilder.setView(dialogView);
         final EditText edt = (EditText) dialogView.findViewById(R.id.emailET);
+        // TODO: 1/30/17 [Code Review] Do not hardcode strings
         dialogBuilder.setTitle("Restore Password");
         dialogBuilder.setPositiveButton("Send", (dialog, whichButton) -> authPresenter.changePassword());
         dialogBuilder.setNegativeButton("Cancel", (dialog, whichButton) -> {
@@ -221,6 +226,8 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     @OnClick(R.id.btn_sign_in)
     @Override
     public void onBtnSignIn() {
+        // TODO: 1/30/17 [Code Review] This is a part of business logic, move it to interactors/model layer
+        // all the validation should not be here
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
         LogAndPas logAndPas = new LogAndPas(email, password);
@@ -249,6 +256,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
 
     @Override
     public void writeUserAuthDataToDB(LogAndPas logAndPas) {
+        // TODO: 1/30/17 [Code Review] NNNNNOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!
         DBMethods db = new DBMethods(this);
 
         db.readFromDB();
@@ -264,7 +272,10 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
 
     @Override
     public boolean isEmailValid(String email) {
-
+        // TODO: 1/30/17 [Code Review] Due to method name, it shall only return true or false if email is valid
+        // (why is this logic in View layer???), but this one also sets error messages. This is wrong.
+        // setting error strings = View layer
+        // validation = model/interactor layer
         if (TextUtils.isEmpty(email)) {
             ilEmail.setError(getString(R.string.empty_email_error));
             return false;
@@ -290,6 +301,8 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     }
 
     @Override
+    // TODO: 1/30/17 [Code Review] Try to get rid of passing context instance to presenter, Presenter
+    // layer should know nothing about Android SDK.
     public Context getContext() {
         return this;
     }

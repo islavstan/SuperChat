@@ -28,10 +28,13 @@ public interface AuthContract {
 
         void setBlankFields();
 
+        // TODO: 1/30/17 [Code Review] It is not obvious what this method really does, please rename
         void authorization();
 
+        // TODO: 1/30/17 [Code Review] It is not obvious what this method really does, please rename
         void authorizationError();
 
+        // TODO: 1/30/17 [Code Review] It is not obvious what this method really does, please rename
         void keepMeSignedIn();
 
         void openRecoveryPasswordDialog();
@@ -40,12 +43,15 @@ public interface AuthContract {
 
         void onBtnSignUp();
 
+        // TODO: 1/30/17 [Code Review] This is a part of business logic, move it to interactors/model layer
         void writeUserAuthDataToDB(LogAndPas logAndPas);
 
         void navigateToLogin(String token);
 
+        // TODO: 1/30/17 [Code Review] This is a part of business logic, move it to interactors/model layer
         boolean isEmailValid(String email);
 
+        // TODO: 1/30/17 [Code Review] This is a part of business logic, move it to interactors/model layer
         boolean isPasswordValid(String password);
 
         Context getContext();

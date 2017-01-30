@@ -60,6 +60,7 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func3;
 import rx.subscriptions.CompositeSubscription;
 
@@ -135,6 +136,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
         );
 
+        // TODO: 1/30/17 [Code Review] the code below is a part of business logic, should not be here
         Observable<CharSequence> emailChangeObservable = RxTextView.textChanges(emailET);
         Observable<CharSequence> passwordChangeObservable = RxTextView.textChanges(passwordET);
         Observable<CharSequence> confirmPassChangeObservable = RxTextView.textChanges(confPassET);
@@ -143,6 +145,11 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> !TextUtils.isEmpty(charSequence))
                 .observeOn(AndroidSchedulers.mainThread())
+                // TODO: 1/30/17 [Code Review] as far as u don't use onCompleted and onError method callbacks,
+                // you can use the code commented below as well
+//                .subscribe(charSequence -> {
+//                    // do whatever u want with the string
+//                });
                 .subscribe(new Subscriber<CharSequence>() {
                     @Override
                     public void onCompleted() {
@@ -272,6 +279,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
 
         signupBtn.setOnClickListener(view -> {
+            // TODO: 1/30/17 [Code Review] part of business logic
             if (InternetConnection.hasConnection(this)) {
 
 
@@ -401,6 +409,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public boolean validatePassword(String password) {
+        // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
         if (TextUtils.isEmpty(password))
             return false;
         final Pattern pattern = Pattern.compile("^(?=.{8,12}$)(?=(.*[A-Z]){2})(?=(.*[a-z]){0,})(?=(.*[0-9]){2})(?=\\S+$).*$");
@@ -410,6 +419,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public boolean validateEmail(String email) {
+        // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
         if (TextUtils.isEmpty(email))
             return false;
         matcher = pattern.matcher(email);
@@ -497,6 +507,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
+                // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
                 selectedImageUri = data.getData();
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
                 actualImage = new File(getRealPathFromURI(this, selectedImageUri));
@@ -507,6 +518,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
             }
             if (requestCode == REQUEST_CAMERA) {
+                // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
                 Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 thumbnail.compress(Bitmap.CompressFormat.PNG, 0, bytes);

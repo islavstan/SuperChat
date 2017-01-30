@@ -19,6 +19,9 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+// TODO: 1/30/17 [Code Review] Move 'QuickBlox-REST-API-Version' header to basic client initialization,
+// seems like it is the same for all API calls. Also use Retrofit's Authenticator/Interceptor interfaces
+// to provide token for requests. https://futurestud.io/tutorials/retrofit-token-authentication-on-android
 public interface Points {
 
     interface AuthorizationPoint {
