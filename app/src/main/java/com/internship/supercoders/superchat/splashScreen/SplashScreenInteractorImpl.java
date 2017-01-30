@@ -4,11 +4,13 @@ import android.util.Log;
 
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.ApiConstant;
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
 import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
+import com.internship.supercoders.superchat.utils.UserPreferences;
 
 import org.json.JSONObject;
 
@@ -29,6 +31,13 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
 //    private String ts = tsLong.toString();
 //    private int randomId = new Random().nextInt();
     private String signature;
+    private DBMethods dbManager;
+    private UserPreferences userPreferences;
+
+    public SplashScreenInteractorImpl(DBMethods dbManager, UserPreferences userPreferences) {
+        this.dbManager = dbManager;
+        this.userPreferences = userPreferences;
+    }
 
     @Override
     public void userAuthorization(String email, String password, UserAuthorizationFinishedListener authorizationListener) {
@@ -125,6 +134,16 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
 
             }
         });
+    }
+
+    @Override
+    public boolean isAuth() {
+        return userPreferences.isUserSignedIn();
+    }
+
+    @Override
+    public LogAndPas getUserInfo() {
+        return dbManager.getAuthData();
     }
 }
     

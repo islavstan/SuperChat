@@ -1,11 +1,12 @@
 package com.internship.supercoders.superchat.splashScreen;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,14 +15,12 @@ import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
 import com.internship.supercoders.superchat.db.DBMethods;
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
 import com.internship.supercoders.superchat.utils.UserPreferences;
 
 public class SplashScreenActivity extends AppCompatActivity implements SplashScreenView {
 
     private static final String TAG = "SplashScreenActivity";
     private SplashScreenPresenterImpl presenter;
-    private UserPreferences preferences;
     private RelativeLayout rootView;
 
     @Override
@@ -31,7 +30,8 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
         TextView tvLogoLabel = (TextView) findViewById(R.id.tv_logo_label);
         Typeface font = Typeface.createFromAsset(getAssets(), "font/FortuneCity.ttf");
         tvLogoLabel.setTypeface(font);
-        presenter = new SplashScreenPresenterImpl(this);
+        presenter = new SplashScreenPresenterImpl(this, new DBMethods(this), new UserPreferences(this));
+
         presenter.sleep(3000);
 
     }
@@ -51,34 +51,20 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
     }
 
     @Override
-    public boolean isAuth() {
-        preferences = new UserPreferences(this);
-        return preferences.isUserSignedIn();
-    }
-
-    @Override
-    public LogAndPas getLogAndPas() {
-        DBMethods db = new DBMethods(this);
-        return db.getAuthData();
-    }
-
-    @Override
-    public Context getContext() {
-        return this;
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i("Splash Activity", "Call OnDestroy()");
         presenter.unsubscribe();
-        preferences = null;
     }
 
     @Override
     public void fadeIn() {
         rootView = (RelativeLayout) findViewById(R.id.activity_splash_screen);
-//        rootView.clearAnimation();
-//        rootView.startAnimation(a);
         AnimateElement.run(this, rootView, R.anim.fadein);
+    }
+
+    @Override
+    public Handler createUiHandler() {
+        return new Handler(this.getMainLooper());
     }
 }
