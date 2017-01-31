@@ -93,4 +93,11 @@ public class DBMethods {
         }
         readFromDB();
     }
+
+    public String getToken() {
+        Cursor c = db.query(dbInfo.authTableName, null, null, null, null, null, null);
+        c.moveToFirst();
+        return c.getString(c.getColumnIndex(dbInfo.tokenRow));
+    }
+
 }
