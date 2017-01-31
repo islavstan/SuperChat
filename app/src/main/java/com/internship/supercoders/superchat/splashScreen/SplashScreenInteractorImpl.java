@@ -142,7 +142,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
     }
 
     @Override
-    public LogAndPas getUserInfo() {
+    public VerificationData getUserInfo() {
         return dbManager.getAuthData();
     }
 }
