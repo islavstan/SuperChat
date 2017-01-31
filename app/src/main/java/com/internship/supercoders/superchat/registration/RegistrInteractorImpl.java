@@ -35,6 +35,7 @@ import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,6 +48,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -211,7 +213,13 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("stas", "registration error = " + jObjError.getString("errors"));
-                        listener.onErrorWithToken(token, jObjError.getString("errors"));
+
+                        String jError = jObjError.getString("errors");
+                        String error = jError.replaceAll("[{\"}]", "").replace("[", "").replace("]", "").replace(":"," : ");
+
+                        Log.d("stas", "new error = " + error);
+
+                        listener.onErrorWithToken(token, error);
                     } catch (Exception e) {
                         Log.d("stas", e.getMessage());
                     }
