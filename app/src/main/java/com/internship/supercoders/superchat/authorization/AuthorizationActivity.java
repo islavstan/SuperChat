@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.internship.supercoders.superchat.AnimateElement;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
@@ -74,6 +75,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
+        AnimateElement.run(this, relativeLayout, R.anim.fadeout);
         Intent intent = getIntent();
          token = intent.getStringExtra("token");
         Log.i(AppConsts.LOG_TAG, "Session token " + token);

@@ -1,20 +1,21 @@
 package com.internship.supercoders.superchat.splashScreen;
 
+import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
-import com.internship.supercoders.superchat.utils.InternetConnection;
+import com.internship.supercoders.superchat.db.DBMethods;
+import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.utils.UserPreferences;
 
 public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashScreenInteractor.UserAuthorizationFinishedListener {
     private SplashScreenView splashScreenView;
     private SplashScreenInteractor splashScreenInteractor;
     private volatile String token = null;
-    private boolean authorize = false;
+    private boolean isAuthorize = false;
 
-    SplashScreenPresenterImpl(SplashScreenView view) {
+    SplashScreenPresenterImpl(SplashScreenView view, DBMethods dbManager, UserPreferences userPreferences) {
         this.splashScreenView = view;
-        this.splashScreenInteractor = new SplashScreenInteractorImpl();
+        this.splashScreenInteractor = new SplashScreenInteractorImpl(dbManager, userPreferences);
     }
 
     @Override
@@ -25,10 +26,6 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
 
     @Override
     public void sleep(final long milliseconds) {
-        if (InternetConnection.hasConnection(splashScreenView.getContext())) {
-            Toast.makeText(splashScreenView.getContext(), "Online", Toast.LENGTH_LONG).show();
-        } else
-            Toast.makeText(splashScreenView.getContext(), "Offline", Toast.LENGTH_LONG).show();
         Thread sleepThread = new Thread() {
             public void run() {
                 try {
@@ -36,21 +33,24 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (authorize) {
+                Handler mainHandler = splashScreenView.createUiHandler();
+                mainHandler.post(() -> splashScreenView.fadeIn());
+                if (isAuthorize) {
                     Log.i("Splash", "ToMainScreen");
                     splashScreenView.navigateToMainScreen(token);
                 } else {
                     Log.i("Splash", "ToAuth");
                     splashScreenView.navigateToAuthorScreen(token);
                 }
+                Log.i("Splash Presenter", "Call finish");
                 splashScreenView.finish();
             }
         };
         sleepThread.start();
-        authorize = splashScreenView.isAuth();
-        if (authorize) {
-            VerificationData user;
-            user = splashScreenView.getLogAndPas();
+        isAuthorize = splashScreenInteractor.isAuth();
+        if (isAuthorize) {
+            LogAndPas user;
+            user = splashScreenInteractor.getUserInfo();
             Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
             splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword(), this);
         } else {
@@ -60,7 +60,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
 
     @Override
     public void onError() {
-        authorize = false;
+        isAuthorize = false;
         Log.i("Splash", "Error");
     }
 

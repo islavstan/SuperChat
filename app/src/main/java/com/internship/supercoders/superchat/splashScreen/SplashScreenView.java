@@ -1,9 +1,7 @@
 package com.internship.supercoders.superchat.splashScreen;
 
-import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-
-import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 /**
  * Created by Max on 17.01.2017.
@@ -16,15 +14,10 @@ public interface SplashScreenView {
     // TODO: 1/30/17 [Code Review] the same as above
     void navigateToAuthorScreen(@Nullable String token);
 
-    // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
-    boolean isAuth();
+    void finish(); //Presenter call onDestroy method in activity
 
-    // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
-    VerificationData getLogAndPas();
+    void fadeIn();
 
-    // TODO: 1/30/17 [Code Review] prevent using this
-    Context getContext();
+    Handler createUiHandler();
 
-    // TODO: 1/30/17 [Code Review] leave some comment what this method is used for
-    void finish();
 }
