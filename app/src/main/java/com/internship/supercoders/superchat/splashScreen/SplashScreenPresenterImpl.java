@@ -3,7 +3,7 @@ package com.internship.supercoders.superchat.splashScreen;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.utils.InternetConnection;
 
 public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashScreenInteractor.UserAuthorizationFinishedListener {
@@ -49,7 +49,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
         sleepThread.start();
         authorize = splashScreenView.isAuth();
         if (authorize) {
-            LogAndPas user;
+            VerificationData user;
             user = splashScreenView.getLogAndPas();
             Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
             splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword(), this);

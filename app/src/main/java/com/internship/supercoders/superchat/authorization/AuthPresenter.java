@@ -1,8 +1,6 @@
 package com.internship.supercoders.superchat.authorization;
 
-import android.app.AlertDialog;
-
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 /**
  * Created by RON on 21.01.2017.
@@ -40,7 +38,7 @@ public class AuthPresenter implements AuthContract.Presenter {
     }
 
     @Override
-    public void validateData(LogAndPas logAndPas) {
+    public void validateData(VerificationData verificationData) {
         view.showProgress();
     }
 }

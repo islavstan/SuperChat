@@ -1,7 +1,6 @@
 package com.internship.supercoders.superchat;
 
 import com.internship.supercoders.superchat.registration.RegistrInteractorImpl;
-import com.internship.supercoders.superchat.registration.RegistrationInteractor;
 import com.internship.supercoders.superchat.registration.RegistrationPresenterImpl;
 import com.internship.supercoders.superchat.registration.RegistrationView;
 
@@ -13,8 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -32,7 +29,7 @@ public class RegistrationPresenterTest {
     @Test
     public void errorTest() throws Exception {
         registrationPresenter.onError();
-        verify(view).registrationError();
+        verify(view).showRegistrationError();
 
     }
 

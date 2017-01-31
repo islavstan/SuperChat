@@ -2,6 +2,11 @@ package com.internship.supercoders.superchat.registration;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.facebook.CallbackManager;
 import com.facebook.login.widget.LoginButton;
@@ -10,15 +15,32 @@ import java.io.File;
 
 public interface RegistrationInteractor {
 
+
     interface RegistrationFinishedListener {
 
         void onError();
 
+        void onErrorWithToken(String token, String error);
+
         void onSuccess(String token);
 
-        void  onSuccessFacebookLogin(String id);
+        void onSuccessFacebookLogin(String id);
 
-        Context getContext();
+        void hideError(int item);
+
+        void showPasswordLengthError(int layout);
+
+        void showPasswordError(int layout);
+
+        void showEmailError();
+
+        void enableSignUp();
+
+        void disableSignUp();
+
+        void setPhotoFromCamera(File photoFile, Bitmap photoBitmap);
+
+        void showConfirmPasswordError();
 
     }
 
@@ -27,7 +49,7 @@ public interface RegistrationInteractor {
 
     void registration(File file, String token, String email, String password, String fullname, String phone, String website, String facebookId, RegistrationFinishedListener listener);
 
-    void authorization(File file, String email, String password, String fullname, String phone, String website, String facebookId, RegistrationFinishedListener listener);
+    void authorization(String token, File file, String email, String password, String fullname, String phone, String website, String facebookId, RegistrationFinishedListener listener);
 
     void createFile(File file, String token, RegistrationFinishedListener listener);
 
@@ -39,4 +61,18 @@ public interface RegistrationInteractor {
             , String x_amz_credential, String x_amz_date, String x_amz_signature, File file);
 
     void declaringFileUploaded(String image_id, String token, File file, RegistrationFinishedListener listener);
+
+    void validateUserInfo(EditText emailET, EditText passwordET, EditText confPassET, Button signupBtn, RegistrationFinishedListener listener);
+
+    boolean validatePassword(String password);
+
+    boolean validateEmail(String email);
+
+    void unsubscribe();
+
+    void makePhotoFromCamera(Intent data, File dir, RegistrationFinishedListener listener);
+
+
 }
+
+

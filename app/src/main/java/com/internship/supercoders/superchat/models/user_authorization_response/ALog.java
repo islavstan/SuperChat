@@ -15,14 +15,14 @@ public class ALog {
     @SerializedName("signature")
     String signature;
     @SerializedName("user")
-    LogAndPas LogAndPas;
+    VerificationData VerificationData;
 
-    public ALog(String appId, String auth_key, String timestamp, String nonce,String signature, LogAndPas LogAndPas ) {
+    public ALog(String appId, String auth_key, String timestamp, String nonce,String signature, VerificationData VerificationData) {
         this.appId = appId;
         this.auth_key = auth_key;
         this.timestamp = timestamp;
         this.nonce = nonce;
-        this.LogAndPas = LogAndPas;
+        this.VerificationData = VerificationData;
         this.signature = signature;
     }
 }

@@ -6,7 +6,7 @@ import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 
@@ -46,7 +46,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
             e.printStackTrace();
         }
         final Points.UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(Points.UserAuthorizatoinPoint.class);
-        Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.TS, Integer.toString(ApiConstant.RANDOM_ID), signature, new LogAndPas(email, password)));
+        Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.TS, Integer.toString(ApiConstant.RANDOM_ID), signature, new VerificationData(email, password)));
         call.enqueue(new Callback<Session>() {
             @Override
             public void onResponse(Call<Session> call, Response<Session> response) {

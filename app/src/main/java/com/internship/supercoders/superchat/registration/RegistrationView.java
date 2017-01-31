@@ -2,6 +2,7 @@ package com.internship.supercoders.superchat.registration;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import java.io.File;
 
@@ -13,14 +14,15 @@ public interface RegistrationView {
 
     void navigateToLogin(String token);
 
-    void registration(File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId);
+    void registration(String token, File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId);
 
-    void registrationError();
+    void showRegistrationError();
 
     void openImageChooser();
 
     void changeFacebookBtnText(String facebookId);
 
+    void showRegistrationErrorWithToken(String token, String error);
 
     Context getContext();
 
@@ -35,20 +37,19 @@ public interface RegistrationView {
 
     void showEmailError();
 
-    boolean validatePassword(String password);
-
-    boolean validateEmail(String email);
-
     void enableSignUp();
 
     void disableSignUp();
 
-    void dialogForCameraOrGallery();
+    void showDialogForCameraOrGallery();
 
-    void cameraIntent();
+    void openCamera();
+
+    void setPhotoFromCamera(File photoFile, Bitmap photoBitmap);
 
     void showInternetConnectionError();
 
 }
+
 
 

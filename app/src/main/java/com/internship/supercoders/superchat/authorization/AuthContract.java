@@ -2,7 +2,7 @@ package com.internship.supercoders.superchat.authorization;
 
 import android.content.Context;
 
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 /**
  * Created by RON on 21.01.2017.
@@ -44,7 +44,7 @@ public interface AuthContract {
         void onBtnSignUp();
 
         // TODO: 1/30/17 [Code Review] This is a part of business logic, move it to interactors/model layer
-        void writeUserAuthDataToDB(LogAndPas logAndPas);
+        void writeUserAuthDataToDB(VerificationData verificationData);
 
         void navigateToLogin(String token);
 
@@ -66,7 +66,7 @@ public interface AuthContract {
         void onDestroy();
         void changePassword();
 
-        void validateData(LogAndPas logAndPas);
+        void validateData(VerificationData verificationData);
     }
 
 }

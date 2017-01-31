@@ -1,10 +1,18 @@
 package com.internship.supercoders.superchat.registration;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -21,15 +29,19 @@ import com.internship.supercoders.superchat.models.blob.BlobData;
 import com.internship.supercoders.superchat.models.registration_request.ReqUser;
 import com.internship.supercoders.superchat.models.registration_request.ReqUserData;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
+import com.jakewharton.rxbinding.widget.RxTextView;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -38,6 +50,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -45,76 +60,90 @@ import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func3;
+import rx.subscriptions.CompositeSubscription;
 
 public class RegistrInteractorImpl implements RegistrationInteractor {
-   /* private Long tsLong = System.currentTimeMillis() / 1000;
-    private String ts = tsLong.toString();
-    private int randomId = new Random().nextInt();
+    /* private Long tsLong = System.currentTimeMillis() / 1000;
+     private String ts = tsLong.toString();
+     private int randomId = new Random().nextInt();
+     private String signature;
+     final String application_id = "52262";
+     final String auth_key = "Mer3vGU4AOrw2zc";*/
     private String signature;
-    final String application_id = "52262";
-    final String auth_key = "Mer3vGU4AOrw2zc";*/
-   private String signature;
+    Matcher matcher;
+    private Pattern pattern = android.util.Patterns.EMAIL_ADDRESS;
+    CompositeSubscription compositeSubscription;
 
     public RegistrInteractorImpl() {
 
+        compositeSubscription = new CompositeSubscription();
     }
 
     @Override
-    public void authorization(final File file, final String email, final String password, final String fullname, final String phone, final String website, String facebookId, final RegistrationFinishedListener listener) {
-        String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
-                ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.RANDOM_ID, ApiConstant.TS);
-        try {
-            signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, ApiConstant.AUTH_SECRET);
+    public void authorization(String token, final File file, final String email, final String password, final String fullname, final String phone, final String website, String facebookId, final RegistrationFinishedListener listener) {
+        if (token != null) {
+            registration(file, token, email, password, fullname, phone, website, facebookId, listener);
+        } else {
+
+
+            String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
+                    ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.RANDOM_ID, ApiConstant.TS);
+            try {
+                signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, ApiConstant.AUTH_SECRET);
 //            Log.d("stas", "signat = " + signature);
-        } catch (SignatureException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
+            } catch (SignatureException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            }
 
 
-        final Points.AuthorizationPoint apiService = ApiClient.getRetrofit().create(Points.AuthorizationPoint.class);
-        Map<String, String> params = new HashMap<>();
-        params.put("application_id",  ApiConstant.APPLICATION_ID);
-        params.put("auth_key", ApiConstant.AUTH_KEY);
-        params.put("timestamp", ApiConstant.TS);
-        Log.d("stas", ApiConstant.TS);
-        params.put("nonce", Integer.toString(ApiConstant.RANDOM_ID));
-        Log.d("stas", ApiConstant.RANDOM_ID + "");
-        params.put("signature", signature);
-        Log.d("stas", signature);
-        Call<Session> call = apiService.getSession(params);
-        call.enqueue(new Callback<Session>() {
-            @Override
-            public void onResponse(Call<Session> call, Response<Session> response) {
-                if (response.isSuccessful()) {
-                    Session session = response.body();
-                    String token = session.getData().getToken();
-                    Log.d("stas", "token = " + token);
+            final Points.AuthorizationPoint apiService = ApiClient.getRetrofit().create(Points.AuthorizationPoint.class);
+            Map<String, String> params = new HashMap<>();
+            params.put("application_id", ApiConstant.APPLICATION_ID);
+            params.put("auth_key", ApiConstant.AUTH_KEY);
+            params.put("timestamp", ApiConstant.TS);
+            Log.d("stas", ApiConstant.TS);
+            params.put("nonce", Integer.toString(ApiConstant.RANDOM_ID));
+            Log.d("stas", ApiConstant.RANDOM_ID + "");
+            params.put("signature", signature);
+            Log.d("stas", signature);
+            Call<Session> call = apiService.getSession(params);
+            call.enqueue(new Callback<Session>() {
+                @Override
+                public void onResponse(Call<Session> call, Response<Session> response) {
+                    if (response.isSuccessful()) {
+                        Session session = response.body();
+                        String token = session.getData().getToken();
+                        Log.d("stas", "token = " + token);
 
 
-                    registration(file, token, email, password, fullname, phone, website, facebookId, listener);
+                        registration(file, token, email, password, fullname, phone, website, facebookId, listener);
 
-                } else {
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        // Log.d("stas", "authorization error = " + jObjError.getString("errors"));
-                        listener.onError();
-                    } catch (Exception e) {
-                        // Log.d("stas", e.getMessage());
+                    } else {
+                        try {
+                            JSONObject jObjError = new JSONObject(response.errorBody().string());
+                            // Log.d("stas", "authorization error = " + jObjError.getString("errors"));
+                            listener.onError();
+                        } catch (Exception e) {
+                            // Log.d("stas", e.getMessage());
+                        }
+
                     }
+                }
+
+                @Override
+                public void onFailure(Call<Session> call, Throwable t) {
 
                 }
-            }
-
-            @Override
-            public void onFailure(Call<Session> call, Throwable t) {
-
-            }
-        });
-
+            });
+        }
 
     }
 
@@ -133,7 +162,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                         (object, response) -> {
 
                             try {
-                              String facebookId = object.getString("id");
+                                String facebookId = object.getString("id");
                                 listener.onSuccessFacebookLogin(facebookId);
                                 Log.d("stas", "id = " + facebookId);
                             } catch (JSONException e) {
@@ -163,16 +192,6 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     @Override
     public void registration(final File file, final String token, final String email, final String password, String fullname, String phone, String website, String facebookId, final RegistrationFinishedListener listener) {
 
@@ -192,7 +211,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("stas", "registration error = " + jObjError.getString("errors"));
-                        listener.onError();
+                        listener.onErrorWithToken(token, jObjError.getString("errors"));
                     } catch (Exception e) {
                         Log.d("stas", e.getMessage());
                     }
@@ -293,7 +312,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             e.printStackTrace();
         }
         final Points.UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(Points.UserAuthorizatoinPoint.class);
-        Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(  ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY,  ApiConstant.TS, Integer.toString(ApiConstant.RANDOM_ID), signature, new LogAndPas(email, password)));
+        Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.TS, Integer.toString(ApiConstant.RANDOM_ID), signature, new VerificationData(email, password)));
         call.enqueue(new Callback<Session>() {
             @Override
             public void onResponse(Call<Session> call, Response<Session> response) {
@@ -327,7 +346,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     @Override
     public void signIn(final File file, final String token, String email, String password, final RegistrationFinishedListener listener) {
         final Points.SignInPoint apiSignIn = ApiClient.getRetrofit().create(Points.SignInPoint.class);
-        Call<Objects> call = apiSignIn.signIn("application/json", "0.1.0", token, new LogAndPas(email, password));
+        Call<Objects> call = apiSignIn.signIn("application/json", "0.1.0", token, new VerificationData(email, password));
         call.enqueue(new Callback<Objects>() {
             @Override
             public void onResponse(Call<Objects> call, Response<Objects> response) {
@@ -437,6 +456,151 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
 
     }
+
+    @Override
+    public void validateUserInfo(EditText emailET, EditText passwordET, EditText confPassET, Button signupBtn, RegistrationFinishedListener listener) {
+
+        Observable<CharSequence> emailChangeObservable = RxTextView.textChanges(emailET);
+        Observable<CharSequence> passwordChangeObservable = RxTextView.textChanges(passwordET);
+        Observable<CharSequence> confirmPassChangeObservable = RxTextView.textChanges(confPassET);
+
+        Subscription confirmPasswordSubscrioption = confirmPassChangeObservable.doOnNext(next -> listener.hideError(4))
+                .debounce(400, TimeUnit.MILLISECONDS)
+                .filter(charSequence -> !TextUtils.isEmpty(charSequence))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(charSequence -> {
+
+                    boolean isPasswordValid = validatePassword(charSequence.toString());
+                    if (charSequence.toString().length() < 8) {
+                        listener.showPasswordLengthError(2);
+                    } else if (!isPasswordValid) {
+                        listener.showPasswordError(2);
+                    } else if (!charSequence.toString().equals(passwordET.getText().toString())) {
+                        listener.showConfirmPasswordError();
+                    } else {
+                        listener.hideError(4);
+                    }
+                });
+
+        Subscription passwordSubscrioption = passwordChangeObservable.doOnNext(next -> listener.hideError(2))
+                .debounce(400, TimeUnit.MILLISECONDS)
+                .filter(charSequence -> !TextUtils.isEmpty(charSequence))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(charSequence -> {
+                    boolean isPasswordValid = validatePassword(charSequence.toString());
+                    if (charSequence.toString().length() < 8) {
+                        listener.showPasswordLengthError(1);
+                    } else if (!isPasswordValid) {
+                        listener.showPasswordError(1);
+                    } else {
+                        listener.hideError(2);
+                    }
+
+
+                });
+
+        Subscription emailSubscription = emailChangeObservable
+                .doOnNext(next -> listener.hideError(1))
+                .debounce(400, TimeUnit.MILLISECONDS)
+                .filter(charSequence -> !TextUtils.isEmpty(charSequence))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(charSequence -> {
+
+                    boolean isEmailValid = validateEmail(charSequence.toString());
+                    if (!isEmailValid) {
+                        listener.showEmailError();
+                    } else {
+                        listener.hideError(1);
+                    }
+
+                });
+
+
+        Subscription signInFieldsSubscription = Observable.combineLatest(emailChangeObservable, passwordChangeObservable, confirmPassChangeObservable, new Func3<CharSequence, CharSequence, CharSequence, Boolean>() {
+            @Override
+            public Boolean call(CharSequence email, CharSequence password, CharSequence confPass) {
+                boolean isEmailValid = validateEmail(email.toString());
+                boolean isPasswordLengthValid = password.toString().length() >= 8;
+                boolean isPasswordValid = validatePassword(password.toString());
+                boolean isConfirmPasswordLengthValid = confPass.toString().length() >= 8;
+                boolean isConfirmPasswordValid = validatePassword(confPass.toString());
+                boolean isSamePass = password.toString().equals(confPass.toString());
+
+
+                return isEmailValid && isPasswordLengthValid && isPasswordValid && isConfirmPasswordLengthValid && isConfirmPasswordValid && isSamePass;
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(validFields -> {
+
+                    if (validFields) {
+                        listener.enableSignUp();
+                    } else {
+                        listener.disableSignUp();
+                    }
+
+
+                });
+
+        compositeSubscription.add(confirmPasswordSubscrioption);
+        compositeSubscription.add(passwordSubscrioption);
+        compositeSubscription.add(emailSubscription);
+        compositeSubscription.add(signInFieldsSubscription);
+
+
+    }
+
+    @Override
+    public boolean validatePassword(String password) {
+        if (TextUtils.isEmpty(password))
+            return false;
+        final Pattern pattern = Pattern.compile("^(?=.{8,12}$)(?=(.*[A-Z]){2})(?=(.*[a-z]){0,})(?=(.*[0-9]){2})(?=\\S+$).*$");
+        matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+
+
+    @Override
+    public boolean validateEmail(String email) {
+        if (TextUtils.isEmpty(email))
+            return false;
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    @Override
+    public void unsubscribe() {
+        compositeSubscription.unsubscribe();
+    }
+
+    @Override
+    public void makePhotoFromCamera(Intent data, File dir, RegistrationFinishedListener listener) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.PNG, 0, bytes);
+        File destination = new File(dir,
+                System.currentTimeMillis() + ".jpg");
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.flush();
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        listener.setPhotoFromCamera(destination, thumbnail);
+
+    }
+
+
+
+
+
+
+
 }
 
 

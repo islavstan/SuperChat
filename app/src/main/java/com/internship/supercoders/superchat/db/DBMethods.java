@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.internship.supercoders.superchat.data.AppConsts;
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 /**
  * Created by RON on 21.01.2017.
@@ -27,11 +27,11 @@ public class DBMethods {
        return this.db;
     }
 
-    public void writeAuthData(LogAndPas logAndPas) {
+    public void writeAuthData(VerificationData verificationData) {
         ContentValues cv = new ContentValues();
 
-        cv.put(dbInfo.emailRow, logAndPas.getEmail());
-        cv.put(dbInfo.passRow, logAndPas.getPassword());
+        cv.put(dbInfo.emailRow, verificationData.getEmail());
+        cv.put(dbInfo.passRow, verificationData.getPassword());
 
         long rowID = db.update(dbInfo.authTableName, cv, "id = ?", new String[]{"1"});
         Log.d(AppConsts.LOG_TAG, "row updated, ID = " + rowID);
@@ -61,7 +61,7 @@ public class DBMethods {
             Log.d(AppConsts.LOG_TAG, "0 rows");
         c.close();
     }
-    public LogAndPas getAuthData(){
+    public VerificationData getAuthData(){
         String email;
         String password;
         Cursor c = db.query(dbInfo.authTableName, null, null, null, null, null, null);
@@ -69,6 +69,6 @@ public class DBMethods {
         email = c.getString(c.getColumnIndex(dbInfo.emailRow));
         password = c.getString(c.getColumnIndex(dbInfo.passRow));
         c.close();
-        return new LogAndPas(email, password);
+        return new VerificationData(email, password);
     }
 }

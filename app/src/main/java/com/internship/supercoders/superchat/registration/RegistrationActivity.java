@@ -64,6 +64,7 @@ import rx.functions.Action1;
 import rx.functions.Func3;
 import rx.subscriptions.CompositeSubscription;
 
+import static android.R.attr.theme;
 import static android.R.attr.thumbnail;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationView {
@@ -86,9 +87,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     LoginButton logBtn;
     CallbackManager callbackManager;
     String facebookId;
-    private Pattern pattern = android.util.Patterns.EMAIL_ADDRESS;
-    private Matcher matcher;
-    CompositeSubscription compositeSubscription;
     String token;
 
     @Override
@@ -103,6 +101,8 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
         callbackManager = CallbackManager.Factory.create();
         logBtn = (LoginButton) findViewById(R.id.login_button);
         facebookBtn = (Button) findViewById(R.id.link_facebook_btn);
@@ -122,7 +122,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
 
         userPhoto = (CircleImageView) findViewById(R.id.photo);
-        userPhoto.setOnClickListener(view -> dialogForCameraOrGallery());
+        userPhoto.setOnClickListener(view -> showDialogForCameraOrGallery());
 
         registrationPresenter = new RegistrationPresenterImpl(this, new RegistrInteractorImpl());
 
@@ -136,160 +136,20 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
         );
 
-        // TODO: 1/30/17 [Code Review] the code below is a part of business logic, should not be here
-        Observable<CharSequence> emailChangeObservable = RxTextView.textChanges(emailET);
-        Observable<CharSequence> passwordChangeObservable = RxTextView.textChanges(passwordET);
-        Observable<CharSequence> confirmPassChangeObservable = RxTextView.textChanges(confPassET);
 
-        Subscription confirmPasswordSubscrioption = confirmPassChangeObservable.doOnNext(next -> hideError(4))
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .filter(charSequence -> !TextUtils.isEmpty(charSequence))
-                .observeOn(AndroidSchedulers.mainThread())
-                // TODO: 1/30/17 [Code Review] as far as u don't use onCompleted and onError method callbacks,
-                // you can use the code commented below as well
-//                .subscribe(charSequence -> {
-//                    // do whatever u want with the string
-//                });
-                .subscribe(new Subscriber<CharSequence>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(CharSequence charSequence) {
-                        boolean isPasswordValid = validatePassword(charSequence.toString());
-                        if (charSequence.toString().length() < 8) {
-                            showPasswordLengthError(2);
-                        } else if (!isPasswordValid) {
-                            showPasswordError(2);
-                        } else if (!charSequence.toString().equals(passwordET.getText().toString())) {
-                            showConfirmPasswordError();
-                        } else {
-                            hideError(4);
-                        }
-                    }
-                });
-
-
-        Subscription passwordSubscrioption = passwordChangeObservable.doOnNext(next -> hideError(2))
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .filter(charSequence -> !TextUtils.isEmpty(charSequence))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<CharSequence>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(CharSequence charSequence) {
-                        boolean isPasswordValid = validatePassword(charSequence.toString());
-                        if (charSequence.toString().length() < 8) {
-                            showPasswordLengthError(1);
-                        } else if (!isPasswordValid) {
-                            showPasswordError(1);
-                        } else {
-                            hideError(2);
-                        }
-                    }
-                });
-
-
-        Subscription emailSubscription = emailChangeObservable
-                .doOnNext(next -> hideError(1))
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .filter(charSequence -> !TextUtils.isEmpty(charSequence))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<CharSequence>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(CharSequence charSequence) {
-                        boolean isEmailValid = validateEmail(charSequence.toString());
-                        if (!isEmailValid) {
-                            showEmailError();
-                        } else {
-                            hideError(1);
-                        }
-                    }
-                });
-
-        Subscription signInFieldsSubscription = Observable.combineLatest(emailChangeObservable, passwordChangeObservable, confirmPassChangeObservable, new Func3<CharSequence, CharSequence, CharSequence, Boolean>() {
-            @Override
-            public Boolean call(CharSequence email, CharSequence password, CharSequence confPass) {
-                boolean isEmailValid = validateEmail(email.toString());
-                boolean isPasswordLengthValid = password.toString().length() >= 8;
-                boolean isPasswordValid = validatePassword(password.toString());
-                boolean isConfirmPasswordLengthValid = confPass.toString().length() >= 8;
-                boolean isConfirmPasswordValid = validatePassword(confPass.toString());
-                boolean isSamePass = password.toString().equals(confPass.toString());
-
-
-                return isEmailValid && isPasswordLengthValid && isPasswordValid && isConfirmPasswordLengthValid && isConfirmPasswordValid && isSamePass;
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(Boolean validFields) {
-                        if (validFields) {
-                            enableSignUp();
-                        } else {
-                            disableSignUp();
-                        }
-                    }
-
-
-                });
-
-
-        compositeSubscription = new CompositeSubscription();
-        compositeSubscription.add(confirmPasswordSubscrioption);
-        compositeSubscription.add(passwordSubscrioption);
-        compositeSubscription.add(emailSubscription);
-        compositeSubscription.add(signInFieldsSubscription);
+        registrationPresenter.validateUserInfo(emailET, passwordET, confPassET, signupBtn);
 
 
         signupBtn.setOnClickListener(view -> {
             // TODO: 1/30/17 [Code Review] part of business logic
             if (InternetConnection.hasConnection(this)) {
-
-
                 String email = emailET.getText().toString().trim();
                 String password = passwordET.getText().toString().trim();
                 String conf_password = confPassET.getText().toString().trim();
                 String fullname = fullnameET.getText().toString().trim();
                 String phone = "380" + phoneET.getUnMaskedText();
                 String website = websiteET.getText().toString().trim();
-                registration(photoFile, email, password, conf_password, fullname, phone, website, facebookId);
+                registration(token, photoFile, email, password, conf_password, fullname, phone, website, facebookId);
             } else showInternetConnectionError();
         });
 
@@ -300,7 +160,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     protected void onDestroy() {
 
         super.onDestroy();
-        compositeSubscription.unsubscribe();
+        registrationPresenter.unsubscribe();
     }
 
     @Override
@@ -325,12 +185,12 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
 
     @Override
-    public void registration(File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId) {
-        registrationPresenter.validateData(photo, email, password, fullname, phone, website, facebookId);
+    public void registration(String token, File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId) {
+        registrationPresenter.validateData(token, photo, email, password, fullname, phone, website, facebookId);
     }
 
     @Override
-    public void registrationError() {
+    public void showRegistrationError() {
         Toast.makeText(this, "Registration Error", Toast.LENGTH_SHORT).show();
 
     }
@@ -348,6 +208,14 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     public void changeFacebookBtnText(String facebookId) {
         facebookBtn.setText(getResources().getString(R.string.linked_facebook_btn));
         this.facebookId = facebookId;
+    }
+
+    @Override
+    public void showRegistrationErrorWithToken(String token, String error) {
+        if (this.token == null) {
+            this.token = token;
+        }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 
 
@@ -407,24 +275,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         inputEmailLayout.setError(getResources().getString(R.string.invalid_email));
     }
 
-    @Override
-    public boolean validatePassword(String password) {
-        // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
-        if (TextUtils.isEmpty(password))
-            return false;
-        final Pattern pattern = Pattern.compile("^(?=.{8,12}$)(?=(.*[A-Z]){2})(?=(.*[a-z]){0,})(?=(.*[0-9]){2})(?=\\S+$).*$");
-        matcher = pattern.matcher(password);
-        return matcher.matches();
-    }
-
-    @Override
-    public boolean validateEmail(String email) {
-        // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
-        if (TextUtils.isEmpty(email))
-            return false;
-        matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
 
     @Override
     public void enableSignUp() {
@@ -439,14 +289,14 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
 
     @Override
-    public void dialogForCameraOrGallery() {
+    public void showDialogForCameraOrGallery() {
         final String[] choiceList = {"Device Camera", "Photo Gallery", "Back"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add Photo");
         builder.setItems(choiceList, (dialog, item) -> {
             switch (item) {
                 case 0:
-                    cameraIntent();
+                    openCamera();
                     break;
                 case 1:
                     openImageChooser();
@@ -465,9 +315,15 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
-    public void cameraIntent() {
+    public void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    public void setPhotoFromCamera(File photo, Bitmap photoBitmap) {
+        userPhoto.setImageBitmap(photoBitmap);
+        photoFile = photo;
     }
 
     @Override
@@ -475,6 +331,17 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         Toast.makeText(this, "internet connection error", Toast.LENGTH_SHORT).show();
     }
 
+
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
+    }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
@@ -493,54 +360,22 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return true;
-    }
-
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
                 // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
+
                 selectedImageUri = data.getData();
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
                 actualImage = new File(getRealPathFromURI(this, selectedImageUri));
                 photoFile = Compressor.getDefault(this).compressToFile(actualImage);
-                if (photoFile.exists())
-                    Log.d("stas", "file exists");
 
 
             }
             if (requestCode == REQUEST_CAMERA) {
-                // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
-                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                thumbnail.compress(Bitmap.CompressFormat.PNG, 0, bytes);
-                File destination = new File(this.getCacheDir(),
-                        System.currentTimeMillis() + ".jpg");
-                FileOutputStream fo;
-                try {
-                    destination.createNewFile();
-                    fo = new FileOutputStream(destination);
-                    fo.write(bytes.toByteArray());
-                    fo.flush();
-                    fo.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                userPhoto.setImageBitmap(thumbnail);
-                photoFile = destination;
-                if (photoFile.exists())
-                    Log.d("stas", "camera file exists");
-
+                registrationPresenter.makePhotoFromCamera(data, this.getCacheDir());
 
             }
         }

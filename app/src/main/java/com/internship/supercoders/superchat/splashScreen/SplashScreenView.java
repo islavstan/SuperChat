@@ -3,7 +3,7 @@ package com.internship.supercoders.superchat.splashScreen;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 /**
  * Created by Max on 17.01.2017.
@@ -20,7 +20,7 @@ public interface SplashScreenView {
     boolean isAuth();
 
     // TODO: 1/30/17 [Code Review] business logic, move to interactor layer
-    LogAndPas getLogAndPas();
+    VerificationData getLogAndPas();
 
     // TODO: 1/30/17 [Code Review] prevent using this
     Context getContext();

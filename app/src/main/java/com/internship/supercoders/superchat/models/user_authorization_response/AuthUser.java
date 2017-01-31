@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class AuthUser {
     @SerializedName("user")
-    LogAndPas logAndPas;
+    VerificationData verificationData;
 
-    public AuthUser(LogAndPas logAndPas) {
-        this.logAndPas = logAndPas;
+    public AuthUser(VerificationData verificationData) {
+        this.verificationData = verificationData;
     }
 
-    public LogAndPas getLogAndPas() {
-        return logAndPas;
+    public VerificationData getVerificationData() {
+        return verificationData;
 
 
     }

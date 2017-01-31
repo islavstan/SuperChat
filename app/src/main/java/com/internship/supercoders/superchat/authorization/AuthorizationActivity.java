@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.authorization;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,7 +25,8 @@ import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
 import com.internship.supercoders.superchat.db.DBMethods;
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.forgot_password.ForgotPasswordDialog;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.registration.RegistrationActivity;
 import com.internship.supercoders.superchat.utils.UserPreferences;
 import com.internship.supercoders.superchat.utils.ViewUtils;
@@ -65,6 +67,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     AuthPresenter authPresenter;
     ViewUtils viewUtils;
     UserPreferences userPreferences;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        String token = intent.getStringExtra("token");
+         token = intent.getStringExtra("token");
         Log.i(AppConsts.LOG_TAG, "Session token " + token);
 
         viewUtils = new ViewUtils(this);
@@ -200,25 +203,9 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     @OnClick(R.id.forgot_password)
     @Override
     public void showChangePasswordDialog() {
-        // TODO: 1/30/17 [Code Review] Make separate Fragment (extend from DialogFragment)
-        // and make its own MVP layer
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.dialog_change_password, null);
-        dialogBuilder.setView(dialogView);
-        final EditText edt = (EditText) dialogView.findViewById(R.id.emailET);
-        // TODO: 1/30/17 [Code Review] Do not hardcode strings
-        dialogBuilder.setTitle("Restore Password");
-        dialogBuilder.setPositiveButton("Send", (dialog, whichButton) -> authPresenter.changePassword());
-        dialogBuilder.setNegativeButton("Cancel", (dialog, whichButton) -> {
-            //pass
-        });
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-        Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        button.setTextColor(getResources().getColor(R.color.colorPrimary));
-        Button button2 = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        button2.setTextColor(getResources().getColor(R.color.colorPrimary));
+        FragmentManager fm = this.getFragmentManager();
+        ForgotPasswordDialog forgotPasswordDialog =new ForgotPasswordDialog();
+        forgotPasswordDialog.show(fm,"dialog");
 
 
     }
@@ -230,17 +217,17 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         // all the validation should not be here
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
-        LogAndPas logAndPas = new LogAndPas(email, password);
+        VerificationData verificationData = new VerificationData(email, password);
 
         boolean isPasswordValid = isPasswordValid(password);
         boolean isEmailValid = isEmailValid(email);
         boolean isValid = isEmailValid && isPasswordValid;
 
         if(isValid){
-            authPresenter.validateData(logAndPas);
+            authPresenter.validateData(verificationData);
             hidePasswordError();
             hideEmailError();
-            writeUserAuthDataToDB(logAndPas);
+            writeUserAuthDataToDB(verificationData);
             keepMeSignedIn();
             Log.i(AppConsts.LOG_TAG, "Check Sign IN: " + Boolean.toString(userPreferences.isUserSignedIn()));
         }
@@ -251,16 +238,17 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     public void onBtnSignUp() {
         Intent intent;
         intent = new Intent(this, RegistrationActivity.class);
+        intent.putExtra("token",token);
         startActivity(intent);
     }
 
     @Override
-    public void writeUserAuthDataToDB(LogAndPas logAndPas) {
+    public void writeUserAuthDataToDB(VerificationData verificationData) {
         // TODO: 1/30/17 [Code Review] NNNNNOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!
         DBMethods db = new DBMethods(this);
 
         db.readFromDB();
-        db.writeAuthData(logAndPas);
+        db.writeAuthData(verificationData);
     }
 
     @Override

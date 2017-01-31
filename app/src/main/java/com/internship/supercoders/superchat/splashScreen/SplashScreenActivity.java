@@ -12,7 +12,7 @@ import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
 import com.internship.supercoders.superchat.db.DBMethods;
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.utils.UserPreferences;
 
 public class SplashScreenActivity extends AppCompatActivity implements SplashScreenView {
@@ -54,7 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
     }
 
     @Override
-    public LogAndPas getLogAndPas() {
+    public VerificationData getLogAndPas() {
         DBMethods db = new DBMethods(this);
         return db.getAuthData();
     }

@@ -40,5 +40,11 @@
     <string name="password_is_not_the_same">Password is not the same</string>
 
 
+    <!--FORGOT PASSWORD-->
+    <string name="title">Restore Password</string>
+    <string name="send">Send</string>
+    <string name="cancel">Cancel</string>
+
+
 
 </resources>

@@ -4,7 +4,7 @@ import com.internship.supercoders.superchat.models.authorization_response.Sessio
 import com.internship.supercoders.superchat.models.blob.Blob;
 import com.internship.supercoders.superchat.models.registration_request.ReqUser;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
-import com.internship.supercoders.superchat.models.user_authorization_response.LogAndPas;
+import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 import java.util.Map;
 import java.util.Objects;
@@ -62,7 +62,7 @@ public interface Points {
 
     interface SignInPoint {
         @POST("/login.json")
-        Call<Objects> signIn(@Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body LogAndPas logAndPas);
+        Call<Objects> signIn(@Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body VerificationData verificationData);
 
     }
 
