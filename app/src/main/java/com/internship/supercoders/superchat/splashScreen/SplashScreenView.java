@@ -1,6 +1,5 @@
 package com.internship.supercoders.superchat.splashScreen;
 
-import android.os.Handler;
 import android.support.annotation.Nullable;
 
 /**
@@ -15,9 +14,5 @@ public interface SplashScreenView {
     void navigateToAuthorScreen(@Nullable String token);
 
     void finish(); //Presenter call onDestroy method in activity
-
-    void fadeIn();
-
-    Handler createUiHandler();
 
 }

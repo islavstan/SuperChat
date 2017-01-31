@@ -1,6 +1,5 @@
 package com.internship.supercoders.superchat.splashScreen;
 
-import android.os.Handler;
 import android.util.Log;
 
 import com.internship.supercoders.superchat.db.DBMethods;
@@ -33,8 +32,6 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Handler mainHandler = splashScreenView.createUiHandler();
-                mainHandler.post(() -> splashScreenView.fadeIn());
                 if (isAuthorize) {
                     Log.i("Splash", "ToMainScreen");
                     splashScreenView.navigateToMainScreen(token);

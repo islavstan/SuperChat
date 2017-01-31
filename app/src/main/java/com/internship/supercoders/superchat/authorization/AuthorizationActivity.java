@@ -2,17 +2,14 @@ package com.internship.supercoders.superchat.authorization;
 
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.internship.supercoders.superchat.AnimateElement;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
@@ -75,7 +71,6 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
-        AnimateElement.run(this, relativeLayout, R.anim.fadeout);
         Intent intent = getIntent();
          token = intent.getStringExtra("token");
         Log.i(AppConsts.LOG_TAG, "Session token " + token);

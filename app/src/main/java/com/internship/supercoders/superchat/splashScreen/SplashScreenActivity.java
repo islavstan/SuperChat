@@ -3,14 +3,12 @@ package com.internship.supercoders.superchat.splashScreen;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.internship.supercoders.superchat.AnimateElement;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
@@ -55,16 +53,5 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
         super.onDestroy();
         Log.i("Splash Activity", "Call OnDestroy()");
         presenter.unsubscribe();
-    }
-
-    @Override
-    public void fadeIn() {
-        rootView = (RelativeLayout) findViewById(R.id.activity_splash_screen);
-        AnimateElement.run(this, rootView, R.anim.fadein);
-    }
-
-    @Override
-    public Handler createUiHandler() {
-        return new Handler(this.getMainLooper());
     }
 }
