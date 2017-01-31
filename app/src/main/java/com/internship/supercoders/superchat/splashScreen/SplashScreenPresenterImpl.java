@@ -64,6 +64,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
     @Override
     public void onSuccess(String token) {
         this.token = token;
+        splashScreenInteractor.saveToken(token);
         Log.i("Splash", "token: " + token);
     }
 }

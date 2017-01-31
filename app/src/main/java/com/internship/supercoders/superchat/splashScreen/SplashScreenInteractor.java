@@ -10,6 +10,8 @@ import com.internship.supercoders.superchat.models.user_authorization_response.V
 public interface SplashScreenInteractor {
     VerificationData getUserInfo();
 
+    void saveToken(String token);
+
     interface UserAuthorizationFinishedListener {
 
         void onError();

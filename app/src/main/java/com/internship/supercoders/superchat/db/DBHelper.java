@@ -32,6 +32,10 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + dbInfo.authTableName + " ("
                 + "id integer primary key autoincrement,"
                 + dbInfo.emailRow + " text,"
-                + dbInfo.passRow + " text" + ");");
+                + dbInfo.passRow + " text,"
+                + dbInfo.tokenRow + " text,"
+                + dbInfo.timeRow + " long"
+                + ");");
     }
+
 }

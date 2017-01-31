@@ -145,5 +145,10 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
     public VerificationData getUserInfo() {
         return dbManager.getAuthData();
     }
+
+    @Override
+    public void saveToken(String token) {
+        dbManager.writeToken(token);
+    }
 }
     
