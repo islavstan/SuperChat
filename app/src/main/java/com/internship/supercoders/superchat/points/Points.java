@@ -43,7 +43,7 @@ public interface Points {
     interface DeclaringFileUploadedPoint {
 
         @PUT("/blobs/{id}/complete.json")
-        Call<Objects> declaringUpload(@Path("id") int id, @Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body Blob blob);
+        Call<Void> declaringUpload(@Path("id") int id, @Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body Blob blob);
 
     }
 
@@ -56,7 +56,7 @@ public interface Points {
     interface ResetPasswordPoint {
 
         @GET("users/password/reset.json?")
-        Call<Object> resetPassword(@Header("Content-Type") String cont, @Header("QB-Token") String token, @Query("email") String email);
+        Call<Void> resetPassword(@Header("Content-Type") String cont, @Header("QB-Token") String token, @Query("email") String email);
 
     }
 

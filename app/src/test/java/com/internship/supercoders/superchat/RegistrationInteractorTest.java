@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @RunWith( MockitoJUnitRunner.class )
 public class RegistrationInteractorTest {
 
-    @Mock
+ /*   @Mock
     private Call<Object> mockObjectCall;
     @Mock
     RegistrationPoint regPoint;
@@ -55,7 +55,7 @@ public class RegistrationInteractorTest {
         Mockito.verify(listener).onSuccess(data);
 
 
-    }
+    }*/
 
 
     @Test

@@ -35,6 +35,7 @@ import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,6 +48,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -211,7 +213,13 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("stas", "registration error = " + jObjError.getString("errors"));
-                        listener.onErrorWithToken(token, jObjError.getString("errors"));
+
+                        String jError = jObjError.getString("errors");
+                        String error = jError.replaceAll("[{\"}]", "").replace("[", "").replace("]", "").replace(":"," : ");
+
+                        Log.d("stas", "new error = " + error);
+
+                        listener.onErrorWithToken(token, error);
                     } catch (Exception e) {
                         Log.d("stas", e.getMessage());
                     }
@@ -425,14 +433,14 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
         long fileSize = file.length();
         Log.d("stas", "file size = " + Long.toString(fileSize));
         final Points.DeclaringFileUploadedPoint apiDecUpl = ApiClient.getRetrofit().create(Points.DeclaringFileUploadedPoint.class);
-        Call<Objects> call = apiDecUpl.declaringUpload(Integer.parseInt(image_id), "application/json", "0.1.0", token, new Blob(new BlobData((int) fileSize)));
+        Call<Void> call = apiDecUpl.declaringUpload(Integer.parseInt(image_id), "application/json", "0.1.0", token, new Blob(new BlobData((int) fileSize)));
 
 
-        call.enqueue(new Callback<Objects>() {
+        call.enqueue(new Callback<Void>() {
 
 
             @Override
-            public void onResponse(Call<Objects> call, Response<Objects> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 Log.d("stas", response + "");
                 if (response.isSuccessful()) {
                     listener.onSuccess(token);
@@ -448,9 +456,9 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             }
 
             @Override
-            public void onFailure(Call<Objects> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("stas", "onFailure = " + t.getMessage());
-                listener.onSuccess(token);
+
             }
         });
 
