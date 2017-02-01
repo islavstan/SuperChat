@@ -34,10 +34,10 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                 }
                 if (isAuthorize) {
                     Log.i("Splash", "ToMainScreen");
-                    splashScreenView.navigateToMainScreen(token);
+                    splashScreenView.navigateToMainScreen();
                 } else {
                     Log.i("Splash", "ToAuth");
-                    splashScreenView.navigateToAuthorScreen(token);
+                    splashScreenView.navigateToAuthorScreen();
                 }
                 Log.i("Splash Presenter", "Call finish");
                 splashScreenView.finish();

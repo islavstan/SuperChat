@@ -3,7 +3,6 @@ package com.internship.supercoders.superchat.splashScreen;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.RelativeLayout;
@@ -35,16 +34,14 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
     }
 
     @Override
-    public void navigateToMainScreen(@Nullable String token) {
+    public void navigateToMainScreen() {
         Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-        intent.putExtra("token", token);
         startActivity(intent);
     }
 
     @Override
-    public void navigateToAuthorScreen(@Nullable String token) {
+    public void navigateToAuthorScreen() {
         Intent intent = new Intent(SplashScreenActivity.this, AuthorizationActivity.class);
-        intent.putExtra("token", token);
         startActivity(intent);
     }
 
