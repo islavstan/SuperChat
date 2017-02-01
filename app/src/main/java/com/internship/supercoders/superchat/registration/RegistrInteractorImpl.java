@@ -433,14 +433,14 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
         long fileSize = file.length();
         Log.d("stas", "file size = " + Long.toString(fileSize));
         final Points.DeclaringFileUploadedPoint apiDecUpl = ApiClient.getRetrofit().create(Points.DeclaringFileUploadedPoint.class);
-        Call<Objects> call = apiDecUpl.declaringUpload(Integer.parseInt(image_id), "application/json", "0.1.0", token, new Blob(new BlobData((int) fileSize)));
+        Call<Void> call = apiDecUpl.declaringUpload(Integer.parseInt(image_id), "application/json", "0.1.0", token, new Blob(new BlobData((int) fileSize)));
 
 
-        call.enqueue(new Callback<Objects>() {
+        call.enqueue(new Callback<Void>() {
 
 
             @Override
-            public void onResponse(Call<Objects> call, Response<Objects> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 Log.d("stas", response + "");
                 if (response.isSuccessful()) {
                     listener.onSuccess(token);
@@ -456,9 +456,9 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             }
 
             @Override
-            public void onFailure(Call<Objects> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("stas", "onFailure = " + t.getMessage());
-                listener.onSuccess(token);
+
             }
         });
 

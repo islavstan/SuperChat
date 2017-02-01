@@ -149,6 +149,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
     @Override
     public void saveToken(String token) {
         dbManager.writeToken(token);
+
     }
 }
     

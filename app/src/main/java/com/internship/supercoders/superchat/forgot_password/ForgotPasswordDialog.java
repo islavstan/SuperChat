@@ -2,6 +2,7 @@ package com.internship.supercoders.superchat.forgot_password;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -29,12 +30,13 @@ import retrofit2.Response;
 public class ForgotPasswordDialog extends DialogFragment {
 
     private DBMethods db;
+    Context context;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         db = new DBMethods(getActivity());
-
+        context = getActivity();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_change_password, null);
@@ -54,6 +56,10 @@ public class ForgotPasswordDialog extends DialogFragment {
     }
 
 
+    private void showToast() {
+        Toast.makeText(context, "Check your email, we sent letter for you", Toast.LENGTH_LONG).show();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -66,12 +72,14 @@ public class ForgotPasswordDialog extends DialogFragment {
         String email = emailET.getText().toString().trim();
         String token = db.getToken();
         final Points.ResetPasswordPoint apiResetPassword = ApiClient.getRetrofit().create(Points.ResetPasswordPoint.class);
-        Call<Object> call = apiResetPassword.resetPassword("application/json", token, email);
-        call.enqueue(new Callback<Object>() {
+        Call<Void> call = apiResetPassword.resetPassword("application/json", token, email);
+        call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
                 if (response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Check your email, we sent letter for you", Toast.LENGTH_LONG).show();
+                    showToast();
+
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -85,7 +93,7 @@ public class ForgotPasswordDialog extends DialogFragment {
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("stas", "changePassword onFailure = " + t.getMessage());
             }
         });

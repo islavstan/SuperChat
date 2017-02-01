@@ -82,7 +82,6 @@ public class DBMethods {
         ContentValues cv = new ContentValues();
         cv.put(dbInfo.tokenRow, token);
         cv.put(dbInfo.timeRow, System.currentTimeMillis());
-
         long rowID = db.update(dbInfo.authTableName, cv, "id = ?", new String[]{"1"});
         Log.d(AppConsts.LOG_TAG, "row updated, ID = " + rowID);
         if (rowID == 0) {
