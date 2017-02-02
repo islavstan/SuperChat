@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.splashScreen;
+package com.internship.supercoders.superchat.splash_screen;
 
 import android.content.Intent;
 import android.graphics.Typeface;

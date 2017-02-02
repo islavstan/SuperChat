@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.splashScreen;
+package com.internship.supercoders.superchat.splash_screen;
 
 import android.util.Log;
 
@@ -71,7 +71,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
                         Log.d("stas", "userAuthorization error = " + jObjError.getString("errors"));
                         authorizationListener.onError();
                     } catch (Exception e) {
-                        Log.d("stas", e.getMessage());
+                        // Log.d("stas", e.getMessage());
                     }
 
                 }

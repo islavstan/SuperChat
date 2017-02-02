@@ -8,4 +8,5 @@ public class AppConsts {
     final public static String APP_PREFERENCES = "superChatPreferences";
     public static final String SIGNED_IN_PREFERENCES = "keepSignedIn";
     public static final long TOKEN_LIFETIME = 2 * 60 * 60 * 1000;
+    final public static String SPLASH_TAG = "Splash";
 }

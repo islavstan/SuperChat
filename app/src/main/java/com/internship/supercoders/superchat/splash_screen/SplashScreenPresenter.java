@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.splashScreen;
+package com.internship.supercoders.superchat.splash_screen;
 
 /**
  * Created by Max on 17.01.2017.

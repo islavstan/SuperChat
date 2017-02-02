@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.splashScreen;
+package com.internship.supercoders.superchat.splash_screen;
 
 
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;

@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.splashScreen;
+package com.internship.supercoders.superchat.splash_screen;
 
 import android.util.Log;
 
@@ -28,18 +28,19 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
         Thread sleepThread = new Thread() {
             public void run() {
                 try {
+                    // Log.i(AppConsts.SPLASH_TAG,"Start");
                     Thread.sleep(milliseconds);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 if (isAuthorize) {
-                    Log.i("Splash", "ToMainScreen");
+                    //Log.i(AppConsts.SPLASH_TAG, "ToMainScreen");
                     splashScreenView.navigateToMainScreen();
                 } else {
-                    Log.i("Splash", "ToAuth");
+                    // Log.i(AppConsts.SPLASH_TAG, "ToAuth");
                     splashScreenView.navigateToAuthorScreen();
                 }
-                Log.i("Splash Presenter", "Call finish");
+                // Log.i(AppConsts.SPLASH_TAG+" Presenter", "Call finish");
                 splashScreenView.finish();
             }
         };
@@ -48,7 +49,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
         if (isAuthorize) {
             VerificationData user;
             user = splashScreenInteractor.getUserInfo();
-            Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
+            // Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
             splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword(), this);
         } else {
             splashScreenInteractor.authorization(this);
@@ -66,6 +67,6 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
         this.token = token;
         splashScreenInteractor.saveToken(token);
 
-        Log.i("Splash", "token: " + token);
+        // Log.i(AppConsts.SPLASH_TAG, "token: " + token);
     }
 }
