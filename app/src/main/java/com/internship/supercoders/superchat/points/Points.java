@@ -18,6 +18,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import rx.Observable;
 
 // TODO: 1/30/17 [Code Review] Move 'QuickBlox-REST-API-Version' header to basic client initialization,
 // seems like it is the same for all API calls. Also use Retrofit's Authenticator/Interceptor interfaces
@@ -66,14 +67,22 @@ public interface Points {
 
     }
 
-    public interface UserAuthorizatoinPoint {
+    interface UserAuthorizatoinPoint {
         @Headers({
                 "Content-Type: application/json",
                 "QuickBlox-REST-API-Version: 0.1.0"
         })
         @POST("/session.json")
         Call<Session> userAuthorizatoin(@Body ALog user);
+    }
 
+    interface RxUserAuthorizationPoint {
+        @Headers({
+                "Content-Type: application/json",
+                "QuickBlox-REST-API-Version: 0.1.0"
+        })
+        @POST("/session.json")
+        Observable<Session> rxUserAuthorizatoin(@Body ALog user);
     }
 
 

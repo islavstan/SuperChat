@@ -23,13 +23,10 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
 
 
 public class SplashScreenInteractorImpl implements SplashScreenInteractor {
-    private static final String TAG = "SPLASH";
-    //private Long tsLong = System.currentTimeMillis() / 1000;
-//    private String ts = tsLong.toString();
-//    private int randomId = new Random().nextInt();
     private String signature;
     private DBMethods dbManager;
     private UserPreferences userPreferences;
@@ -54,7 +51,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
-        final Points.UserAuthorizatoinPoint apiUserAuth = ApiClient.getRetrofit().create(Points.UserAuthorizatoinPoint.class);
+        final Points.UserAuthorizatoinPoint apiUserAuth = ApiClient.getRxRetrofit().create(Points.UserAuthorizatoinPoint.class);
         Call<Session> call = apiUserAuth.userAuthorizatoin(new ALog(ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.TS, Integer.toString(ApiConstant.RANDOM_ID), signature, new VerificationData(email, password)));
         call.enqueue(new Callback<Session>() {
             @Override
@@ -82,6 +79,25 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
 
             }
         });
+    }
+
+    @Override
+    public Observable<Session> rxUserAuthorization(String email, String password) {
+        String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s&user[email]=%s&user[password]=%s",
+                ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.RANDOM_ID, ApiConstant.TS, email, password);
+        try {
+            signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, ApiConstant.AUTH_SECRET);
+
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+
+        final Points.RxUserAuthorizationPoint apiUserAuth = ApiClient.getRxRetrofit().create(Points.RxUserAuthorizationPoint.class);
+        return apiUserAuth.rxUserAuthorizatoin(new ALog(ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.TS, Integer.toString(ApiConstant.RANDOM_ID), signature, new VerificationData(email, password)));
     }
 
     @Override
