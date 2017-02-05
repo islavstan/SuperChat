@@ -34,6 +34,9 @@ public interface Points {
         @POST("/session.json")
         Call<Session> getSession(@Body Map<String, String> map);
 
+        @POST("/session.json")
+        Observable<Session> getRxSession(@Body Map<String, String> map);
+
     }
 
     interface CreateFilePoint {

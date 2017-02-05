@@ -33,8 +33,7 @@ public class SplashScreePresenterTest {
 
     @Test
     public void navigateToMainScreenShouldBeCalledIfUserAlreadyLoggedIn() throws InterruptedException {
-        VerificationData user = new VerificationData("testEmail", "testPassword");
-        when(interactor.isAuth()).thenReturn(true);
+        VerificationData user = new VerificationData("max@g.com", "superpass");
         when(userPreferences.isUserSignedIn()).thenReturn(true);
         when(dbManager.getAuthData()).thenReturn(user);
         presenter.sleep(3000);

@@ -23,11 +23,9 @@ public interface SplashScreenInteractor {
 
     }
 
-    void userAuthorization(String email, String password, UserAuthorizationFinishedListener listener);
+    Observable<Session> userAuthorization(String email, String password);
 
-    Observable<Session> rxUserAuthorization(String email, String password);
-
-    void authorization(UserAuthorizationFinishedListener authorizationListener);
+    Observable<Session> createSession();
 
     boolean isAuth();
 }
