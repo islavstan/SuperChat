@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat;
+package com.internship.supercoders.superchat.utils;
 
 import android.content.Context;
 import android.view.View;

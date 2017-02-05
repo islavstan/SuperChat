@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
@@ -22,6 +23,16 @@ public class ApiClient {
                     .baseUrl(BASE_URL).build();
         }
         return retrofit;
+    }
+
+    public static Retrofit getRxRetrofit() {
+        Gson result = new GsonBuilder().create();
+        return new Retrofit.Builder()
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(result))
+                .baseUrl(BASE_URL)
+                .build();
+
     }
 
     public static Retrofit getRetrofit(String URL) {
