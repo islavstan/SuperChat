@@ -8,7 +8,6 @@ import com.internship.supercoders.superchat.models.user_authorization_response.V
 import com.internship.supercoders.superchat.utils.UserPreferences;
 
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashScreenInteractor.UserAuthorizationFinishedListener {
@@ -62,17 +61,15 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
             //splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword(), this);
             subscriber = splashScreenInteractor.rxUserAuthorization(user.getEmail(), user.getPassword())
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext(session -> {
-                        splashScreenInteractor.saveToken(session.getData().getToken());
-                        Log.i(AppConsts.SPLASH_TAG, "token=" + session.getData().getToken());
-                    })
-                    .doOnError(throwable -> {
-                        isAuthorize = false;
-                        Log.i("Splash", "Error");
-                    }).subscribe();
-
-
+                    .subscribe(
+                            session -> {
+                                splashScreenInteractor.saveToken(session.getData().getToken());
+                            },
+                            error -> {
+                                error.getMessage();
+                                error.printStackTrace();
+                                isAuthorize = false;
+                            });
         } else {
             splashScreenInteractor.authorization(this);
         }
