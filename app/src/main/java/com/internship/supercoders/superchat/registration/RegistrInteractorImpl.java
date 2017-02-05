@@ -131,7 +131,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     } else {
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            // Log.d("stas", "authorization error = " + jObjError.getString("errors"));
+                            // Log.d("stas", "signInUser error = " + jObjError.getString("errors"));
                             listener.onError();
                         } catch (Exception e) {
                             // Log.d("stas", e.getMessage());

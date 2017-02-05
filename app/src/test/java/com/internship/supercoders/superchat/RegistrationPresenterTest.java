@@ -50,7 +50,7 @@ public class RegistrationPresenterTest {
         verify(view).showProgress();
         verify(view).hidePasswordError();
        verify(view).hideEmailError();
-        verify(interacor).authorization(file,data,data,data,data,data,registrationPresenter);*/
+        verify(interacor).signInUser(file,data,data,data,data,data,registrationPresenter);*/
 
     }
 }

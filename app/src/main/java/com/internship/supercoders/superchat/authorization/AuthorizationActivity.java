@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -21,18 +20,16 @@ import android.widget.TextView;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
-import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.forgot_password.ForgotPasswordDialog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.registration.RegistrationActivity;
-import com.internship.supercoders.superchat.utils.UserPreferences;
 import com.internship.supercoders.superchat.utils.ViewUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AuthorizationActivity extends AppCompatActivity implements AuthContract.View {
+public class AuthorizationActivity extends AppCompatActivity implements AuthView {
 
     @BindView(R.id.activity_main)
     RelativeLayout relativeLayout;
@@ -61,10 +58,10 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     @BindView(R.id.cb_keep_me_signed_in)
     CheckBox checkBox;
 
-    AuthPresenter authPresenter;
+    AuthPresenterImpl authPresenter;
     ViewUtils viewUtils;
-    UserPreferences userPreferences;
     String token;
+    AuthInteractorImpl authInteractor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +73,8 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         Log.i(AppConsts.LOG_TAG, "Session token " + token);
 
         viewUtils = new ViewUtils(this);
-        authPresenter = new AuthPresenter(this);
-
-        // TODO: 1/30/17 [Code Review] You should use this instance in Presenter layer
-        userPreferences = new UserPreferences(this);
+        authPresenter = new AuthPresenterImpl(this);
+        authInteractor = new AuthInteractorImpl(this);
 
 //        viewUtils.hideKeyboard();
 
@@ -96,7 +91,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
 
             @Override
             public void afterTextChanged(Editable s) {
-                isEmailValid(s.toString());
+                authInteractor.validateEmail(s.toString());
             }
         });
 
@@ -104,7 +99,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    isEmailValid(((EditText) v).getText().toString());
+                    authInteractor.validateEmail(((EditText) v).getText().toString());
                 }
             }
         });
@@ -122,7 +117,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
 
             @Override
             public void afterTextChanged(Editable s) {
-                isPasswordValid(s.toString());
+                authInteractor.validatePassword(s.toString());
             }
         });
 
@@ -130,7 +125,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    isPasswordValid(((EditText) v).getText().toString());
+                    authInteractor.validatePassword(((EditText) v).getText().toString());
                 }
             }
         });
@@ -148,7 +143,12 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     }
 
     @Override
-    public void setEmailError() {
+    public void setEmailIsEmptyError() {
+        ilEmail.setError(getString(R.string.empty_email_error));
+    }
+
+    @Override
+    public void setEmailIsInvalidError() {
         ilEmail.setError(getString(R.string.invalid_email));
     }
 
@@ -158,7 +158,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     }
 
     @Override
-    public void setPasswordError() {
+    public void setPasswordIsEmptyError() {
         ilPassword.setError(getString(R.string.invalid_password));
     }
 
@@ -173,18 +173,18 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     }
 
     @Override
-    public void authorization() {
+    public void signInUser() {
 
     }
 
     @Override
-    public void authorizationError() {
+    public void showAuthorizationError() {
 
     }
 
     @Override
-    public void keepMeSignedIn() {
-        userPreferences.kepUserSignedIn(checkBox.isChecked());
+    public void setUserSignedIn() {
+        authPresenter.userPreferences.kepUserSignedIn(checkBox.isChecked());
     }
 
     @OnClick(R.id.forgot_password)
@@ -193,18 +193,12 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         Log.d(AppConsts.LOG_TAG, "openRecoveryPasswordDialog");
     }
 
-
-
-
-
     @OnClick(R.id.forgot_password)
     @Override
     public void showChangePasswordDialog() {
         FragmentManager fm = this.getFragmentManager();
         ForgotPasswordDialog forgotPasswordDialog =new ForgotPasswordDialog();
         forgotPasswordDialog.show(fm,"dialog");
-
-
     }
 
     @OnClick(R.id.btn_sign_in)
@@ -216,17 +210,14 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         String password = etPassword.getText().toString();
         VerificationData verificationData = new VerificationData(email, password);
 
-        boolean isPasswordValid = isPasswordValid(password);
-        boolean isEmailValid = isEmailValid(email);
-        boolean isValid = isEmailValid && isPasswordValid;
 
-        if(isValid){
+        if(authInteractor.isAuthDataValid(password, email)){
             authPresenter.validateData(verificationData);
             hidePasswordError();
             hideEmailError();
-            writeUserAuthDataToDB(verificationData);
-            keepMeSignedIn();
-            Log.i(AppConsts.LOG_TAG, "Check Sign IN: " + Boolean.toString(userPreferences.isUserSignedIn()));
+            authInteractor.writeUserAuthDataToDB(verificationData);
+            setUserSignedIn();
+            Log.i(AppConsts.LOG_TAG, "Check Sign IN: " + Boolean.toString(authPresenter.userPreferences.isUserSignedIn()));
         }
     }
 
@@ -239,14 +230,6 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
         startActivity(intent);
     }
 
-    @Override
-    public void writeUserAuthDataToDB(VerificationData verificationData) {
-        // TODO: 1/30/17 [Code Review] NNNNNOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!
-        DBMethods db = new DBMethods(this);
-
-        db.readFromDB();
-        db.writeAuthData(verificationData);
-    }
 
     @Override
     public void navigateToLogin(String token) {
@@ -256,37 +239,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthCont
     }
 
     @Override
-    public boolean isEmailValid(String email) {
-        // TODO: 1/30/17 [Code Review] Due to method name, it shall only return true or false if email is valid
-        // (why is this logic in View layer???), but this one also sets error messages. This is wrong.
-        // setting error strings = View layer
-        // validation = model/interactor layer
-        if (TextUtils.isEmpty(email)) {
-            ilEmail.setError(getString(R.string.empty_email_error));
-            return false;
-        }else {
-            if (!email.contains("@")) {
-                ilEmail.setError(getString(R.string.invalid_email));
-                return false;
-            }
-        }
-
-        hideEmailError();
-        return true;
-    }
-
-    @Override
-    public boolean isPasswordValid(String password) {
-        if (TextUtils.isEmpty(password)){
-            ilPassword.setError(getString(R.string.empty_password_error));
-            return false;
-        }
-        hidePasswordError();
-        return true;
-    }
-
-    @Override
-    // TODO: 1/30/17 [Code Review] Try to get rid of passing context instance to presenter, Presenter
+    // TODO: 1/30/17 [Code Review] Try to get rid of passing context instance to presenter, AuthPresenter
     // layer should know nothing about Android SDK.
     public Context getContext() {
         return this;

@@ -3,42 +3,17 @@ package com.internship.supercoders.superchat.authorization;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 /**
- * Created by RON on 21.01.2017.
+ * Created by RON on 05.02.2017.
  */
-public class AuthPresenter implements AuthContract.Presenter {
-    AuthContract.View view;
+public interface AuthPresenter {
 
-    public AuthPresenter(AuthContract.View view){
-        this.view = view;
-    }
+    void onError();
 
-    @Override
-    public void onError() {
-        if (view != null) {
-            view.authorizationError();
-        }
-    }
+    void onSuccess(String token);
 
-    @Override
-    public void onSuccess(String token) {
-        if (view != null) {
-            view.hideProgress();
-            view.navigateToLogin(token);
-        }
-    }
+    void onDestroy();
 
-    @Override
-    public void onDestroy() {
-        // TODO: 1/30/17 [Code Review] Nullify view instance here!
-    }
+    void changePassword();
 
-    @Override
-    public void changePassword() {
-
-    }
-
-    @Override
-    public void validateData(VerificationData verificationData) {
-        view.showProgress();
-    }
+    void validateData(VerificationData verificationData);
 }

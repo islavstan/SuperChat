@@ -9,6 +9,6 @@ public interface SplashScreenView {
 
     void navigateToAuthorScreen();
 
-    void finish(); //Presenter call onDestroy method in activity
+    void finish(); //AuthPresenter call onDestroy method in activity
 
 }

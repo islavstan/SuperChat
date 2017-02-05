@@ -40,7 +40,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter, SplashS
                     // Log.i(AppConsts.SPLASH_TAG, "ToAuth");
                     splashScreenView.navigateToAuthorScreen();
                 }
-                // Log.i(AppConsts.SPLASH_TAG+" Presenter", "Call finish");
+                // Log.i(AppConsts.SPLASH_TAG+" AuthPresenter", "Call finish");
                 splashScreenView.finish();
             }
         };
