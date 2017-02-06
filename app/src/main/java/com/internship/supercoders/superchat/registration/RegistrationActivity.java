@@ -34,6 +34,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.utils.InternetConnection;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.squareup.picasso.Picasso;
@@ -88,6 +89,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     CallbackManager callbackManager;
     String facebookId;
     String token;
+    private DBMethods db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +103,12 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
-        Intent intent = getIntent();
-        token = intent.getStringExtra("token");
+
+        db = new DBMethods(this);
+        token = db.getToken();
+
+
+        Log.d("stas",token);
         callbackManager = CallbackManager.Factory.create();
         logBtn = (LoginButton) findViewById(R.id.login_button);
         facebookBtn = (Button) findViewById(R.id.link_facebook_btn);
@@ -330,9 +336,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     public void showInternetConnectionError() {
         Toast.makeText(this, "internet connection error", Toast.LENGTH_SHORT).show();
     }
-
-
-
 
 
     @Override
