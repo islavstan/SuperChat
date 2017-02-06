@@ -1,7 +1,8 @@
 package com.internship.supercoders.superchat.splash_screen;
 
-//import android.util.Log;
+import android.util.Log;
 
+import com.internship.supercoders.superchat.data.AppConsts;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
@@ -37,6 +38,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
 
             @Override
             public void onNext(Session session) {
+                Log.i(AppConsts.SPLASH_TAG, "Save token");
                 splashScreenInteractor.saveToken(session.getData().getToken());
             }
         };
@@ -62,10 +64,12 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
                     e.printStackTrace();
                 }
                 if (isAuthorize) {
-                    //Log.i(AppConsts.SPLASH_TAG, "ToMainScreen");
+                    Log.i(AppConsts.SPLASH_TAG, "ToMainScreen");
+                    Log.i(AppConsts.SPLASH_TAG, "token = " + splashScreenInteractor.getToken());
                     splashScreenView.navigateToMainScreen();
                 } else {
-                    //Log.i(AppConsts.SPLASH_TAG, "ToAuth");
+                    Log.i(AppConsts.SPLASH_TAG, "ToAuth");
+                    Log.i(AppConsts.SPLASH_TAG, "token = " + splashScreenInteractor.getToken());
                     splashScreenView.navigateToAuthorScreen();
                 }
                 //Log.i(AppConsts.SPLASH_TAG + " Presenter", "Call finish");
@@ -80,10 +84,14 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
             //Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
             subscription = splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword())
                     .subscribeOn(Schedulers.io())
-                    .doOnError(throwable -> splashScreenInteractor.createSession().subscribe(authSubscriber))
+                    .doOnError(throwable -> splashScreenInteractor.createSession()
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(authSubscriber))
                     .subscribe(authSubscriber);
         } else {
-            subscription = splashScreenInteractor.createSession().subscribe(authSubscriber);
+            subscription = splashScreenInteractor.createSession()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(authSubscriber);
         }
     }
 }

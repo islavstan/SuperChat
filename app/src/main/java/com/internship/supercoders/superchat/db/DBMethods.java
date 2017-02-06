@@ -23,8 +23,8 @@ public class DBMethods {
         db = dbHelper.getWritableDatabase();
     }
 
-    public SQLiteDatabase getDb(){
-       return this.db;
+    public SQLiteDatabase getDb() {
+        return this.db;
     }
 
     public void writeAuthData(VerificationData verificationData) {
@@ -35,7 +35,7 @@ public class DBMethods {
 
         long rowID = db.update(dbInfo.authTableName, cv, "id = ?", new String[]{"1"});
         Log.d(AppConsts.LOG_TAG, "row updated, ID = " + rowID);
-        if(rowID==0){
+        if (rowID == 0) {
             cv.put(dbInfo.tokenRow, "null");
             cv.put(dbInfo.timeRow, (long) 0);
             rowID = db.insert(dbInfo.authTableName, null, cv);
@@ -43,7 +43,7 @@ public class DBMethods {
         }
     }
 
-    public void readFromDB(){
+    public void readFromDB() {
         Log.d(AppConsts.LOG_TAG, "--- Rows in " + dbInfo.authTableName + ": ---");
         Cursor c = db.query(dbInfo.authTableName, null, null, null, null, null, null);
 
@@ -67,7 +67,8 @@ public class DBMethods {
             Log.d(AppConsts.LOG_TAG, "0 rows");
         c.close();
     }
-    public VerificationData getAuthData(){
+
+    public VerificationData getAuthData() {
         String email;
         String password;
         Cursor c = db.query(dbInfo.authTableName, null, null, null, null, null, null);
@@ -97,7 +98,10 @@ public class DBMethods {
         String token;
         Cursor c = db.query(dbInfo.authTableName, null, null, null, null, null, null);
         c.moveToFirst();
-        token = c.getString(c.getColumnIndex(dbInfo.tokenRow));
+        if (c.getCount() > 0)
+            token = c.getString(c.getColumnIndex(dbInfo.tokenRow));
+        else
+            token = null;
         c.close();
         return token;
     }

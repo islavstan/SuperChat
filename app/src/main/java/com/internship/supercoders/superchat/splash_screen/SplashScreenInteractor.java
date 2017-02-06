@@ -15,6 +15,8 @@ public interface SplashScreenInteractor {
 
     void saveToken(String token);
 
+    String getToken();
+
     interface UserAuthorizationFinishedListener {
 
         void onError();

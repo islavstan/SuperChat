@@ -91,5 +91,10 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
         dbManager.writeToken(token);
 
     }
+
+    @Override
+    public String getToken() {
+        return dbManager.getToken();
+    }
 }
     
