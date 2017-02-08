@@ -18,7 +18,7 @@ import org.junit.Rule;
 
 public class Runner {
     Context mContext;
-    WaitFor waitFor;
+    public WaitFor waitFor;
 
     @Rule
     public ActivityTestRule mActivityRule = new ActivityTestRule(SplashScreenActivity.class);
