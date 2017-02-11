@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_invite_users"
-            android:title="@string/menu_slideshow" />
+            android:title="@string/menu_invite_users" />
     </group>
 
     <group
@@ -28,7 +28,7 @@
         <item
             android:id="@+id/nav_send"
             android:icon="@drawable/ic_menu_log_out"
-            android:title="@string/log_out" />
+            android:title="@string/menu_log_out" />
     </group>
 
 </menu>

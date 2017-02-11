@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -14,13 +15,45 @@
         android:layout_height="match_parent" />
 
 
-    <android.support.design.widget.NavigationView
+    <LinearLayout
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/cardview_light_background"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_navigation"
-        app:menu="@menu/activity_navigation_drawer" />
+        android:orientation="vertical"
+        app:headerLayout="@layout/nav_header_navigation">
 
+        <include layout="@layout/nav_header_navigation" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_navigation_menu_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            tools:layout_height="200dp"
+            tools:listitem="@layout/nav_item_menu_navigation" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/grey"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_navigation_menu_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            tools:layout_height="200dp"
+            tools:listitem="@layout/nav_item_menu_navigation" />
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
