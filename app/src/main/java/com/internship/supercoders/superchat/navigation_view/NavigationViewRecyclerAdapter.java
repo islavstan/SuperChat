@@ -18,6 +18,7 @@ import java.util.List;
 
 public class NavigationViewRecyclerAdapter extends RecyclerView.Adapter<NavigationViewRecyclerAdapter.NavigationMenuViewHolder> {
     private List<NavMenuItem> mMenu;
+    private NavigationItemClickListener mItemClickListener;
 
     public class NavigationMenuViewHolder extends RecyclerView.ViewHolder {
         public ImageView itemIcon;
@@ -27,12 +28,17 @@ public class NavigationViewRecyclerAdapter extends RecyclerView.Adapter<Navigati
             super(itemView);
             itemIcon = (ImageView) itemView.findViewById(R.id.nav_menu_icon);
             itemText = (TextView) itemView.findViewById(R.id.tvItem);
+            itemView.setOnClickListener(view -> {
+                if (mItemClickListener != null) {
+                    mItemClickListener.menuItemOnClick(mMenu.get(getAdapterPosition()).getItemId());
+                }
+            });
         }
     }
 
-    public NavigationViewRecyclerAdapter(List<NavMenuItem> navMenu) {
+    public NavigationViewRecyclerAdapter(List<NavMenuItem> navMenu, NavigationItemClickListener listener) {
         this.mMenu = navMenu;
-
+        this.mItemClickListener = listener;
     }
 
     @Override
@@ -53,4 +59,6 @@ public class NavigationViewRecyclerAdapter extends RecyclerView.Adapter<Navigati
     public int getItemCount() {
         return mMenu.size();
     }
+
+
 }

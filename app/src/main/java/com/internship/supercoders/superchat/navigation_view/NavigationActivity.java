@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.models.navigation_menu.NavMenuItem;
@@ -20,13 +21,14 @@ import com.internship.supercoders.superchat.models.navigation_menu.NavMenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavigationActivity extends AppCompatActivity {
+public class NavigationActivity extends AppCompatActivity implements NavigationItemClickListener {
     private List<NavMenuItem> topNavMenu = new ArrayList<>();
     private List<NavMenuItem> bottomNavMenu = new ArrayList<>();
     private RecyclerView topRecyclerView;
     private RecyclerView bottomRecyclerView;
     private NavigationViewRecyclerAdapter topMenuAdapter;
     private NavigationViewRecyclerAdapter bottomMenuAdapter;
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class NavigationActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -83,8 +85,9 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     private void createMenu(RecyclerView recyclerView, List<NavMenuItem> navMenu, NavigationViewRecyclerAdapter mAdapter, NavigationMenuType menuType) {
+        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         prepareMenuItems(navMenu, menuType);
-        mAdapter = new NavigationViewRecyclerAdapter(navMenu);
+        mAdapter = new NavigationViewRecyclerAdapter(navMenu, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -95,15 +98,32 @@ public class NavigationActivity extends AppCompatActivity {
         navMenu.clear();
         switch (menuType) {
             case TOP:
-                navMenu.add(new NavMenuItem(R.drawable.ic_menu_add_chat, getString(R.string.menu_create_new_chat)));
-                navMenu.add(new NavMenuItem(R.drawable.ic_menu_users, getString(R.string.menu_users)));
-                navMenu.add(new NavMenuItem(R.drawable.ic_menu_invite_users, getString(R.string.menu_invite_users)));
+                navMenu.add(new NavMenuItem(R.drawable.ic_menu_add_chat, getString(R.string.menu_create_new_chat), NavigationItemId.CREATE_NEW_CHAT));
+                navMenu.add(new NavMenuItem(R.drawable.ic_menu_users, getString(R.string.menu_users), NavigationItemId.USERS));
+                navMenu.add(new NavMenuItem(R.drawable.ic_menu_invite_users, getString(R.string.menu_invite_users), NavigationItemId.INVITE_USERS));
                 break;
             case BOTTOM:
-                navMenu.add(new NavMenuItem(R.drawable.ic_menu_settings, getString(R.string.menu_settings)));
-                navMenu.add(new NavMenuItem(R.drawable.ic_menu_log_out, getString(R.string.menu_log_out)));
+                navMenu.add(new NavMenuItem(R.drawable.ic_menu_settings, getString(R.string.menu_settings), NavigationItemId.SETTINGS));
+                navMenu.add(new NavMenuItem(R.drawable.ic_menu_log_out, getString(R.string.menu_log_out), NavigationItemId.LOG_OUT));
                 break;
         }
     }
 
+    @Override
+    public void menuItemOnClick(NavigationItemId id) {
+        drawer.closeDrawer(GravityCompat.START);
+        switch (id) {
+            case CREATE_NEW_CHAT:
+                break;
+            case USERS:
+                break;
+            case INVITE_USERS:
+                break;
+            case SETTINGS:
+                break;
+            case LOG_OUT:
+                break;
+        }
+
+    }
 }
