@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.navigation_view;
+package com.internship.supercoders.superchat.navigation.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.internship.supercoders.superchat.R;
-import com.internship.supercoders.superchat.models.navigation_menu.NavMenuItem;
 
 import java.util.List;
 

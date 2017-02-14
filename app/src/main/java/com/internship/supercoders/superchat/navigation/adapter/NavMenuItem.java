@@ -1,6 +1,4 @@
-package com.internship.supercoders.superchat.models.navigation_menu;
-
-import com.internship.supercoders.superchat.navigation_view.NavigationItemId;
+package com.internship.supercoders.superchat.navigation.adapter;
 
 /**
  * Created by Max on 11.02.2017.

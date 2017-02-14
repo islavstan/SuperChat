@@ -79,4 +79,9 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 
     compile 'com.vicmikhailau:MaskedEditText:2.0.1'
+    //Moxy
+    compile 'com.arello-mobile:moxy:1.4.5'
+    annotationProcessor 'com.arello-mobile:moxy-compiler:1.4.5'
+    compile 'com.arello-mobile:moxy-app-compat:1.4.5'
+    compile "com.android.support:appcompat-v7:25.1.0"
 }

@@ -1,6 +1,8 @@
 package com.internship.supercoders.superchat.api;
 
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -13,6 +15,7 @@ public class ApiClient {
     public static final String URL_FOR_UPLOAD_AVA = "https://qbprod.s3.amazonaws.com/";
 
     private static Retrofit retrofit = null;
+    private static Retrofit rxRetrofit = null;
 
     public static Retrofit getRetrofit() {
         if (retrofit == null) {
@@ -25,13 +28,18 @@ public class ApiClient {
         return retrofit;
     }
 
+    @NonNull
     public static Retrofit getRxRetrofit() {
-        Gson result = new GsonBuilder().create();
-        return new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(result))
-                .baseUrl(BASE_URL)
-                .build();
+        if (rxRetrofit == null) {
+            Gson result = new GsonBuilder().create();
+            rxRetrofit = new Retrofit.Builder()
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(result))
+                    .baseUrl(BASE_URL)
+                    .build();
+
+        }
+        return rxRetrofit;
 
     }
 

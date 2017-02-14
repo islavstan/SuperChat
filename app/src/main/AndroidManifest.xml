@@ -48,7 +48,7 @@
             android:value="cb34282d7442515b6f58308a9ff0b0c3e4320812" />
 
         <activity
-            android:name=".navigation_view.NavigationActivity"
+            android:name=".navigation.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:theme="@style/AppTheme">
             <intent-filter>

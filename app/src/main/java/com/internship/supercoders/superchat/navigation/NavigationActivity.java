@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.navigation_view;
+package com.internship.supercoders.superchat.navigation;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,14 +13,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.internship.supercoders.superchat.R;
-import com.internship.supercoders.superchat.models.navigation_menu.NavMenuItem;
+import com.internship.supercoders.superchat.navigation.adapter.NavMenuItem;
+import com.internship.supercoders.superchat.navigation.adapter.NavigationItemClickListener;
+import com.internship.supercoders.superchat.navigation.adapter.NavigationItemId;
+import com.internship.supercoders.superchat.navigation.adapter.NavigationMenuType;
+import com.internship.supercoders.superchat.navigation.adapter.NavigationViewRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavigationActivity extends AppCompatActivity implements NavigationItemClickListener {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class NavigationActivity extends MvpAppCompatActivity implements NavigationItemClickListener {
+
+    @InjectPresenter
+    NavigationPresenterImpl mNavigatioPresenter;
+
     private List<NavMenuItem> topNavMenu = new ArrayList<>();
     private List<NavMenuItem> bottomNavMenu = new ArrayList<>();
     private RecyclerView topRecyclerView;
@@ -29,6 +41,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationI
     private NavigationViewRecyclerAdapter topMenuAdapter;
     private NavigationViewRecyclerAdapter bottomMenuAdapter;
     DrawerLayout drawer;
+    CircleImageView ivAvatar;
+    TextView name;
+    TextView email;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +66,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationI
         bottomRecyclerView = (RecyclerView) findViewById(R.id.rv_navigation_menu_bottom);
         createMenu(topRecyclerView, topNavMenu, topMenuAdapter, NavigationMenuType.TOP);
         createMenu(bottomRecyclerView, bottomNavMenu, bottomMenuAdapter, NavigationMenuType.BOTTOM);
+
+        ivAvatar = (CircleImageView) findViewById(R.id.iv_user_avatar);
+        name = (TextView) findViewById(R.id.tv_name);
+        email = (TextView) findViewById(R.id.tv_email);
+        mNavigatioPresenter.getUserInfo();
     }
 
     @Override
