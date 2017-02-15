@@ -51,16 +51,16 @@ public interface RegistrationInteractor {
 
     void authorization(String token, File file, String email, String password, String fullname, String phone, String website, String facebookId, RegistrationFinishedListener listener);
 
-    void createFile(File file, String token, RegistrationFinishedListener listener);
+    void createFile(String userId, File file, String token, RegistrationFinishedListener listener);
 
     void userAuthorization(String email, String password, RegistrationFinishedListener listener);
 
-    void signIn(File file, String token, String email, String password, RegistrationFinishedListener listener);
+    void signIn(String userId, File file, String token, String email, String password, RegistrationFinishedListener listener);
 
-    void uploadFile(String image_id, String token, RegistrationFinishedListener listener, String contentType, String expires, String acl, String key, String policy, String success_action_status, String x_amz_algorithm
+    void uploadFile(String userId, String image_id, String token, RegistrationFinishedListener listener, String contentType, String expires, String acl, String key, String policy, String success_action_status, String x_amz_algorithm
             , String x_amz_credential, String x_amz_date, String x_amz_signature, File file);
 
-    void declaringFileUploaded(String image_id, String token, File file, RegistrationFinishedListener listener);
+    void declaringFileUploaded(String userId, String image_id, String token, File file, RegistrationFinishedListener listener);
 
     void validateUserInfo(EditText emailET, EditText passwordET, EditText confPassET, Button signupBtn, RegistrationFinishedListener listener);
 
@@ -72,7 +72,7 @@ public interface RegistrationInteractor {
 
     void makePhotoFromCamera(Intent data, File dir, RegistrationFinishedListener listener);
 
-
+    void updateUserAva(String image_id, String userId, String token, RegistrationFinishedListener listener);
 }
 
 
