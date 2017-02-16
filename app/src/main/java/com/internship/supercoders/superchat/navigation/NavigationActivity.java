@@ -23,16 +23,17 @@ import com.internship.supercoders.superchat.navigation.adapter.NavigationItemCli
 import com.internship.supercoders.superchat.navigation.adapter.NavigationItemId;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationMenuType;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationViewRecyclerAdapter;
+import com.internship.supercoders.superchat.navigation.interfaces.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class NavigationActivity extends MvpAppCompatActivity implements NavigationItemClickListener {
+public class NavigationActivity extends MvpAppCompatActivity implements NavigationView, NavigationItemClickListener {
 
     @InjectPresenter
-    NavigationPresenterImpl mNavigatioPresenter;
+    NavigationPresenterImpl mNavigationPresenter;
 
     private List<NavMenuItem> topNavMenu = new ArrayList<>();
     private List<NavMenuItem> bottomNavMenu = new ArrayList<>();
@@ -70,7 +71,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         ivAvatar = (CircleImageView) findViewById(R.id.iv_user_avatar);
         name = (TextView) findViewById(R.id.tv_name);
         email = (TextView) findViewById(R.id.tv_email);
-        mNavigatioPresenter.getUserInfo();
+        mNavigationPresenter.getUserInfo();
     }
 
     @Override
@@ -145,6 +146,11 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
             case LOG_OUT:
                 break;
         }
+
+    }
+
+    @Override
+    public void updateUserInfo() {
 
     }
 }
