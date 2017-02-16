@@ -30,6 +30,8 @@ import com.internship.supercoders.superchat.models.registration_request.ReqUser;
 import com.internship.supercoders.superchat.models.registration_request.ReqUserData;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
+import com.internship.supercoders.superchat.models.user_update_request.UpdateUser;
+import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
 import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -198,17 +200,20 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     public void registration(final File file, final String token, final String email, final String password, String fullname, String phone, String website, String facebookId, final RegistrationFinishedListener listener) {
 
         final Points.RegistrationPoint apiServRegistr = ApiClient.getRetrofit().create(Points.RegistrationPoint.class);
-        Call<Object> regCall = apiServRegistr.registration("application/json", "0.1.0", token, new ReqUser(new ReqUserData(password,
+        Call<UpdateUser> regCall = apiServRegistr.registration("application/json", "0.1.0", token, new ReqUser(new ReqUserData(password,
                 email, fullname, phone, website, facebookId)));
-        regCall.enqueue(new Callback<Object>() {
+        regCall.enqueue(new Callback<UpdateUser>() {
             @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
+            public void onResponse(Call<UpdateUser> call, Response<UpdateUser> response) {
 
                 if (response.isSuccessful()) {
+                    UpdateUser user = response.body();
+                    String userId = user.getUpdateUserData().getId();
+
                     if (file == null) {
                         listener.onSuccess(token);
 
-                    } else signIn(file, token, email, password, listener);
+                    } else signIn(userId, file, token, email, password, listener);
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -228,7 +233,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
+            public void onFailure(Call<UpdateUser> call, Throwable t) {
 
             }
         });
@@ -252,7 +257,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
 
     @Override
-    public void createFile(final File file, final String token, final RegistrationFinishedListener listener) {
+    public void createFile(String userId, final File file, final String token, final RegistrationFinishedListener listener) {
         Log.d("stas", "createfile");
         String name = randomName();
         final Points.CreateFilePoint apiCreateFile = ApiClient.getRetrofit().create(Points.CreateFilePoint.class);
@@ -282,7 +287,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     String x_amz_signature = uri.getQueryParameter("x-amz-signature");
                     // Log.d("stas",x_amz_signature);
                     Log.d("stas", "params = " + params);
-                    uploadFile(image_id, token, listener, contentType, expires, acl, key, policy, success_action_status, x_amz_algorithm,
+                    uploadFile(userId, image_id, token, listener, contentType, expires, acl, key, policy, success_action_status, x_amz_algorithm,
                             x_amz_credential, x_amz_date, x_amz_signature, file);
 
 
@@ -352,14 +357,14 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
     @Override
-    public void signIn(final File file, final String token, String email, String password, final RegistrationFinishedListener listener) {
+    public void signIn(String userId, final File file, final String token, String email, String password, final RegistrationFinishedListener listener) {
         final Points.SignInPoint apiSignIn = ApiClient.getRetrofit().create(Points.SignInPoint.class);
         Call<Objects> call = apiSignIn.signIn("application/json", "0.1.0", token, new VerificationData(email, password));
         call.enqueue(new Callback<Objects>() {
             @Override
             public void onResponse(Call<Objects> call, Response<Objects> response) {
                 if (response.isSuccessful()) {
-                    createFile(file, token, listener);
+                    createFile(userId, file, token, listener);
 
                 } else {
                     try {
@@ -383,7 +388,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
 
     @Override
-    public void uploadFile(final String image_id, final String token, final RegistrationFinishedListener listener, final String contentType, final String expires, final String acl, final String key, final String policy, final String success_action_status,
+    public void uploadFile(String userId, final String image_id, final String token, final RegistrationFinishedListener listener, final String contentType, final String expires, final String acl, final String key, final String policy, final String success_action_status,
                            final String x_amz_algorithm, final String x_amz_credential, final String x_amz_date, final String x_amz_signature, final File file) {
         final HttpUrl url = new HttpUrl.Builder().scheme("https").host("qbprod.s3.amazonaws.com").build();
         final OkHttpClient client = new OkHttpClient();
@@ -419,7 +424,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 if (response != null) {
                     long fileSize = file.length();
                     Log.d("stas", "file size = " + Long.toString(fileSize));
-                    declaringFileUploaded(image_id, token, file, listener);
+                    declaringFileUploaded(userId, image_id, token, file, listener);
 
 
                 } else listener.onError();
@@ -429,7 +434,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
     @Override
-    public void declaringFileUploaded(String image_id, final String token, File file, final RegistrationFinishedListener listener) {
+    public void declaringFileUploaded(String userId, String image_id, final String token, File file, final RegistrationFinishedListener listener) {
         long fileSize = file.length();
         Log.d("stas", "file size = " + Long.toString(fileSize));
         final Points.DeclaringFileUploadedPoint apiDecUpl = ApiClient.getRetrofit().create(Points.DeclaringFileUploadedPoint.class);
@@ -443,7 +448,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Log.d("stas", response + "");
                 if (response.isSuccessful()) {
-                    listener.onSuccess(token);
+                  updateUserAva(image_id, userId,token, listener);
 
                 } else
                     try {
@@ -458,6 +463,34 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("stas", "onFailure = " + t.getMessage());
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void updateUserAva(String image_id, String userId, String token, RegistrationFinishedListener listener) {
+        final Points.UpdateUserPoint updateUserPoint = ApiClient.getRetrofit().create(Points.UpdateUserPoint.class);
+        Call<UpdateUser> call = updateUserPoint.update(userId, "application/json", "0.1.0", token, new UpdateUser(new UpdateUserData(image_id)));
+        call.enqueue(new Callback<UpdateUser>() {
+            @Override
+            public void onResponse(Call<UpdateUser> call, Response<UpdateUser> response) {
+                if (response.isSuccessful()) {
+                    listener.onSuccess(token);
+                } else
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("stas", "updateUserAva error = " + jObjError);
+                        listener.onError();
+                    } catch (Exception e) {
+                        Log.d("stas", e.getMessage());
+                    }
+            }
+
+            @Override
+            public void onFailure(Call<UpdateUser> call, Throwable t) {
 
             }
         });

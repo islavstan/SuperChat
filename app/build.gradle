@@ -84,4 +84,7 @@ dependencies {
     annotationProcessor 'com.arello-mobile:moxy-compiler:1.4.5'
     compile 'com.arello-mobile:moxy-app-compat:1.4.5'
     compile "com.android.support:appcompat-v7:25.1.0"
+
+    compile 'com.github.clans:fab:1.6.4'
+
 }

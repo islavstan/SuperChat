@@ -59,4 +59,8 @@
         </activity>
     </application>
 
+
+        <activity android:name=".chats.ChatsActivity"></activity>
+    </application>
+
 </manifest>
