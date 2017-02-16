@@ -5,6 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="splash_screen_background">#327780</color>
+    <color name="gray">#BDBDBD</color>
+
 
 
     <!--sing up-->

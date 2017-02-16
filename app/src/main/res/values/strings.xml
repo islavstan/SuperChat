@@ -45,6 +45,9 @@
     <string name="send">Send</string>
     <string name="cancel">Cancel</string>
 
-
+    <!--CHATS-->
+    <string name="chats">CHATS</string>
+    <string name="public_chats">public</string>
+    <string name="private_chats">private</string>
 
 </resources>

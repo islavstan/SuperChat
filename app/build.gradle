@@ -79,4 +79,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 
     compile 'com.vicmikhailau:MaskedEditText:2.0.1'
+
+    compile 'com.github.clans:fab:1.6.4'
+
 }
