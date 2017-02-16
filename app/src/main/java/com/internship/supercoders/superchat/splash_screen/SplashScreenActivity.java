@@ -8,10 +8,10 @@ import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
 import com.internship.supercoders.superchat.db.DBMethods;
+import com.internship.supercoders.superchat.navigation.NavigationActivity;
 import com.internship.supercoders.superchat.utils.UserPreferences;
 
 public class SplashScreenActivity extends AppCompatActivity implements SplashScreenView {
@@ -35,7 +35,7 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
 
     @Override
     public void navigateToMainScreen() {
-        Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        Intent intent = new Intent(SplashScreenActivity.this, NavigationActivity.class);
         startActivity(intent);
     }
 

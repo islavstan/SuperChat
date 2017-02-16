@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/main_navigation_menu"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_add_chat"
+            android:title="@string/menu_create_new_chat" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_menu_users"
+            android:title="@string/menu_users" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_invite_users"
+            android:title="@string/menu_invite_users" />
+    </group>
+
+    <group
+        android:id="@+id/second_navigation_menu"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="@string/menu_settings" />
+        <item
+            android:id="@+id/nav_send"
+            android:icon="@drawable/ic_menu_log_out"
+            android:title="@string/menu_log_out" />
+    </group>
+
+</menu>

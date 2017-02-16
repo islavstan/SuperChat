@@ -6,9 +6,25 @@
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <activity
+        android:name="com.facebook.CustomTabActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+            <data android:scheme="@string/fb_login_protocol_scheme" />
+        </intent-filter>
+    </activity>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -16,7 +32,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity android:name=".splash_screen.SplashScreenActivity">
             <intent-filter>
@@ -26,23 +44,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-       <activity android:name=".registration.RegistrationActivity" />
+        <activity android:name=".registration.RegistrationActivity" />
         <activity android:name=".authorization.AuthorizationActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cb34282d7442515b6f58308a9ff0b0c3e4320812" />
+
+        <activity
+            android:name=".navigation.NavigationActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
+
+        </activity>
     </application>
-
-
-    <activity
-        android:name="com.facebook.CustomTabActivity"
-        android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="@string/fb_login_protocol_scheme" />
-        </intent-filter>
-    </activity>
 
 </manifest>
