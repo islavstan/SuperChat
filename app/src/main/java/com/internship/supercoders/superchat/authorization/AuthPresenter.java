@@ -16,4 +16,6 @@ public interface AuthPresenter {
     void changePassword();
 
     void validateData(VerificationData verificationData);
+
+    void signIn(String token, String login, String password);
 }

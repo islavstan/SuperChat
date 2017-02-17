@@ -1,9 +1,11 @@
 package com.internship.supercoders.superchat.navigation;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import com.github.clans.fab.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.chats.adapters.ChatsViewPagerAdapter;
 import com.internship.supercoders.superchat.navigation.adapter.NavMenuItem;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationItemId;
@@ -45,7 +48,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     CircleImageView ivAvatar;
     TextView name;
     TextView email;
-
+    ViewPager viewPager;
+    ChatsViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +57,11 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle(getResources().getString(R.string.chats));
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setOnClickListener(view -> addNewChat());
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -72,6 +77,34 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         name = (TextView) findViewById(R.id.tv_name);
         email = (TextView) findViewById(R.id.tv_email);
         mNavigationPresenter.getUserInfo();
+
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.public_chats)));
+        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.private_chats)));
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setOffscreenPageLimit(2);
+        adapter = new ChatsViewPagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+
     }
 
     @Override
@@ -151,6 +184,11 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
 
     @Override
     public void updateUserInfo() {
+
+    }
+
+    @Override
+    public void addNewChat() {
 
     }
 }

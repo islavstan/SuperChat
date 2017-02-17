@@ -71,12 +71,7 @@ import rx.functions.Func3;
 import rx.subscriptions.CompositeSubscription;
 
 public class RegistrInteractorImpl implements RegistrationInteractor {
-    /* private Long tsLong = System.currentTimeMillis() / 1000;
-     private String ts = tsLong.toString();
-     private int randomId = new Random().nextInt();
-     private String signature;
-     final String application_id = "52262";
-     final String auth_key = "Mer3vGU4AOrw2zc";*/
+
     private String signature;
     Matcher matcher;
     private Pattern pattern = android.util.Patterns.EMAIL_ADDRESS;
@@ -359,10 +354,10 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     @Override
     public void signIn(String userId, final File file, final String token, String email, String password, final RegistrationFinishedListener listener) {
         final Points.SignInPoint apiSignIn = ApiClient.getRetrofit().create(Points.SignInPoint.class);
-        Call<Objects> call = apiSignIn.signIn("application/json", "0.1.0", token, new VerificationData(email, password));
-        call.enqueue(new Callback<Objects>() {
+        Call<UpdateUserData> call = apiSignIn.signIn("application/json", "0.1.0", token, new VerificationData(email, password));
+        call.enqueue(new Callback<UpdateUserData>() {
             @Override
-            public void onResponse(Call<Objects> call, Response<Objects> response) {
+            public void onResponse(Call<UpdateUserData> call, Response<UpdateUserData> response) {
                 if (response.isSuccessful()) {
                     createFile(userId, file, token, listener);
 
@@ -380,7 +375,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             }
 
             @Override
-            public void onFailure(Call<Objects> call, Throwable t) {
+            public void onFailure(Call<UpdateUserData> call, Throwable t) {
 
             }
         });

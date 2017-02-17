@@ -30,7 +30,7 @@ public interface AuthView {
     void signInUser();
 
     // TODO: 1/30/17 [Code Review] It is not obvious what this method really does, please rename
-    void showAuthorizationError();
+    void showAuthorizationError(String error);
 
     // TODO: 1/30/17 [Code Review] It is not obvious what this method really does, please rename
     void setUserSignedIn();

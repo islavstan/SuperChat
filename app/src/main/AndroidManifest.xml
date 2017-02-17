@@ -46,6 +46,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".registration.RegistrationActivity" />
         <activity android:name=".authorization.AuthorizationActivity" />
+        <activity android:name=".chats.ChatsActivity"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -60,7 +61,7 @@
     </application>
 
 
-        <activity android:name=".chats.ChatsActivity"></activity>
-    </application>
+
+
 
 </manifest>

@@ -16,12 +16,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.forgot_password.ForgotPasswordDialog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
+import com.internship.supercoders.superchat.navigation.NavigationActivity;
 import com.internship.supercoders.superchat.registration.RegistrationActivity;
 import com.internship.supercoders.superchat.utils.ViewUtils;
 
@@ -62,23 +65,24 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
     ViewUtils viewUtils;
     String token;
     AuthInteractorImpl authInteractor;
+    private DBMethods db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
-        Intent intent = getIntent();
-         token = intent.getStringExtra("token");
+        db = new DBMethods(this);
+         token = db.getToken();
         Log.i(AppConsts.LOG_TAG, "Session token " + token);
 
         viewUtils = new ViewUtils(this);
         authPresenter = new AuthPresenterImpl(this);
-        authInteractor = new AuthInteractorImpl(this);
+        authInteractor = new AuthInteractorImpl(/*this*/);
 
 //        viewUtils.hideKeyboard();
 
-        etEmail.addTextChangedListener(new TextWatcher() {
+    /*    etEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -128,7 +132,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
                     authInteractor.validatePassword(((EditText) v).getText().toString());
                 }
             }
-        });
+        });*/
     }
 
 
@@ -178,8 +182,8 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
     }
 
     @Override
-    public void showAuthorizationError() {
-
+    public void showAuthorizationError(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -206,7 +210,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
     public void onBtnSignIn() {
         // TODO: 1/30/17 [Code Review] This is a part of business logic, move it to interactors/model layer
         // all the validation should not be here
-        String email = etEmail.getText().toString();
+     /*   String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
         VerificationData verificationData = new VerificationData(email, password);
 
@@ -218,7 +222,10 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
             authInteractor.writeUserAuthDataToDB(verificationData);
             setUserSignedIn();
             Log.i(AppConsts.LOG_TAG, "Check Sign IN: " + Boolean.toString(authPresenter.userPreferences.isUserSignedIn()));
-        }
+        }*/
+        String email = etEmail.getText().toString();
+        String password = etPassword.getText().toString();
+        authPresenter.signIn(token, email, password);
     }
 
     @OnClick(R.id.signup_btn)
@@ -233,7 +240,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
 
     @Override
     public void navigateToLogin(String token) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, NavigationActivity.class);
         intent.putExtra("token",token);
         startActivity(intent);
     }

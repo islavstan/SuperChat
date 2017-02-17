@@ -7,9 +7,7 @@ import android.util.Log;
 
 import static com.internship.supercoders.superchat.data.AppConsts.LOG_TAG;
 
-/**
- * Created by RON on 21.01.2017.
- */
+
 public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
@@ -20,6 +18,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d(LOG_TAG, "--- onCreate database ---");
         createAuthTable(db);
+        createMyInfoTable(db);
+        createMyContactsTable(db);
     }
 
     @Override
@@ -37,5 +37,19 @@ public class DBHelper extends SQLiteOpenHelper {
                 + dbInfo.timeRow + " long"
                 + ");");
     }
+
+    private void createMyInfoTable(SQLiteDatabase db) {
+        db.execSQL("create table myInfo ("
+                + "id integer primary key autoincrement, my_id integer, login text, password text, email text, " +
+                "full_name text, phone text, website text, blob_id text, facebook_id text, photo_path text );");
+    }
+
+    private void createMyContactsTable(SQLiteDatabase db) {
+        db.execSQL("create table myContacts ("
+                + "id integer primary key autoincrement, my_id integer, login text, password text, email text, " +
+                "full_name text, phone text, website text, blob_id text, facebook_id text, photo_path text );");
+
+    }
+
 
 }

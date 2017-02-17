@@ -7,6 +7,7 @@ import com.internship.supercoders.superchat.models.registration_request.ReqUser;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUser;
+import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
 
 import java.util.Map;
 import java.util.Objects;
@@ -68,7 +69,7 @@ public interface Points {
 
     interface SignInPoint {
         @POST("/login.json")
-        Call<Objects> signIn(@Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body VerificationData verificationData);
+        Call<UpdateUserData> signIn(@Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body VerificationData verificationData);
 
     }
 
@@ -93,14 +94,14 @@ public interface Points {
     interface UpdateUserPoint {
 
         @PUT("/users/{id}.json")
-        Call<UpdateUser> update(@Path("id")String id, @Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body UpdateUser user);
+        Call<UpdateUser> update(@Path("id") String id, @Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body UpdateUser user);
     }
 
-interface RetrieveDialogs{
-    @GET("chat/Dialog.json")
-    Call<DialogModel>retrieve (@Header("QB-Token") String token);
+    interface RetrieveDialogs {
+        @GET("chat/Dialog.json")
+        Call<DialogModel> retrieve(@Header("QB-Token") String token);
 
-}
+    }
 
 
 }
