@@ -2,15 +2,20 @@ package com.internship.supercoders.superchat.splash_screen;
 
 //import android.util.Log;
 
+import android.util.Log;
+
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
+import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
 import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 import com.internship.supercoders.superchat.utils.UserPreferences;
+
+import org.json.JSONObject;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -18,6 +23,9 @@ import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rx.Observable;
 
 
@@ -75,6 +83,36 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
         params.put("signature", signature);
         return apiService.getRxSession(params);
     }
+
+    @Override
+    public void signIn() {
+      /*  final Points.SignInPoint apiSignIn = ApiClient.getRetrofit().create(Points.SignInPoint.class);
+        Call<UpdateUserData> call = apiSignIn.signIn("application/json", "0.1.0", token, new VerificationData(email, password));
+        call.enqueue(new Callback<UpdateUserData>() {
+            @Override
+            public void onResponse(Call<UpdateUserData> call, Response<UpdateUserData> response) {
+                if (response.isSuccessful()) {
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("stas", "SplashScreen signIn error = " + jObjError.getString("errors"));
+
+                    } catch (Exception e) {
+                        Log.d("stas", e.getMessage());
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<UpdateUserData> call, Throwable t) {
+
+            }
+        });*/
+    }
+
 
     @Override
     public boolean isAuth() {

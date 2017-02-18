@@ -4,20 +4,29 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.TextView;
 
+import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
+import com.squareup.picasso.Picasso;
 
-/**
- * Created by RON on 21.01.2017.
- */
+import java.io.File;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+
 public class DBMethods {
     DBHelper dbHelper;
     DBInfo dbInfo;
     SQLiteDatabase db;
+    Context context;
 
     public DBMethods(Context context) {
+        this.context = context;
         dbHelper = new DBHelper(context);
         dbInfo = new DBInfo();
         db = dbHelper.getWritableDatabase();
@@ -106,4 +115,84 @@ public class DBMethods {
         return token;
     }
 
+
+    public void saveMyInfo(String photoPath, String blobId, int id, String email, String password, String fullname, String phone, String website, String facebookId) {
+        ContentValues cv = new ContentValues();
+        cv.put("my_id", id);
+        cv.put("email", email);
+        cv.put("password", password);
+        cv.put("full_name", fullname);
+        cv.put("phone", phone);
+        cv.put("website", website);
+        cv.put("facebook_id", facebookId);
+        cv.put("blob_id", blobId);
+        cv.put("photo_path", photoPath);
+        cv.put("signed_in", 1);
+        db.insert("myInfo", null, cv);
+
+
+    }
+
+    public void getMyInfoForNavigation(CircleImageView imageView, TextView email, TextView fullName) {
+        Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
+        for (int i = 0; i < c.getCount(); i++) {
+            if (c.moveToNext()) {
+                String mEmail = c.getString(c.getColumnIndex("email"));
+                String mFullName = c.getString(c.getColumnIndex("full_name"));
+                String photoPath = c.getString(c.getColumnIndex("photo_path"));
+                Log.d("stas", "photopath = " + photoPath);
+                String root = Environment.getExternalStorageDirectory().toString();
+                Log.d("stas", root + "/SuperChat/ava/" + photoPath);
+                Uri uri = Uri.fromFile(new File(root + "/SuperChat/ava/" + photoPath));
+                Picasso.with(context).load(uri).placeholder(R.drawable.userpic).into(imageView);
+                email.setText(mEmail);
+                fullName.setText(mFullName);
+            }
+        }
+        c.close();
+
+    }
+
+    public boolean getLoginUser() {
+        Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
+        boolean exists = (c.getCount() > 0);
+        c.close();
+        return exists;
+    }
+
+    public void signOut() {
+        String strSQL = "UPDATE myInfo SET signed_in = '0' WHERE signed_in = '1'";
+        db.execSQL(strSQL);
+    }
+
+    public void saveImagePath(String path, String id) {
+        String strSQL = "UPDATE myInfo SET photo_path = '" + path + "' WHERE my_id = '" + id + "'";
+        db.execSQL(strSQL);
+    }
+
+    public String getEmail() {
+        Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
+        String email = null;
+        for (int i = 0; i < c.getCount(); i++) {
+            if (c.moveToNext()) {
+                email = c.getString(c.getColumnIndex("email"));
+            }
+        }
+        c.close();
+        return email;
+
+    }
+
+    public String getPassword() {
+        Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
+        String password = null;
+        for (int i = 0; i < c.getCount(); i++) {
+            if (c.moveToNext()) {
+                password = c.getString(c.getColumnIndex("password"));
+            }
+        }
+        c.close();
+        return password;
+
+    }
 }

@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="16dp"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
+        android:layout_margin="16dp"
         android:id="@+id/card_view"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        card_view:cardElevation="4dp"
         android:layout_height="wrap_content">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="60dp"
+        android:layout_width="48dp"
         android:id="@+id/photo"
         android:layout_centerVertical="true"
-        android:layout_height="60dp"
+        android:layout_height="48dp"
         android:src="@drawable/userpic"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
@@ -33,9 +39,9 @@
           android:textColor="@color/colorCardBackground"
           android:layout_marginLeft="8dp"
           android:layout_toLeftOf="@+id/date"
-          android:layout_marginTop="16dp"
+          android:layout_marginTop="8dp"
           android:layout_marginRight="8dp"
-          android:textSize="20sp"
+          android:textSize="18sp"
           android:layout_toRightOf="@+id/photo"/>
     <TextView
     android:layout_width="wrap_content"
@@ -46,7 +52,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginRight="8dp"
-    android:textSize="18sp"
+    android:textSize="16sp"
     android:layout_below="@+id/groupName"
     android:layout_toRightOf="@+id/photo"/>
 
@@ -60,8 +66,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
-        android:textSize="18sp"
-        android:layout_marginBottom="16dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
         android:layout_below="@+id/userName"
         android:layout_toRightOf="@+id/photo"/>
 
@@ -71,17 +77,17 @@
         android:id="@+id/date"
         android:maxLines="1"
         android:layout_alignParentRight="true"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
         android:text="11:22"/>
 
 
-</RelativeLayout>
+    </RelativeLayout>
 
 
 
 
     </android.support.v7.widget.CardView>
 
-</LinearLayout>
+    </LinearLayout>

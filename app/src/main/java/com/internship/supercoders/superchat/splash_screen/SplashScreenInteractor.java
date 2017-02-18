@@ -1,6 +1,7 @@
 package com.internship.supercoders.superchat.splash_screen;
 
 
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
@@ -28,6 +29,8 @@ public interface SplashScreenInteractor {
     Observable<Session> userAuthorization(String email, String password);
 
     Observable<Session> createSession();
+
+    void signIn();
 
     boolean isAuth();
 }

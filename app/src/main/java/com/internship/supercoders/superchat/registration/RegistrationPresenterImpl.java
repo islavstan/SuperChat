@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.facebook.CallbackManager;
 import com.facebook.login.widget.LoginButton;
+import com.internship.supercoders.superchat.db.DBMethods;
 
 import java.io.File;
 
@@ -56,13 +57,13 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
     }
 
     @Override
-    public void validateData(String token, File file, String email, String password, String fullname, String phone, String website, String facebookId) {
+    public void validateData(DBMethods dbMethods, String token, File file, String email, String password, String fullname, String phone, String website, String facebookId) {
         if (registrationView != null) {
             registrationView.showProgress();
             registrationView.disableSignUp();
         }
 
-        regInteractor.authorization(token, file, email, password, fullname, phone, website, facebookId, this);
+        regInteractor.authorization(dbMethods, token, file, email, password, fullname, phone, website, facebookId, this);
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.facebook.login.widget.LoginButton;
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.api.RequestBuilder;
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.blob.Blob;
 import com.internship.supercoders.superchat.models.blob.BlobData;
@@ -43,9 +45,12 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
@@ -83,9 +88,9 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
     @Override
-    public void authorization(String token, final File file, final String email, final String password, final String fullname, final String phone, final String website, String facebookId, final RegistrationFinishedListener listener) {
+    public void authorization(DBMethods db, String token, final File file, final String email, final String password, final String fullname, final String phone, final String website, String facebookId, final RegistrationFinishedListener listener) {
         if (token != null) {
-            registration(file, token, email, password, fullname, phone, website, facebookId, listener);
+            registration(db, file, token, email, password, fullname, phone, website, facebookId, listener);
         } else {
 
 
@@ -123,7 +128,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                         Log.d("stas", "token = " + token);
 
 
-                        registration(file, token, email, password, fullname, phone, website, facebookId, listener);
+                        registration(db, file, token, email, password, fullname, phone, website, facebookId, listener);
 
                     } else {
                         try {
@@ -192,7 +197,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
 
     @Override
-    public void registration(final File file, final String token, final String email, final String password, String fullname, String phone, String website, String facebookId, final RegistrationFinishedListener listener) {
+    public void registration(DBMethods db, final File file, final String token, final String email, final String password, String fullname, String phone, String website, String facebookId, final RegistrationFinishedListener listener) {
 
         final Points.RegistrationPoint apiServRegistr = ApiClient.getRetrofit().create(Points.RegistrationPoint.class);
         Call<UpdateUser> regCall = apiServRegistr.registration("application/json", "0.1.0", token, new ReqUser(new ReqUserData(password,
@@ -204,18 +209,20 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 if (response.isSuccessful()) {
                     UpdateUser user = response.body();
                     String userId = user.getUpdateUserData().getId();
+                    db.saveMyInfo(null, null, Integer.parseInt(userId), email, password, fullname, phone, website, facebookId);
 
                     if (file == null) {
-                        listener.onSuccess(token);
+                        // listener.onSuccess(token);
+                        signIn(db, userId, file, token, email, password, listener);
 
-                    } else signIn(userId, file, token, email, password, listener);
+                    } else signIn(db, userId, file, token, email, password, listener);
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("stas", "registration error = " + jObjError.getString("errors"));
 
                         String jError = jObjError.getString("errors");
-                        String error = jError.replaceAll("[{\"}]", "").replace("[", "").replace("]", "").replace(":"," : ");
+                        String error = jError.replaceAll("[{\"}]", "").replace("[", "").replace("]", "").replace(":", " : ");
 
                         Log.d("stas", "new error = " + error);
 
@@ -252,7 +259,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
 
     @Override
-    public void createFile(String userId, final File file, final String token, final RegistrationFinishedListener listener) {
+    public void createFile(DBMethods db, String userId, final File file, final String token, final RegistrationFinishedListener listener) {
         Log.d("stas", "createfile");
         String name = randomName();
         final Points.CreateFilePoint apiCreateFile = ApiClient.getRetrofit().create(Points.CreateFilePoint.class);
@@ -282,7 +289,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     String x_amz_signature = uri.getQueryParameter("x-amz-signature");
                     // Log.d("stas",x_amz_signature);
                     Log.d("stas", "params = " + params);
-                    uploadFile(userId, image_id, token, listener, contentType, expires, acl, key, policy, success_action_status, x_amz_algorithm,
+                    uploadFile(db, userId, image_id, token, listener, contentType, expires, acl, key, policy, success_action_status, x_amz_algorithm,
                             x_amz_credential, x_amz_date, x_amz_signature, file);
 
 
@@ -352,14 +359,21 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
     @Override
-    public void signIn(String userId, final File file, final String token, String email, String password, final RegistrationFinishedListener listener) {
+    public void signIn(DBMethods db, String userId, final File file, final String token, String email, String password, final RegistrationFinishedListener listener) {
         final Points.SignInPoint apiSignIn = ApiClient.getRetrofit().create(Points.SignInPoint.class);
         Call<UpdateUserData> call = apiSignIn.signIn("application/json", "0.1.0", token, new VerificationData(email, password));
         call.enqueue(new Callback<UpdateUserData>() {
             @Override
             public void onResponse(Call<UpdateUserData> call, Response<UpdateUserData> response) {
                 if (response.isSuccessful()) {
-                    createFile(userId, file, token, listener);
+
+                    if (file == null) {
+                        listener.onSuccess(token);
+
+                    } else {
+
+                        createFile(db, userId, file, token, listener);
+                    }
 
                 } else {
                     try {
@@ -383,7 +397,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
 
     @Override
-    public void uploadFile(String userId, final String image_id, final String token, final RegistrationFinishedListener listener, final String contentType, final String expires, final String acl, final String key, final String policy, final String success_action_status,
+    public void uploadFile(DBMethods db, String userId, final String image_id, final String token, final RegistrationFinishedListener listener, final String contentType, final String expires, final String acl, final String key, final String policy, final String success_action_status,
                            final String x_amz_algorithm, final String x_amz_credential, final String x_amz_date, final String x_amz_signature, final File file) {
         final HttpUrl url = new HttpUrl.Builder().scheme("https").host("qbprod.s3.amazonaws.com").build();
         final OkHttpClient client = new OkHttpClient();
@@ -419,7 +433,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 if (response != null) {
                     long fileSize = file.length();
                     Log.d("stas", "file size = " + Long.toString(fileSize));
-                    declaringFileUploaded(userId, image_id, token, file, listener);
+                    declaringFileUploaded(db, userId, image_id, token, file, listener);
 
 
                 } else listener.onError();
@@ -429,7 +443,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
     @Override
-    public void declaringFileUploaded(String userId, String image_id, final String token, File file, final RegistrationFinishedListener listener) {
+    public void declaringFileUploaded(DBMethods db, String userId, String image_id, final String token, File file, final RegistrationFinishedListener listener) {
         long fileSize = file.length();
         Log.d("stas", "file size = " + Long.toString(fileSize));
         final Points.DeclaringFileUploadedPoint apiDecUpl = ApiClient.getRetrofit().create(Points.DeclaringFileUploadedPoint.class);
@@ -443,7 +457,9 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Log.d("stas", response + "");
                 if (response.isSuccessful()) {
-                  updateUserAva(image_id, userId,token, listener);
+
+
+                    updateUserAva(db, file, image_id, userId, token, listener);
 
                 } else
                     try {
@@ -466,13 +482,24 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
     }
 
     @Override
-    public void updateUserAva(String image_id, String userId, String token, RegistrationFinishedListener listener) {
+    public void updateUserAva(DBMethods db, File file, String image_id, String userId, String token, RegistrationFinishedListener listener) {
         final Points.UpdateUserPoint updateUserPoint = ApiClient.getRetrofit().create(Points.UpdateUserPoint.class);
         Call<UpdateUser> call = updateUserPoint.update(userId, "application/json", "0.1.0", token, new UpdateUser(new UpdateUserData(image_id)));
         call.enqueue(new Callback<UpdateUser>() {
             @Override
             public void onResponse(Call<UpdateUser> call, Response<UpdateUser> response) {
                 if (response.isSuccessful()) {
+
+                    String fileName = randomName();
+                    try {
+                        saveFileToFolder(file, fileName);
+                        db.saveImagePath(fileName, userId);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                     listener.onSuccess(token);
                 } else
                     try {
@@ -492,6 +519,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
 
     }
+
 
     @Override
     public void validateUserInfo(EditText emailET, EditText passwordET, EditText confPassET, Button signupBtn, RegistrationFinishedListener listener) {
@@ -631,10 +659,22 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
     }
 
-
-
-
-
+    private void saveFileToFolder(File file, String name) throws IOException {
+        Log.d("Stas", "save file...");
+        String root = Environment.getExternalStorageDirectory().toString();
+        File dir = new File(root + "/SuperChat/ava/");
+        if (!dir.exists()) dir.mkdirs();
+        File fTo = new File(root + "/SuperChat/ava/" + name);
+        InputStream in = new FileInputStream(file.getAbsolutePath());
+        OutputStream out = new FileOutputStream(fTo);
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+    }
 
 
 }

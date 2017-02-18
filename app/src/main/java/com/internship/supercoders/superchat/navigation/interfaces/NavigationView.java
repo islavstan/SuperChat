@@ -9,4 +9,6 @@ import com.arellomobile.mvp.MvpView;
 public interface NavigationView extends MvpView {
     void updateUserInfo();
     void addNewChat();
+    void loadMyInfo();
+    void logOut();
 }

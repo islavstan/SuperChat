@@ -37,11 +37,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 + dbInfo.timeRow + " long"
                 + ");");
     }
-
+// если signed_in = 1 то клиент залогинен
     private void createMyInfoTable(SQLiteDatabase db) {
         db.execSQL("create table myInfo ("
                 + "id integer primary key autoincrement, my_id integer, login text, password text, email text, " +
-                "full_name text, phone text, website text, blob_id text, facebook_id text, photo_path text );");
+                "full_name text, phone text, website text, blob_id text, facebook_id text, photo_path text, signed_in integer );");
     }
 
     private void createMyContactsTable(SQLiteDatabase db) {
