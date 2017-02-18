@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.navigation.interfaces.NavigationItemClickListener;
 
 import java.util.List;
 

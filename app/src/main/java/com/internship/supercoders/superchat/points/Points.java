@@ -6,11 +6,11 @@ import com.internship.supercoders.superchat.models.dialog.DialogModel;
 import com.internship.supercoders.superchat.models.registration_request.ReqUser;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
+import com.internship.supercoders.superchat.models.user_info.UserDataPage;
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUser;
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
 
 import java.util.Map;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -100,6 +100,15 @@ public interface Points {
     interface RetrieveDialogs {
         @GET("chat/Dialog.json")
         Call<DialogModel> retrieve(@Header("QB-Token") String token);
+
+    }
+
+    interface RxRetriveAllUsers {
+        @Headers({
+                "QuickBlox-REST-API-Version: 0.1.0"
+        })
+        @GET("/users.json")
+        Observable<UserDataPage> getUserInfoPage(@Header("QB-Token") String token, @Query("page") int page, @Query("per_page") int perPage);
 
     }
 

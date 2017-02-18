@@ -1,8 +1,7 @@
 package com.internship.supercoders.superchat.navigation;
 
+import android.content.Intent;
 import android.os.Bundle;
-import com.github.clans.fab.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -19,14 +18,16 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.github.clans.fab.FloatingActionButton;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.chats.adapters.ChatsViewPagerAdapter;
 import com.internship.supercoders.superchat.navigation.adapter.NavMenuItem;
-import com.internship.supercoders.superchat.navigation.adapter.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationItemId;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationMenuType;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationViewRecyclerAdapter;
+import com.internship.supercoders.superchat.navigation.interfaces.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationView;
+import com.internship.supercoders.superchat.users.UsersActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,6 +172,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
             case CREATE_NEW_CHAT:
                 break;
             case USERS:
+                Intent intent = new Intent(NavigationActivity.this, UsersActivity.class);
+                startActivity(intent);
                 break;
             case INVITE_USERS:
                 break;
