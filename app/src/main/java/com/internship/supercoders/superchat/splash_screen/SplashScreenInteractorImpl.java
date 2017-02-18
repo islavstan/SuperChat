@@ -2,20 +2,15 @@ package com.internship.supercoders.superchat.splash_screen;
 
 //import android.util.Log;
 
-import android.util.Log;
-
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
-import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
 import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 import com.internship.supercoders.superchat.utils.UserPreferences;
-
-import org.json.JSONObject;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -23,9 +18,6 @@ import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import rx.Observable;
 
 
@@ -116,7 +108,7 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
 
     @Override
     public boolean isAuth() {
-        return userPreferences.isUserSignedIn();
+        return dbManager.isLoginUser();
     }
 
     @Override

@@ -153,7 +153,7 @@ public class DBMethods {
 
     }
 
-    public boolean getLoginUser() {
+    public boolean isLoginUser() {
         Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
         boolean exists = (c.getCount() > 0);
         c.close();
