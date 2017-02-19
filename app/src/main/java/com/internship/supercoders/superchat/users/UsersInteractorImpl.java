@@ -24,6 +24,6 @@ public class UsersInteractorImpl implements UsersInteractor {
     @Override
     public Observable<UserDataPage> getFirstUsers() {
         final Points.RxRetriveAllUsers apiService = ApiClient.getRxRetrofit().create(Points.RxRetriveAllUsers.class);
-        return apiService.getUserInfoPage(dbManager.getToken(), 1, 10);
+        return apiService.getUserInfoPage(dbManager.getToken(), "2", "10");
     }
 }

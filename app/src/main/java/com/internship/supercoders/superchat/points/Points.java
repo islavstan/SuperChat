@@ -107,8 +107,8 @@ public interface Points {
         @Headers({
                 "QuickBlox-REST-API-Version: 0.1.0"
         })
-        @GET("/users.json")
-        Observable<UserDataPage> getUserInfoPage(@Header("QB-Token") String token, @Query("page") int page, @Query("per_page") int perPage);
+        @GET("/users.json?")
+        Observable<UserDataPage> getUserInfoPage(@Header("QB-Token") String token, @Query("page") String page, @Query("per_page") String perPage);
 
     }
 

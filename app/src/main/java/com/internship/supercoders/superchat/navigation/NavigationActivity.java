@@ -43,8 +43,6 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     private List<NavMenuItem> bottomNavMenu = new ArrayList<>();
     private RecyclerView topRecyclerView;
     private RecyclerView bottomRecyclerView;
-    private NavigationViewRecyclerAdapter topMenuAdapter;
-    private NavigationViewRecyclerAdapter bottomMenuAdapter;
     DrawerLayout drawer;
     CircleImageView ivAvatar;
     TextView name;
@@ -71,8 +69,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         toggle.syncState();
         topRecyclerView = (RecyclerView) findViewById(R.id.rv_navigation_menu_top);
         bottomRecyclerView = (RecyclerView) findViewById(R.id.rv_navigation_menu_bottom);
-        createMenu(topRecyclerView, topNavMenu, topMenuAdapter, NavigationMenuType.TOP);
-        createMenu(bottomRecyclerView, bottomNavMenu, bottomMenuAdapter, NavigationMenuType.BOTTOM);
+        createMenu(topRecyclerView, topNavMenu, NavigationMenuType.TOP);
+        createMenu(bottomRecyclerView, bottomNavMenu, NavigationMenuType.BOTTOM);
 
         ivAvatar = (CircleImageView) findViewById(R.id.iv_user_avatar);
         name = (TextView) findViewById(R.id.tv_name);
@@ -140,10 +138,10 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         return super.onOptionsItemSelected(item);
     }
 
-    private void createMenu(RecyclerView recyclerView, List<NavMenuItem> navMenu, NavigationViewRecyclerAdapter mAdapter, NavigationMenuType menuType) {
+    private void createMenu(RecyclerView recyclerView, List<NavMenuItem> navMenu, NavigationMenuType menuType) {
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         prepareMenuItems(navMenu, menuType);
-        mAdapter = new NavigationViewRecyclerAdapter(navMenu, this);
+        NavigationViewRecyclerAdapter mAdapter = new NavigationViewRecyclerAdapter(navMenu, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -61,5 +61,9 @@
     <string name="chats">CHATS</string>
     <string name="public_chats">public</string>
     <string name="private_chats">private</string>
+    <string name="users_title">USERS</string>
+    <string name="menu_filter">Filter</string>
+    <string name="menu_search">Search</string>
+    <string name="full_name_default">Full Name</string>
 
 </resources>

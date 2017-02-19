@@ -2,6 +2,9 @@ package com.internship.supercoders.superchat.splash_screen;
 
 //import android.util.Log;
 
+import android.util.Log;
+
+import com.internship.supercoders.superchat.data.AppConsts;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
@@ -37,7 +40,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
 
             @Override
             public void onNext(Session session) {
-                //Log.i(AppConsts.SPLASH_TAG, "Save token");
+                Log.i(AppConsts.SPLASH_TAG, "Save token: " + session.getData().getToken());
                 splashScreenInteractor.saveToken(session.getData().getToken());
             }
         };

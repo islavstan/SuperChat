@@ -37,5 +37,11 @@ public class UserDataFullProfile {
     @SerializedName("user_tags")
     String tags;
 
+    public String getEmail() {
+        return email;
+    }
 
+    public String getName() {
+        return name;
+    }
 }

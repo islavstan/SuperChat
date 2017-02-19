@@ -10,13 +10,13 @@ import java.util.List;
 
 public class UserDataPage {
     @SerializedName("curren_page")
-    int currentPage;
+    private int currentPage;
     @SerializedName("per_page")
-    int perPage;
+    private int perPage;
     @SerializedName("total_entries")
-    int totalEntries;
+    private int totalEntries;
     @SerializedName("items")
-    List<UserDataFullProfile> userList;
+    private List<UserDataList> userList;
 
     public int getCurrentPage() {
         return currentPage;
@@ -30,7 +30,17 @@ public class UserDataPage {
         return totalEntries;
     }
 
-    public List<UserDataFullProfile> getUserList() {
+    public List<UserDataList> getUserList() {
         return userList;
     }
+
+    public class UserDataList {
+        @SerializedName("user")
+        private UserDataFullProfile item;
+
+        public UserDataFullProfile getItem() {
+            return this.item;
+        }
+    }
 }
+
