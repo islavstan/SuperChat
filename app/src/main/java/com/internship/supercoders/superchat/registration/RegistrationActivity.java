@@ -35,6 +35,7 @@ import com.facebook.login.widget.LoginButton;
 import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.db.DBMethods;
+import com.internship.supercoders.superchat.navigation.NavigationActivity;
 import com.internship.supercoders.superchat.utils.InternetConnection;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.squareup.picasso.Picasso;
@@ -48,9 +49,12 @@ import io.fabric.sdk.android.Fabric;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -108,7 +112,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         token = db.getToken();
 
 
-        Log.d("stas",token);
+     //   Log.d("stas",token);
         callbackManager = CallbackManager.Factory.create();
         logBtn = (LoginButton) findViewById(R.id.login_button);
         facebookBtn = (Button) findViewById(R.id.link_facebook_btn);
@@ -155,7 +159,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                 String fullname = fullnameET.getText().toString().trim();
                 String phone = "380" + phoneET.getUnMaskedText();
                 String website = websiteET.getText().toString().trim();
-                registration(token, photoFile, email, password, conf_password, fullname, phone, website, facebookId);
+                registration(db, token, photoFile, email, password, conf_password, fullname, phone, website, facebookId);
             } else showInternetConnectionError();
         });
 
@@ -183,7 +187,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public void navigateToLogin(String token) {
         Toast.makeText(this, "registration successfully", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        Intent intent = new Intent(RegistrationActivity.this, NavigationActivity.class);
         intent.putExtra("token", token);
         startActivity(intent);
         finish();
@@ -191,8 +195,8 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
 
     @Override
-    public void registration(String token, File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId) {
-        registrationPresenter.validateData(token, photo, email, password, fullname, phone, website, facebookId);
+    public void registration(DBMethods dbMethods, String token, File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId) {
+        registrationPresenter.validateData(dbMethods, token, photo, email, password, fullname, phone, website, facebookId);
     }
 
     @Override
@@ -362,6 +366,24 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
 
+    private void saveFileToFolder(File file) throws IOException {
+        Log.d("Stas", "save file...");
+        String root = Environment.getExternalStorageDirectory().toString();
+        File dir = new File(root + "/SuperChat/ava/");
+        if (!dir.exists()) dir.mkdirs();
+        File fTo = new File(root + "/SuperChat/ava/" + "sasask");
+        InputStream in = new FileInputStream(file.getAbsolutePath());
+        OutputStream out = new FileOutputStream(fTo);
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close(); // Закрываем потоки
+        out.close();
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -374,6 +396,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
                 actualImage = new File(getRealPathFromURI(this, selectedImageUri));
                 photoFile = Compressor.getDefault(this).compressToFile(actualImage);
+
 
 
             }

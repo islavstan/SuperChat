@@ -77,8 +77,38 @@ public class SplashScreenInteractorImpl implements SplashScreenInteractor {
     }
 
     @Override
+    public void signIn() {
+      /*  final Points.SignInPoint apiSignIn = ApiClient.getRetrofit().create(Points.SignInPoint.class);
+        Call<UpdateUserData> call = apiSignIn.signIn("application/json", "0.1.0", token, new VerificationData(email, password));
+        call.enqueue(new Callback<UpdateUserData>() {
+            @Override
+            public void onResponse(Call<UpdateUserData> call, Response<UpdateUserData> response) {
+                if (response.isSuccessful()) {
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("stas", "SplashScreen signIn error = " + jObjError.getString("errors"));
+
+                    } catch (Exception e) {
+                        Log.d("stas", e.getMessage());
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<UpdateUserData> call, Throwable t) {
+
+            }
+        });*/
+    }
+
+
+    @Override
     public boolean isAuth() {
-        return userPreferences.isUserSignedIn();
+        return dbManager.isLoginUser();
     }
 
     @Override

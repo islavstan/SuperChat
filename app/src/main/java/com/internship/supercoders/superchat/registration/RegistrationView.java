@@ -4,6 +4,8 @@ package com.internship.supercoders.superchat.registration;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.internship.supercoders.superchat.db.DBMethods;
+
 import java.io.File;
 
 public interface RegistrationView {
@@ -14,7 +16,7 @@ public interface RegistrationView {
 
     void navigateToLogin(String token);
 
-    void registration(String token, File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId);
+    void registration(DBMethods dbMethods, String token, File photo, String email, String password, String conf_password, String fullname, String phone, String website, String facebookId);
 
     void showRegistrationError();
 

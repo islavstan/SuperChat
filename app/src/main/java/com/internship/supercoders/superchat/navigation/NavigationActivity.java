@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,9 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.github.clans.fab.FloatingActionButton;
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
 import com.internship.supercoders.superchat.chats.adapters.ChatsViewPagerAdapter;
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.navigation.adapter.NavMenuItem;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationItemId;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationMenuType;
@@ -49,6 +52,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     TextView email;
     ViewPager viewPager;
     ChatsViewPagerAdapter adapter;
+    DBMethods dbMethods;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(getResources().getString(R.string.chats));
+        dbMethods = new DBMethods(this);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -77,7 +82,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         email = (TextView) findViewById(R.id.tv_email);
         mNavigationPresenter.getUserInfo();
 
-
+        loadMyInfo();
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.public_chats)));
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.private_chats)));
@@ -178,6 +183,9 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
             case SETTINGS:
                 break;
             case LOG_OUT:
+                logOut();
+
+
                 break;
         }
 
@@ -191,5 +199,18 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     @Override
     public void addNewChat() {
 
+    }
+
+    @Override
+    public void loadMyInfo() {
+        dbMethods.getMyInfoForNavigation(ivAvatar, email, name);
+    }
+
+    @Override
+    public void logOut() {
+        Log.d("stas", "logOut");
+        dbMethods.signOut();
+        Intent intent = new Intent(NavigationActivity.this, AuthorizationActivity.class);
+        startActivity(intent);
     }
 }
