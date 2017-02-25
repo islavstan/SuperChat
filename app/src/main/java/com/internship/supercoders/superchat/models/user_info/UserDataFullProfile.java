@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.models.user_info;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -36,6 +37,8 @@ public class UserDataFullProfile {
     String blobId;
     @SerializedName("user_tags")
     String tags;
+    @Expose
+    private byte[] avatarObj;
 
     public String getEmail() {
         return email;
@@ -43,5 +46,17 @@ public class UserDataFullProfile {
 
     public String getName() {
         return name;
+    }
+
+    public String getBlobId() {
+        return blobId;
+    }
+
+    public byte[] getAvatarObj() {
+        return avatarObj;
+    }
+
+    public void setAvatarObj(byte[] avatarObj) {
+        this.avatarObj = avatarObj;
     }
 }

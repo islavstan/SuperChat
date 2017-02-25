@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.users.adapter;
 
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,10 +34,16 @@ public class UserRvAdapter extends RecyclerView.Adapter<UserRvAdapter.UserItemVi
     @Override
     public void onBindViewHolder(UserItemViewHolder holder, int position) {
         String userName = mUserList.get(position).getItem().getName();
+        byte[] imageSource = mUserList.get(position).getItem().getAvatarObj();
         if (userName == null) {
             userName = mUserList.get(position).getItem().getEmail();
         }
         holder.tvFullName.setText(userName);
+        if (imageSource == null) {
+            holder.ivAvatar.setImageResource(R.drawable.ic_userpic_default);
+        } else {
+            holder.ivAvatar.setImageBitmap(BitmapFactory.decodeByteArray(imageSource, 0, imageSource.length));
+        }
     }
 
     @Override

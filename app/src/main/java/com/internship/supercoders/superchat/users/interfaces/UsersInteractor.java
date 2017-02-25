@@ -9,5 +9,7 @@ import rx.Observable;
  */
 
 public interface UsersInteractor {
-    Observable<UserDataPage> getFirstUsers();
+    Observable<UserDataPage> getUsers();
+
+    Observable<okhttp3.ResponseBody> getFile(String blobId);
 }

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
 import com.internship.supercoders.superchat.db.DBMethods;
+import com.internship.supercoders.superchat.utils.FileManager;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -12,6 +13,7 @@ import io.fabric.sdk.android.Fabric;
  */
 public class App extends Application {
     private static DBMethods dbManager;
+    private static FileManager fileManager;
 
     @Override
     public void onCreate() {
@@ -23,5 +25,9 @@ public class App extends Application {
 
     public static DBMethods getDataBaseManager() {
         return dbManager;
+    }
+
+    public static FileManager getFileManager() {
+        return fileManager;
     }
 }

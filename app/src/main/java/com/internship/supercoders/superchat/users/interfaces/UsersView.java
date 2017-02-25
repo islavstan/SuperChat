@@ -10,4 +10,5 @@ import com.internship.supercoders.superchat.users.adapter.UserRvAdapter;
 public interface UsersView extends MvpView {
     void initUserList(UserRvAdapter userListAdapter);
 
+    void updateUserList();
 }

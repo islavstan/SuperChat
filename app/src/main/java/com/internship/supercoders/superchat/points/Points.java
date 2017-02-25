@@ -12,6 +12,7 @@ import com.internship.supercoders.superchat.models.user_update_request.UpdateUse
 
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -109,8 +110,14 @@ public interface Points {
         })
         @GET("/users.json?")
         Observable<UserDataPage> getUserInfoPage(@Header("QB-Token") String token, @Query("page") String page, @Query("per_page") String perPage);
-
     }
 
+    interface RxDownloadFile {
+        @Headers({
+                "QuickBlox-REST-API-Version: 0.1.0"
+        })
+        @GET("/blobs/{blob_id}/download.json")
+        Observable<ResponseBody> getFile(@Header("QB-Token") String token, @Path("blob_id") String blobId);
+    }
 
 }

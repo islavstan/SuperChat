@@ -19,6 +19,7 @@ public class UsersActivity extends MvpAppCompatActivity implements UsersView {
 
     Toolbar toolbar;
     RecyclerView recyclerView;
+    UserRvAdapter userListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,15 @@ public class UsersActivity extends MvpAppCompatActivity implements UsersView {
     }
 
     @Override
-    public void initUserList(UserRvAdapter userListAdapter) {
+    public void initUserList(UserRvAdapter adapter) {
+        userListAdapter = adapter;
         recyclerView.setAdapter(userListAdapter);
     }
+
+    @Override
+    public void updateUserList() {
+        userListAdapter.notifyDataSetChanged();
+        //TODO: userListAdapter.notifyItemChanged(position);
+    }
+
 }
