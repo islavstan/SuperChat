@@ -20,6 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
         createAuthTable(db);
         createMyInfoTable(db);
         createMyContactsTable(db);
+        createMyChatsTable(db);
     }
 
     @Override
@@ -49,6 +50,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "id integer primary key autoincrement, my_id integer, login text, password text, email text, " +
                 "full_name text, phone text, website text, blob_id text, facebook_id text, photo_path text );");
 
+    }
+
+    private void createMyChatsTable(SQLiteDatabase db) {
+        db.execSQL("create table myChats ("
+    +"id integer primary key autoincrement, chat_id integer, last_message text, last_message_date_sent text, "+
+        "last_message_user_id text, occupants_ids text, name text, photo text, type integer, unread_messages_count integer, xmpp_room_jid text );");
     }
 
 
