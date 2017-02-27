@@ -8,6 +8,7 @@ import com.internship.supercoders.superchat.models.user_authorization_response.A
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUser;
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
+import okhttp3.ResponseBody;
 
 import java.util.Map;
 import java.util.Objects;
@@ -73,6 +74,12 @@ public interface Points {
 
     }
 
+    interface SignInPoint2 {
+        @POST("/login.json")
+        Call<UpdateUser> signIn(@Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body VerificationData verificationData);
+
+    }
+
     interface UserAuthorizatoinPoint {
         @Headers({
                 "Content-Type: application/json",
@@ -100,6 +107,12 @@ public interface Points {
     interface RetrieveDialogs {
         @GET("chat/Dialog.json")
         Call<DialogModel> retrieve(@Header("QB-Token") String token);
+
+    }
+
+    interface DownloadFilePoint {
+        @GET("blobs/{id}/download.json")
+        Call<ResponseBody> downloadFile(@Path("id") String blobId, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token);
 
     }
 

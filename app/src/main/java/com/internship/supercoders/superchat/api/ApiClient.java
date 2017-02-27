@@ -28,6 +28,12 @@ public class ApiClient {
         return retrofit;
     }
 
+
+    public static Retrofit getRetrofitForDownload() {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL).build();
+        return retrofit;
+    }
     @NonNull
     public static Retrofit getRxRetrofit() {
         if (rxRetrofit == null) {

@@ -2,6 +2,8 @@ package com.internship.supercoders.superchat.splash_screen;
 
 //import android.util.Log;
 
+import android.util.Log;
+
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
@@ -15,7 +17,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
     private SplashScreenView splashScreenView;
     private SplashScreenInteractor splashScreenInteractor;
     private volatile String token = null;
-    private boolean isAuthorize = false;
+    // private boolean isAuthorize;
     private Subscription subscription = null;
     private Subscriber<Session> authSubscriber;
 
@@ -32,7 +34,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
             public void onError(Throwable e) {
                 e.getMessage();
                 e.printStackTrace();
-                isAuthorize = false;
+                //isAuthorize = false;
             }
 
             @Override
@@ -54,29 +56,8 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
 
     @Override
     public void sleep(final long milliseconds) {
-        Thread sleepThread = new Thread() {
-            public void run() {
-                try {
-                    //Log.i(AppConsts.SPLASH_TAG, "Start");
-                    Thread.sleep(milliseconds);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (isAuthorize) {
-                    //Log.i(AppConsts.SPLASH_TAG, "ToMainScreen");
-                    //Log.i(AppConsts.SPLASH_TAG, "token = " + splashScreenInteractor.getToken());
-                    splashScreenView.navigateToMainScreen();
-                } else {
-                    //Log.i(AppConsts.SPLASH_TAG, "ToAuth");
-                    //Log.i(AppConsts.SPLASH_TAG, "token = " + splashScreenInteractor.getToken());
-                    splashScreenView.navigateToAuthorScreen();
-                }
-                //Log.i(AppConsts.SPLASH_TAG + " Presenter", "Call finish");
-                splashScreenView.finish();
-            }
-        };
-        sleepThread.start();
-        isAuthorize = splashScreenInteractor.isAuth();
+        boolean isAuthorize = splashScreenInteractor.isAuth();
+        Log.d("stas", isAuthorize + " - isAuth");
         if (isAuthorize) {
             VerificationData user;
             user = splashScreenInteractor.getUserInfo();
@@ -92,5 +73,32 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
                     .subscribeOn(Schedulers.io())
                     .subscribe(authSubscriber);
         }
+
+        Thread sleepThread = new Thread() {
+            public void run() {
+                try {
+                    //Log.i(AppConsts.SPLASH_TAG, "Start");
+                    Thread.sleep(milliseconds);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (isAuthorize) {
+                    Log.d("stas", isAuthorize + "--isAuthorize");
+                    //Log.i(AppConsts.SPLASH_TAG, "ToMainScreen");
+                    //Log.i(AppConsts.SPLASH_TAG, "token = " + splashScreenInteractor.getToken());
+                    splashScreenView.navigateToMainScreen();
+                } else {
+                    Log.d("stas", isAuthorize + "++--isAuthorize");
+                    //Log.i(AppConsts.SPLASH_TAG, "ToAuth");
+                    //Log.i(AppConsts.SPLASH_TAG, "token = " + splashScreenInteractor.getToken());
+                    splashScreenView.navigateToAuthorScreen();
+                }
+                //Log.i(AppConsts.SPLASH_TAG + " Presenter", "Call finish");
+                splashScreenView.finish();
+            }
+        };
+        sleepThread.start();
+
+
     }
 }

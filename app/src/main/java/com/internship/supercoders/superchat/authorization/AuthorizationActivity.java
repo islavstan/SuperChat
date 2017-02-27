@@ -225,7 +225,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
         }*/
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
-        authPresenter.signIn(token, email, password);
+        authPresenter.signIn(db, token, email, password);
     }
 
     @OnClick(R.id.signup_btn)

@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.authorization;
 
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 
@@ -24,5 +25,11 @@ public interface AuthInteractor {
 
     boolean isAuthDataValid(String password, String email);
 
-    void signIn(String token, String login, String password, AuthFinishedListener authFinishedListener);
+    void signIn(DBMethods dbMethods, String token, String login, String password, AuthFinishedListener authFinishedListener);
+
+    void downloadUserPhoto(DBMethods db, String userId, String blobId, String token, AuthFinishedListener listener);
+
+    void userAthorization(DBMethods db, String password, String email, AuthFinishedListener listener);
+
+
 }

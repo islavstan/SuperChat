@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.authorization;
 
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
 /**
@@ -17,5 +18,7 @@ public interface AuthPresenter {
 
     void validateData(VerificationData verificationData);
 
-    void signIn(String token, String login, String password);
+    void signIn(DBMethods dbMethods, String token, String login, String password);
+
+
 }

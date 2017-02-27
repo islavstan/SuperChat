@@ -46,7 +46,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".registration.RegistrationActivity" />
-        <activity android:name=".authorization.AuthorizationActivity" />
+      <activity android:name=".authorization.AuthorizationActivity" />
         <activity android:name=".chats.ChatsActivity"/>
 
         <meta-data
