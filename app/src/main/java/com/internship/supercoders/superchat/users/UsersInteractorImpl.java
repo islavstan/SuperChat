@@ -1,5 +1,7 @@
 package com.internship.supercoders.superchat.users;
 
+import android.util.Log;
+
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.data.AppConsts;
 import com.internship.supercoders.superchat.db.DBMethods;
@@ -39,8 +41,8 @@ public class UsersInteractorImpl implements UsersInteractor {
         return apiService.getFile(mDbManager.getToken(), blobId);
     }
 
-    private boolean writeAvatarToDisk(ResponseBody body, int id) throws IOException {
-        mFileManager.saveToInternalStorage(AppConsts.AVATAR_DIR, Integer.toString(id), body.bytes());
-        return true;
+    @Override
+    public void writeAvatarToDisk(ResponseBody body, String id) throws IOException {
+        Log.i("writeAvatarToDisk: ", Boolean.toString(mFileManager.saveToInternalStorage(AppConsts.AVATAR_DIR, id, body)));
     }
 }

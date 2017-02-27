@@ -54,13 +54,13 @@ public class UsersPresenterImpl extends MvpPresenter<UsersView> implements Users
                             .subscribe(file -> {
                                 try {
                                     user.setAvatarObj(file.bytes());
+                                    mUsersInteractor.writeAvatarToDisk(file, user.getBlobId());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                     Log.d("UserPresenter", "IOException: " + e.toString());
-
                                 }
                                 getViewState().updateUserList();
-                            }, error -> Log.d("UserPresenter", "updateUserAvatarError: " + error.toString()));
+                            }, error -> Log.d("UserPresenter", "updateUserAvatarError: " + error.getMessage()));
                 });
     }
 }
