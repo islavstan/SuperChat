@@ -4,6 +4,7 @@ package com.internship.supercoders.superchat.splash_screen;
 
 import android.util.Log;
 
+import com.internship.supercoders.superchat.data.AppConsts;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
@@ -83,12 +84,10 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
                     e.printStackTrace();
                 }
                 if (isAuthorize) {
-                    Log.d("stas", isAuthorize + "--isAuthorize");
                     //Log.i(AppConsts.SPLASH_TAG, "ToMainScreen");
                     //Log.i(AppConsts.SPLASH_TAG, "token = " + splashScreenInteractor.getToken());
                     splashScreenView.navigateToMainScreen();
                 } else {
-                    Log.d("stas", isAuthorize + "++--isAuthorize");
                     //Log.i(AppConsts.SPLASH_TAG, "ToAuth");
                     //Log.i(AppConsts.SPLASH_TAG, "token = " + splashScreenInteractor.getToken());
                     splashScreenView.navigateToAuthorScreen();
@@ -98,7 +97,21 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
             }
         };
         sleepThread.start();
-
-
+        isAuthorize = splashScreenInteractor.isAuth();
+        if (isAuthorize) {
+            VerificationData user;
+            user = splashScreenInteractor.getUserInfo();
+            //Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
+            subscription = splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword())
+                    .subscribeOn(Schedulers.io())
+                    .doOnError(throwable -> splashScreenInteractor.createSession()
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(authSubscriber))
+                    .subscribe(authSubscriber);
+        } else {
+            subscription = splashScreenInteractor.createSession()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(authSubscriber);
+        }
     }
 }

@@ -2,8 +2,6 @@ package com.internship.supercoders.superchat.navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.github.clans.fab.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -21,16 +19,18 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.github.clans.fab.FloatingActionButton;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
 import com.internship.supercoders.superchat.chats.adapters.ChatsViewPagerAdapter;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.navigation.adapter.NavMenuItem;
-import com.internship.supercoders.superchat.navigation.adapter.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationItemId;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationMenuType;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationViewRecyclerAdapter;
+import com.internship.supercoders.superchat.navigation.interfaces.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationView;
+import com.internship.supercoders.superchat.users.UsersActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +46,6 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     private List<NavMenuItem> bottomNavMenu = new ArrayList<>();
     private RecyclerView topRecyclerView;
     private RecyclerView bottomRecyclerView;
-    private NavigationViewRecyclerAdapter topMenuAdapter;
-    private NavigationViewRecyclerAdapter bottomMenuAdapter;
     DrawerLayout drawer;
     CircleImageView ivAvatar;
     TextView name;
@@ -76,8 +74,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         toggle.syncState();
         topRecyclerView = (RecyclerView) findViewById(R.id.rv_navigation_menu_top);
         bottomRecyclerView = (RecyclerView) findViewById(R.id.rv_navigation_menu_bottom);
-        createMenu(topRecyclerView, topNavMenu, topMenuAdapter, NavigationMenuType.TOP);
-        createMenu(bottomRecyclerView, bottomNavMenu, bottomMenuAdapter, NavigationMenuType.BOTTOM);
+        createMenu(topRecyclerView, topNavMenu, NavigationMenuType.TOP);
+        createMenu(bottomRecyclerView, bottomNavMenu, NavigationMenuType.BOTTOM);
 
         ivAvatar = (CircleImageView) findViewById(R.id.iv_user_avatar);
         name = (TextView) findViewById(R.id.tv_name);
@@ -145,10 +143,10 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         return super.onOptionsItemSelected(item);
     }
 
-    private void createMenu(RecyclerView recyclerView, List<NavMenuItem> navMenu, NavigationViewRecyclerAdapter mAdapter, NavigationMenuType menuType) {
+    private void createMenu(RecyclerView recyclerView, List<NavMenuItem> navMenu, NavigationMenuType menuType) {
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         prepareMenuItems(navMenu, menuType);
-        mAdapter = new NavigationViewRecyclerAdapter(navMenu, this);
+        NavigationViewRecyclerAdapter mAdapter = new NavigationViewRecyclerAdapter(navMenu, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -177,6 +175,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
             case CREATE_NEW_CHAT:
                 break;
             case USERS:
+                Intent intent = new Intent(NavigationActivity.this, UsersActivity.class);
+                startActivity(intent);
                 break;
             case INVITE_USERS:
                 break;

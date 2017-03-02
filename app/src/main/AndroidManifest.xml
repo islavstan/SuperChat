@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -46,8 +47,8 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".registration.RegistrationActivity" />
-      <activity android:name=".authorization.AuthorizationActivity" />
-        <activity android:name=".chats.ChatsActivity"/>
+        <activity android:name=".authorization.AuthorizationActivity" />
+        <activity android:name=".chats.ChatsActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -56,13 +57,10 @@
         <activity
             android:name=".navigation.NavigationActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" />
+        <activity android:name=".users.UsersActivity">
 
         </activity>
     </application>
-
-
-
-
 
 </manifest>
