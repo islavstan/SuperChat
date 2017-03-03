@@ -14,7 +14,6 @@ import com.internship.supercoders.superchat.models.user_update_request.UpdateUse
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
 import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
-import okhttp3.ResponseBody;
 
 import org.json.JSONObject;
 
@@ -26,11 +25,9 @@ import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
-import java.util.function.LongFunction;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -166,7 +163,7 @@ public class AuthInteractorImpl implements AuthInteractor {
                     String facebookId = userData.getFacebook_id();
 
                     db.saveMyInfo(null, blobId, Integer.parseInt(id), login, password, fullName, phone, website, facebookId);
-                    if (!blobId.equals("")) {
+                    if (blobId != null) {
                         Log.d("stas", "download");
                         db.writeToken(token);
                         downloadUserPhoto(db, id, blobId, token, listener);

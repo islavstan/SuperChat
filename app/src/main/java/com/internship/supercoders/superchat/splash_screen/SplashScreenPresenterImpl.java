@@ -4,7 +4,6 @@ package com.internship.supercoders.superchat.splash_screen;
 
 import android.util.Log;
 
-import com.internship.supercoders.superchat.data.AppConsts;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
@@ -12,6 +11,7 @@ import com.internship.supercoders.superchat.utils.UserPreferences;
 
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class SplashScreenPresenterImpl implements SplashScreenPresenter {
@@ -57,7 +57,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
 
     @Override
     public void sleep(final long milliseconds) {
-        boolean isAuthorize = splashScreenInteractor.isAuth();
+        final boolean isAuthorize = splashScreenInteractor.isAuth();
         Log.d("stas", isAuthorize + " - isAuth");
         if (isAuthorize) {
             VerificationData user;
@@ -65,14 +65,12 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
             //Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
             subscription = splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword())
                     .subscribeOn(Schedulers.io())
-                    .doOnError(throwable -> splashScreenInteractor.createSession()
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(authSubscriber))
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(authSubscriber);
         } else {
-            subscription = splashScreenInteractor.createSession()
+            /*subscription = splashScreenInteractor.createSession()
                     .subscribeOn(Schedulers.io())
-                    .subscribe(authSubscriber);
+                    .subscribe(authSubscriber);*/
         }
 
         Thread sleepThread = new Thread() {
@@ -97,21 +95,5 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
             }
         };
         sleepThread.start();
-        isAuthorize = splashScreenInteractor.isAuth();
-        if (isAuthorize) {
-            VerificationData user;
-            user = splashScreenInteractor.getUserInfo();
-            //Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
-            subscription = splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword())
-                    .subscribeOn(Schedulers.io())
-                    .doOnError(throwable -> splashScreenInteractor.createSession()
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(authSubscriber))
-                    .subscribe(authSubscriber);
-        } else {
-            subscription = splashScreenInteractor.createSession()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(authSubscriber);
-        }
     }
 }
