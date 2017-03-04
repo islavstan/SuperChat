@@ -54,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private void createMyChatsTable(SQLiteDatabase db) {
         db.execSQL("create table myChats ("
-    +"id integer primary key autoincrement, chat_id integer, last_message text, last_message_date_sent text, "+
+    +"id integer primary key autoincrement, chat_id text, last_message text, last_message_date_sent text, "+
         "last_message_user_id text, occupants_ids text, name text, photo text, type integer, unread_messages_count integer, xmpp_room_jid text );");
     }
 

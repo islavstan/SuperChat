@@ -59,7 +59,7 @@ public class PublicChatsFragment extends Fragment implements FragmentChatView {
 
     @Override
     public void loadData() {
-        presenter.loadData(db.getToken(), adapter);
+        presenter.loadData(db, adapter);
 
     }
 

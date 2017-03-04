@@ -20,6 +20,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 
@@ -31,9 +34,9 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
     }
 
     @Override
-    public void loadData(ChatsRecyclerAdapter adapter, String token) {
+    public void loadData(ChatsRecyclerAdapter adapter, DBMethods db) {
         final Points.RetrieveDialogs retrieveDialogs = ApiClient.getRetrofit().create(Points.RetrieveDialogs.class);
-        Call<DialogModel> call = retrieveDialogs.retrieve(token);
+        Call<DialogModel> call = retrieveDialogs.retrieve(db.getToken());
         call.enqueue(new Callback<DialogModel>() {
             @Override
             public void onResponse(Call<DialogModel> call, Response<DialogModel> response) {
@@ -48,7 +51,31 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
                         Log.d("stas", chatId + " chatId");
                         String name = data.getName();
                         Log.d("stas", name + " name");
+                        List<Integer> list = data.getOccupants_ids();
+                        String occupants = "";
+                        for (int c = 0; c < list.size(); c++) {
+                            occupants = occupants + list.get(c);
+                            if (c < list.size() - 1)
+                                occupants = occupants + ",";
+                        }
+                        Log.d("stas", occupants);
+
+                        String finalOccupants = occupants;
+                        db.checkChat(chatId)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(integer -> {
+                                            if (integer == 0) {
+                                                Log.d("stas", "write chat in db");
+                                                db.writeChatsData(data, finalOccupants);
+                                            } else Log.d("stas", "chat exists in db");
+                                        }
+
+
+                                );
                     }
+
+
 
 
                     adapter.loadChats(model.getList());

@@ -187,6 +187,8 @@ public class DBMethods {
     }
 
 
+
+
     public Observable<VerificationData>getEmailAndPassword() {
         return Observable.create(new Observable.OnSubscribe<VerificationData>() {
             @Override
@@ -196,6 +198,14 @@ public class DBMethods {
                         c.getString(c.getColumnIndex("password"))) : null);
                 c.close();
             }
+        });
+    }
+
+    public Observable<Integer>checkChat(String chatId) {
+        return Observable.create(subscriber -> {
+            Cursor c = db.rawQuery("SELECT * FROM myChats where chat_id = '" + chatId+"'", null);
+            subscriber.onNext(c.moveToFirst() ? 1 : 0);
+
         });
     }
 
@@ -213,14 +223,14 @@ public class DBMethods {
     }
 
 
-    public Observable<Long> writeChatsData(DialogData dialogData) {
+    public Observable<Long> writeChatsData(DialogData dialogData, String occupants) {
         return Observable.create(subscriber -> {
             ContentValues contentValues = new ContentValues();
             contentValues.put("chat_id", dialogData.getChatId());
             contentValues.put("last_message", dialogData.getLastMessage());
             contentValues.put("last_message_date_sent", dialogData.getLastMessageDateSent());
             contentValues.put("last_message_user_id", dialogData.getLastMessageUserId());
-            contentValues.put("occupants_ids", dialogData.getOccupants());
+            contentValues.put("occupants_ids",occupants);
             contentValues.put("name", dialogData.getName());
             contentValues.put("photo", dialogData.getPhoto());
             contentValues.put("type", dialogData.getType());

@@ -5,6 +5,7 @@ import com.internship.supercoders.superchat.chats.adapters.ChatsRecyclerAdapter;
 import com.internship.supercoders.superchat.chats.interactors.PublicChatInteractor;
 import com.internship.supercoders.superchat.chats.interactors.PublicChatInteractorImpl;
 import com.internship.supercoders.superchat.chats.views.FragmentChatView;
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.registration.RegistrationInteractor;
 import com.internship.supercoders.superchat.registration.RegistrationView;
 
@@ -18,8 +19,8 @@ public class PublicChatPresenterImpl implements PublicChatPresenter {
     }
 
     @Override
-    public void loadData(String token, ChatsRecyclerAdapter adapter) {
-   publicChatInteractor.loadData(adapter, token);
+    public void loadData(DBMethods dbMethods, ChatsRecyclerAdapter adapter) {
+   publicChatInteractor.loadData(adapter, dbMethods);
     }
 
     @Override

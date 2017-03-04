@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.chats.adapters;
 
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.chat.service.SmackService;
 import com.internship.supercoders.superchat.chats.UserActionsListener;
 import com.internship.supercoders.superchat.chats.chat_model.ChatModel;
 import com.internship.supercoders.superchat.models.dialog.DialogData;
@@ -44,6 +46,13 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
         holder.groupName.setText(model.getName());
         holder.message.setText(model.getLastMessage());
 
+
+      /*  holder.cardView.setOnClickListener(v -> {
+            Intent intent =new Intent(holder.cardView.getContext(), SmackService.class);
+            intent.putExtra("id", model.getChatId());
+            holder.cardView.getContext().startService(intent);
+        });
+*/
 
     }
 
