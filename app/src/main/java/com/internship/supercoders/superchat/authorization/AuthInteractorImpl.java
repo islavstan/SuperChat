@@ -150,8 +150,6 @@ public class AuthInteractorImpl implements AuthInteractor {
                 if (response.isSuccessful()) {
                     UpdateUser user = response.body();
                     UpdateUserData userData = user.getUpdateUserData();
-                    String login = userData.getLogin();
-                    Log.d("stas", login + " = login");
                     String blobId = userData.getBlob_id();
                     Log.d("stas", blobId + " = blobId");
                     String id = userData.getId();
@@ -163,9 +161,10 @@ public class AuthInteractorImpl implements AuthInteractor {
                     String facebookId = userData.getFacebook_id();
 
                     db.saveMyInfo(null, blobId, Integer.parseInt(id), login, password, fullName, phone, website, facebookId);
+                    db.writeToken(token);
                     if (blobId != null) {
                         Log.d("stas", "download");
-                        db.writeToken(token);
+
                         downloadUserPhoto(db, id, blobId, token, listener);
                     } else {
                         listener.onSuccess(token);

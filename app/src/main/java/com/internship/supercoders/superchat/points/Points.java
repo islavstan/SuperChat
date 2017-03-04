@@ -1,5 +1,8 @@
 package com.internship.supercoders.superchat.points;
 
+import android.app.Dialog;
+
+import com.internship.supercoders.superchat.chat.chat_model.Message;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.blob.Blob;
 import com.internship.supercoders.superchat.models.dialog.DialogModel;
@@ -15,7 +18,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -79,6 +84,8 @@ public interface Points {
         @POST("/login.json")
         Call<UpdateUser> signIn(@Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body VerificationData verificationData);
 
+        Observable<UpdateUser>rxSignIn(@Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body VerificationData verificationData);
+
     }
 
     interface UserAuthorizatoinPoint {
@@ -116,6 +123,26 @@ public interface Points {
         Call<ResponseBody> downloadFile(@Path("id") String blobId, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token);
 
     }
+
+    interface CreateDialog {
+        @POST("chat/Dialog.json")
+        Call<Void> createDialog(@Header("Content-Type") String cont, @Header("QB-Token") String token, @Body Dialog dialog);
+
+    }
+
+
+    interface RetrieveMessages {
+        @GET("chat/Message.json?")
+        Observable<Response<Message>> retrieveMessages(@Header("QB-Token") String token, @Query("chat_dialog_id") String dialogId);
+    }
+
+    interface DeleteMessage {
+        @DELETE("chat/Message/{message_id}.json")
+        Observable<Response<Void>> deleteMessage(@Header("Content-Type") String cont, @Header("QB-Token") String token, @Path("message_id") String messageId);
+
+
+    }
+
 
     interface RxRetriveAllUsers {
         @Headers({

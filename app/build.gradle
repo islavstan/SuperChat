@@ -9,6 +9,7 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -25,9 +26,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions {
-            enabled true
-        }
+
     }
     buildTypes {
         release {
@@ -35,6 +34,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+    }
+}
+android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -89,4 +101,10 @@ dependencies {
     compile 'com.github.clans:fab:1.6.4'
 
     compile 'javax.inject:javax.inject:1'
+
+
+    compile 'org.igniterealtime.smack:smack-android:4.1.6'
+    compile 'org.igniterealtime.smack:smack-tcp:4.1.6'
+    compile 'org.igniterealtime.smack:smack-im:4.1.6'
+    compile 'org.igniterealtime.smack:smack-extensions:4.1.6'
 }

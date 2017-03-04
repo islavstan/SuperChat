@@ -7,12 +7,15 @@ import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.chats.adapters.ChatsRecyclerAdapter;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
+import com.internship.supercoders.superchat.models.dialog.DialogData;
 import com.internship.supercoders.superchat.models.dialog.DialogModel;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.points.Points;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,6 +29,7 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
     public PublicChatInteractorImpl() {
 
     }
+
     @Override
     public void loadData(ChatsRecyclerAdapter adapter, String token) {
         final Points.RetrieveDialogs retrieveDialogs = ApiClient.getRetrofit().create(Points.RetrieveDialogs.class);
@@ -35,6 +39,18 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
             public void onResponse(Call<DialogModel> call, Response<DialogModel> response) {
                 if (response.isSuccessful()) {
                     DialogModel model = response.body();
+                    List<DialogData> dataList = model.getList();
+                    for (int i = 0; i < dataList.size(); i++) {
+                        DialogData data = dataList.get(i);
+                        String lastMessage = data.getLastMessage();
+                        Log.d("stas", lastMessage + " lastMessage");
+                        String chatId = data.getChatId();
+                        Log.d("stas", chatId + " chatId");
+                        String name = data.getName();
+                        Log.d("stas", name + " name");
+                    }
+
+
                     adapter.loadChats(model.getList());
                 } else {
                     try {

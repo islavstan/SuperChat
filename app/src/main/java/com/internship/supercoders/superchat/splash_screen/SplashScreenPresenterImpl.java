@@ -7,11 +7,14 @@ import android.util.Log;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
+import com.internship.supercoders.superchat.models.user_update_request.UpdateUser;
 import com.internship.supercoders.superchat.utils.UserPreferences;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class SplashScreenPresenterImpl implements SplashScreenPresenter {
@@ -60,13 +63,60 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
         final boolean isAuthorize = splashScreenInteractor.isAuth();
         Log.d("stas", isAuthorize + " - isAuth");
         if (isAuthorize) {
-            VerificationData user;
-            user = splashScreenInteractor.getUserInfo();
+            VerificationData user = splashScreenInteractor.getUserInfo();
+
             //Log.d("Splash", "Login: " + user.getEmail() + "Password: " + user.getPassword());
-            subscription = splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword())
+        /*    subscription = splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(authSubscriber);
+                    .subscribe(authSubscriber);*/
+
+            Log.d("stas", user.getEmail() + " - email " + user.getPassword());
+            splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword())
+                    .map(session -> session.getData().getToken())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<String>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.d("stas", e.getMessage());
+
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                            splashScreenInteractor.saveToken(s);
+                            Log.d("stas", "s = " + s);
+                            splashScreenInteractor.signIn(s)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Subscriber<UpdateUser>() {
+                                        @Override
+                                        public void onCompleted() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(UpdateUser updateUser) {
+
+
+                                        }
+                                    });
+
+                        }
+                    });
+
+
         } else {
             /*subscription = splashScreenInteractor.createSession()
                     .subscribeOn(Schedulers.io())

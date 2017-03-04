@@ -4,6 +4,7 @@ package com.internship.supercoders.superchat.splash_screen;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
+import com.internship.supercoders.superchat.models.user_update_request.UpdateUser;
 
 import rx.Observable;
 
@@ -30,7 +31,7 @@ public interface SplashScreenInteractor {
 
     Observable<Session> createSession();
 
-    void signIn();
+    Observable<UpdateUser> signIn(String token);
 
     boolean isAuth();
 }

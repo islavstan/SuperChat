@@ -11,12 +11,15 @@ import android.widget.TextView;
 
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
+import com.internship.supercoders.superchat.models.dialog.DialogData;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Observable;
+import rx.Subscriber;
 
 
 public class DBMethods {
@@ -183,6 +186,19 @@ public class DBMethods {
 
     }
 
+
+    public Observable<VerificationData>getEmailAndPassword() {
+        return Observable.create(new Observable.OnSubscribe<VerificationData>() {
+            @Override
+            public void call(Subscriber<? super VerificationData> subscriber) {
+                Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
+                subscriber.onNext(c.moveToFirst() ? new VerificationData(c.getString(c.getColumnIndex("email")),
+                        c.getString(c.getColumnIndex("password"))) : null);
+                c.close();
+            }
+        });
+    }
+
     public String getPassword() {
         Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
         String password = null;
@@ -193,6 +209,26 @@ public class DBMethods {
         }
         c.close();
         return password;
+
+    }
+
+
+    public Observable<Long> writeChatsData(DialogData dialogData) {
+        return Observable.create(subscriber -> {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("chat_id", dialogData.getChatId());
+            contentValues.put("last_message", dialogData.getLastMessage());
+            contentValues.put("last_message_date_sent", dialogData.getLastMessageDateSent());
+            contentValues.put("last_message_user_id", dialogData.getLastMessageUserId());
+            contentValues.put("occupants_ids", dialogData.getOccupants());
+            contentValues.put("name", dialogData.getName());
+            contentValues.put("photo", dialogData.getPhoto());
+            contentValues.put("type", dialogData.getType());
+            contentValues.put("unread_messages_count", dialogData.getUnread_messages_count());
+            contentValues.put("xmpp_room_jid", dialogData.getXmpp_room_jid());
+            subscriber.onNext(db.insert("myChats", null, contentValues));
+        });
+
 
     }
 }

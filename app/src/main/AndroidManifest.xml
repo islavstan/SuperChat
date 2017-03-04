@@ -49,10 +49,16 @@
         <activity android:name=".registration.RegistrationActivity" />
         <activity android:name=".authorization.AuthorizationActivity" />
         <activity android:name=".chats.ChatsActivity" />
-
+        <activity android:name=".chat.ChatActivity"></activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="cb34282d7442515b6f58308a9ff0b0c3e4320812" />
+
+        <service
+            android:name=".chat.service.SmackService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
 
         <activity
             android:name=".navigation.NavigationActivity"
