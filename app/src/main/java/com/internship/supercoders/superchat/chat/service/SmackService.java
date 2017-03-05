@@ -113,7 +113,7 @@ public class SmackService extends Service {
             Log.d("stas1", "connect");
             mConnection.connect();
         } catch (IOException | SmackException | XMPPException e) {
-            e.printStackTrace();
+            Log.d("stas1", "connect error - "+e.getMessage());
         }
     }
 }

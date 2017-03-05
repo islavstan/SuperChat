@@ -59,12 +59,8 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
     }
 
     public void connect() throws IOException, XMPPException, SmackException {
-            Log.d("stas1", "connectccc");
-        Log.d("stas1", dbMethods.getEmail()+ dbMethods.getPassword());
-        Log.d("stas1", chatId);
-
         XMPPTCPConnectionConfiguration builder = XMPPTCPConnectionConfiguration.builder()
-                .setUsernameAndPassword(dbMethods.getEmail(), dbMethods.getPassword())
+                .setUsernameAndPassword(dbMethods.getMyId() + "-52822", dbMethods.getPassword())
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setServiceName(service)
                 .setPort(5222)
@@ -72,14 +68,15 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
         mConnection = new XMPPTCPConnection(builder);
         mConnection.addConnectionListener(this);
         mConnection.connect();
+
         mConnection.login();
 
         manager = MultiUserChatManager.getInstanceFor(mConnection);
         muc = manager.getMultiUserChat("52822_" + chatId + "@muc.chat.quickblox.com");
         muc.join(mConnection.getUser());
 
-        Log.d("stas1", mConnection.getUser()+" getUser");
-        Log.d("stas1", mConnection.isConnected()+" isConnect");
+        Log.d("stas1", mConnection.getUser() + " getUser");
+        Log.d("stas1", mConnection.isConnected() + " isConnect");
 
 
         PingManager.setDefaultPingInterval(600); //Ping every 10 minutes
@@ -110,14 +107,13 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
     }
 
 
-
     public void disconnect() {
-        if(mConnection != null){
+        if (mConnection != null) {
             mConnection.disconnect();
         }
 
         mConnection = null;
-        if(mReceiver != null){
+        if (mReceiver != null) {
             mApplicationContext.unregisterReceiver(mReceiver);
             mReceiver = null;
         }
@@ -143,12 +139,12 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
     private void sendMessage(String body, String to) {
         msg = new Message();
-        extensionElement =new DefaultExtensionElement("extraParams","jabber:client");
-        extensionElement.setValue("save_to_history","1");
+        extensionElement = new DefaultExtensionElement("extraParams", "jabber:client");
+        extensionElement.setValue("save_to_history", "1");
         // extensionElement.setValue("date_sent",getDate());
-        Log.d("stas",msg.getBody()+" = getBody");
+        Log.d("stas", msg.getBody() + " = getBody");
         msg.setBody(body);
-        Log.d("stas",body+" - body");
+        Log.d("stas", body + " - body");
         msg.setStanzaId(randomName());
         msg.setType(Message.Type.groupchat);
         msg.setTo(to);
@@ -157,8 +153,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
             muc.sendMessage(msg);
 
 
-
-            Log.d("stas", "sendMessage - "+msg.toXML().toString());
+            Log.d("stas", "sendMessage - " + msg.toXML().toString());
 
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
@@ -229,8 +224,6 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
         }
     }
-
-
 
 
     @Override
