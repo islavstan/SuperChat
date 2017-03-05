@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.chat.ChatActivity;
 import com.internship.supercoders.superchat.chat.service.SmackService;
 import com.internship.supercoders.superchat.chats.UserActionsListener;
 import com.internship.supercoders.superchat.chats.chat_model.ChatModel;
@@ -47,12 +48,20 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
         holder.message.setText(model.getLastMessage());
 
 
-      /*  holder.cardView.setOnClickListener(v -> {
+        holder.cardView.setOnClickListener(v -> {
             Intent intent =new Intent(holder.cardView.getContext(), SmackService.class);
             intent.putExtra("id", model.getChatId());
             holder.cardView.getContext().startService(intent);
+            Intent intent1 = new Intent(holder.cardView.getContext(), ChatActivity.class);
+            intent1.putExtra("chatId", model.getChatId());
+
+
+
+
+
+            holder.cardView.getContext().startActivity(intent1);
         });
-*/
+
 
     }
 

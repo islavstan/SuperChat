@@ -16,6 +16,7 @@ import com.internship.supercoders.superchat.models.user_authorization_response.V
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
@@ -187,9 +188,7 @@ public class DBMethods {
     }
 
 
-
-
-    public Observable<VerificationData>getEmailAndPassword() {
+    public Observable<VerificationData> getEmailAndPassword() {
         return Observable.create(new Observable.OnSubscribe<VerificationData>() {
             @Override
             public void call(Subscriber<? super VerificationData> subscriber) {
@@ -201,10 +200,11 @@ public class DBMethods {
         });
     }
 
-    public Observable<Integer>checkChat(String chatId) {
+    public Observable<Integer> checkChat(String chatId) {
         return Observable.create(subscriber -> {
-            Cursor c = db.rawQuery("SELECT * FROM myChats where chat_id = '" + chatId+"'", null);
+            Cursor c = db.rawQuery("SELECT * FROM myChats where chat_id = '" + chatId + "'", null);
             subscriber.onNext(c.moveToFirst() ? 1 : 0);
+            c.close();
 
         });
     }
@@ -222,6 +222,21 @@ public class DBMethods {
 
     }
 
+    public int getMyId() {
+        Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
+        int id = 0;
+        for (int i = 0; i < c.getCount(); i++) {
+            if (c.moveToNext()) {
+                id = c.getInt(c.getColumnIndex("my_id"));
+            }
+        }
+        c.close();
+        return id;
+
+    }
+
+
+
 
     public Observable<Long> writeChatsData(DialogData dialogData, String occupants) {
         return Observable.create(subscriber -> {
@@ -230,7 +245,7 @@ public class DBMethods {
             contentValues.put("last_message", dialogData.getLastMessage());
             contentValues.put("last_message_date_sent", dialogData.getLastMessageDateSent());
             contentValues.put("last_message_user_id", dialogData.getLastMessageUserId());
-            contentValues.put("occupants_ids",occupants);
+            contentValues.put("occupants_ids", occupants);
             contentValues.put("name", dialogData.getName());
             contentValues.put("photo", dialogData.getPhoto());
             contentValues.put("type", dialogData.getType());
@@ -240,5 +255,10 @@ public class DBMethods {
         });
 
 
+    }
+
+    public String[] convertStringToArray(String str) {
+        String[] arr = str.split(",");
+        return arr;
     }
 }

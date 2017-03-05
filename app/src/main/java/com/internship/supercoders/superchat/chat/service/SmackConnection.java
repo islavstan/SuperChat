@@ -59,6 +59,9 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
     }
 
     public void connect() throws IOException, XMPPException, SmackException {
+            Log.d("stas1", "connectccc");
+        Log.d("stas1", dbMethods.getEmail()+ dbMethods.getPassword());
+        Log.d("stas1", chatId);
 
         XMPPTCPConnectionConfiguration builder = XMPPTCPConnectionConfiguration.builder()
                 .setUsernameAndPassword(dbMethods.getEmail(), dbMethods.getPassword())
@@ -74,6 +77,10 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
         manager = MultiUserChatManager.getInstanceFor(mConnection);
         muc = manager.getMultiUserChat("52822_" + chatId + "@muc.chat.quickblox.com");
         muc.join(mConnection.getUser());
+
+        Log.d("stas1", mConnection.getUser()+" getUser");
+        Log.d("stas1", mConnection.isConnected()+" isConnect");
+
 
         PingManager.setDefaultPingInterval(600); //Ping every 10 minutes
         PingManager pingManager = PingManager.getInstanceFor(mConnection);

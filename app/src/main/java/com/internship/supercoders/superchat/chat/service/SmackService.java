@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
 import java.io.IOException;
+
 
 public class SmackService extends Service {
 
@@ -55,6 +56,7 @@ public class SmackService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         chatId=(String) intent.getExtras().get("id");
+        Log.d("stas1", chatId+ " - chatId");
         start();
         return Service.START_STICKY;
     }
@@ -68,7 +70,7 @@ public class SmackService extends Service {
     public void start() {
         if (!mActive) {
             mActive = true;
-
+          Log.d("stas1", "start");
             // Create ConnectionThread Loop
             if (mThread == null || !mThread.isAlive()) {
                 mThread = new Thread(new Runnable() {
@@ -76,6 +78,7 @@ public class SmackService extends Service {
                     public void run() {
                         Looper.prepare();
                         mTHandler = new Handler();
+                        Log.d("stas1", "initConn");
                         initConnection();
                         Looper.loop();
                     }
@@ -103,9 +106,11 @@ public class SmackService extends Service {
 
     private void initConnection() {
         if (mConnection == null) {
+
             mConnection = new SmackConnection(this, chatId);
         }
         try {
+            Log.d("stas1", "connect");
             mConnection.connect();
         } catch (IOException | SmackException | XMPPException e) {
             e.printStackTrace();

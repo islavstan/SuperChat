@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.chats.interactors;
 
+import android.graphics.LightingColorFilter;
 import android.util.Log;
 
 import com.internship.supercoders.superchat.api.ApiClient;
@@ -61,10 +62,12 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
                         Log.d("stas", occupants);
 
                         String finalOccupants = occupants;
+                        Log.d("stas", chatId+" chat id ");
                         db.checkChat(chatId)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(integer -> {
+                                    Log.d("stas", integer+" integer");
                                             if (integer == 0) {
                                                 Log.d("stas", "write chat in db");
                                                 db.writeChatsData(data, finalOccupants);
