@@ -44,9 +44,9 @@ import static com.internship.supercoders.superchat.navigation.adapter.Navigation
 
 public class NavigationActivity extends MvpAppCompatActivity implements NavigationView, NavigationItemClickListener {
 
-    @InjectPresenter
-    NavigationPresenterImpl mNavigationPresenter;
-
+   /* @InjectPresenter
+    NavigationPresenterImpl mNavigationPresenter;*/
+   NavigationPresenterImpl mNavigationPresenter;
     private List<NavMenuItem> topNavMenu = new ArrayList<>();
     private List<NavMenuItem> bottomNavMenu = new ArrayList<>();
     private RecyclerView topRecyclerView;
@@ -68,6 +68,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         dbMethods = new DBMethods(this);
 
         fragmentManager = getSupportFragmentManager();
+        mNavigationPresenter = new NavigationPresenterImpl(this);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -153,15 +154,11 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         drawer.closeDrawer(GravityCompat.START);
         switch (id) {
             case CREATE_NEW_CHAT:
-
                 setTitle(getResources().getString(R.string.chats));
-
                 ChatsFragment fragment = new ChatsFragment();
                 fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
                 break;
             case USERS:
-               /* Intent intent = new Intent(NavigationActivity.this, UsersActivity.class);
-                startActivity(intent);*/
                 setTitle(getResources().getString(R.string.users));
                 UsersFragment usersFragment = new UsersFragment();
                 fragmentManager.beginTransaction().replace(R.id.content, usersFragment).commit();
@@ -172,7 +169,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
             case SETTINGS:
                 break;
             case LOG_OUT:
-                logOut();
+
+                mNavigationPresenter.logOut(dbMethods);
 
 
                 break;
@@ -199,7 +197,6 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     @Override
     public void logOut() {
         Log.d("stas", "logOut");
-        dbMethods.signOut();
         Intent intent = new Intent(NavigationActivity.this, AuthorizationActivity.class);
         startActivity(intent);
     }

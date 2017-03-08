@@ -88,6 +88,20 @@ public interface Points {
 
     }
 
+
+    interface SignOut {
+        @Headers({
+                "QuickBlox-REST-API-Version: 0.1.0"
+        })
+        @DELETE("/login.json")
+        Observable<Response<Void>> signOut(@Header("QB-Token") String token);
+
+        @DELETE("/session.json")
+        Observable<Response<Void>> destroySession(@Header("QB-Token") String token);
+
+
+    }
+
     interface UserAuthorizatoinPoint {
         @Headers({
                 "Content-Type: application/json",

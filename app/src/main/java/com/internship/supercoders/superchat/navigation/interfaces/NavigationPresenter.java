@@ -1,9 +1,10 @@
 package com.internship.supercoders.superchat.navigation.interfaces;
 
-/**
- * Created by Max on 13.02.2017.
- */
+
+import com.internship.supercoders.superchat.db.DBMethods;
 
 public interface NavigationPresenter {
-    public void getUserInfo();
+     void getUserInfo();
+
+     void logOut(DBMethods dbMethods);
 }
