@@ -3,6 +3,7 @@ package com.internship.supercoders.superchat.navigation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +23,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.github.clans.fab.FloatingActionButton;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
+import com.internship.supercoders.superchat.chats.ChatsFragment;
 import com.internship.supercoders.superchat.chats.adapters.ChatsViewPagerAdapter;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.navigation.adapter.NavMenuItem;
@@ -31,11 +33,14 @@ import com.internship.supercoders.superchat.navigation.adapter.NavigationViewRec
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationView;
 import com.internship.supercoders.superchat.users.UsersActivity;
+import com.internship.supercoders.superchat.users.UsersFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.internship.supercoders.superchat.navigation.adapter.NavigationItemId.CREATE_NEW_CHAT;
 
 public class NavigationActivity extends MvpAppCompatActivity implements NavigationView, NavigationItemClickListener {
 
@@ -50,9 +55,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     CircleImageView ivAvatar;
     TextView name;
     TextView email;
-    ViewPager viewPager;
-    ChatsViewPagerAdapter adapter;
     DBMethods dbMethods;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +64,10 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle(getResources().getString(R.string.chats));
+
         dbMethods = new DBMethods(this);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> addNewChat());
+        fragmentManager = getSupportFragmentManager();
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -83,30 +85,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         mNavigationPresenter.getUserInfo();
 
         loadMyInfo();
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.public_chats)));
-        tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.private_chats)));
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setOffscreenPageLimit(2);
-        adapter = new ChatsViewPagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+        menuItemOnClick(CREATE_NEW_CHAT);
 
 
     }
@@ -157,7 +137,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         navMenu.clear();
         switch (menuType) {
             case TOP:
-                navMenu.add(new NavMenuItem(R.drawable.ic_menu_add_chat, getString(R.string.menu_create_new_chat), NavigationItemId.CREATE_NEW_CHAT));
+                navMenu.add(new NavMenuItem(R.drawable.ic_menu_add_chat, getString(R.string.chats_list), CREATE_NEW_CHAT));
                 navMenu.add(new NavMenuItem(R.drawable.ic_menu_users, getString(R.string.menu_users), NavigationItemId.USERS));
                 navMenu.add(new NavMenuItem(R.drawable.ic_menu_invite_users, getString(R.string.menu_invite_users), NavigationItemId.INVITE_USERS));
                 break;
@@ -173,11 +153,20 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         drawer.closeDrawer(GravityCompat.START);
         switch (id) {
             case CREATE_NEW_CHAT:
+
+                setTitle(getResources().getString(R.string.chats));
+
+                ChatsFragment fragment = new ChatsFragment();
+                fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
                 break;
             case USERS:
-                Intent intent = new Intent(NavigationActivity.this, UsersActivity.class);
-                startActivity(intent);
+               /* Intent intent = new Intent(NavigationActivity.this, UsersActivity.class);
+                startActivity(intent);*/
+                setTitle(getResources().getString(R.string.users));
+                UsersFragment usersFragment = new UsersFragment();
+                fragmentManager.beginTransaction().replace(R.id.content, usersFragment).commit();
                 break;
+
             case INVITE_USERS:
                 break;
             case SETTINGS:
@@ -190,6 +179,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         }
 
     }
+
 
     @Override
     public void updateUserInfo() {

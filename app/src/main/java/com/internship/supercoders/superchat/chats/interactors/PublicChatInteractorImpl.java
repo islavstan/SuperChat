@@ -31,7 +31,7 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
 
 
     public PublicChatInteractorImpl() {
-//hello
+
     }
 
     @Override
