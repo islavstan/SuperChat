@@ -22,8 +22,10 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
         TextView tvLogoLabel = (TextView) findViewById(R.id.tv_logo_label);
         Typeface font = Typeface.createFromAsset(getAssets(), "font/FortuneCity.ttf");
         tvLogoLabel.setTypeface(font);

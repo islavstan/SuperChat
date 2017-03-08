@@ -62,15 +62,18 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
                         Log.d("stas", occupants);
 
                         String finalOccupants = occupants;
-                        Log.d("stas", chatId+" chat id ");
+                        Log.d("stas", chatId + " chat id ");
                         db.checkChat(chatId)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(integer -> {
-                                    Log.d("stas", integer+" integer");
+                                    Log.d("stas", integer + " integer");
                                             if (integer == 0) {
-                                                Log.d("stas", "write chat in db");
-                                                db.writeChatsData(data, finalOccupants);
+
+                                                db.writeChatsData(data, finalOccupants).
+                                                        subscribeOn(Schedulers.io())
+                                                        .observeOn(AndroidSchedulers.mainThread())
+                                                        .subscribe(result -> Log.d("stas", result + " - write chat in db"));
                                             } else Log.d("stas", "chat exists in db");
                                         }
 

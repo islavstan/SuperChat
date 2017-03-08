@@ -189,14 +189,11 @@ public class DBMethods {
 
 
     public Observable<VerificationData> getEmailAndPassword() {
-        return Observable.create(new Observable.OnSubscribe<VerificationData>() {
-            @Override
-            public void call(Subscriber<? super VerificationData> subscriber) {
-                Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
-                subscriber.onNext(c.moveToFirst() ? new VerificationData(c.getString(c.getColumnIndex("email")),
-                        c.getString(c.getColumnIndex("password"))) : null);
-                c.close();
-            }
+        return Observable.create(subscriber -> {
+            Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
+            subscriber.onNext(c.moveToFirst() ? new VerificationData(c.getString(c.getColumnIndex("email")),
+                    c.getString(c.getColumnIndex("password"))) : null);
+            c.close();
         });
     }
 
@@ -204,6 +201,7 @@ public class DBMethods {
         return Observable.create(subscriber -> {
             Cursor c = db.rawQuery("SELECT * FROM myChats where chat_id = '" + chatId + "'", null);
             subscriber.onNext(c.moveToFirst() ? 1 : 0);
+           Log.d("stas1", c.getCount()+" c.getCount");
             c.close();
 
         });
@@ -241,6 +239,7 @@ public class DBMethods {
     public Observable<Long> writeChatsData(DialogData dialogData, String occupants) {
         return Observable.create(subscriber -> {
             ContentValues contentValues = new ContentValues();
+            Log.d("stas",dialogData.getChatId()+" write id" );
             contentValues.put("chat_id", dialogData.getChatId());
             contentValues.put("last_message", dialogData.getLastMessage());
             contentValues.put("last_message_date_sent", dialogData.getLastMessageDateSent());

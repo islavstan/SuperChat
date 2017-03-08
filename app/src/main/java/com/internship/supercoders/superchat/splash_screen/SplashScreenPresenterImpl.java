@@ -71,6 +71,7 @@ public class SplashScreenPresenterImpl implements SplashScreenPresenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(authSubscriber);*/
 
+
             Log.d("stas", user.getEmail() + " - email " + user.getPassword());
             splashScreenInteractor.userAuthorization(user.getEmail(), user.getPassword())
                     .map(session -> session.getData().getToken())
