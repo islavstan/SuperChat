@@ -2,10 +2,8 @@ package com.internship.supercoders.superchat.navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,12 +17,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
-import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.github.clans.fab.FloatingActionButton;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.authorization.AuthorizationActivity;
 import com.internship.supercoders.superchat.chats.ChatsFragment;
-import com.internship.supercoders.superchat.chats.adapters.ChatsViewPagerAdapter;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.navigation.adapter.NavMenuItem;
 import com.internship.supercoders.superchat.navigation.adapter.NavigationItemId;
@@ -32,7 +27,6 @@ import com.internship.supercoders.superchat.navigation.adapter.NavigationMenuTyp
 import com.internship.supercoders.superchat.navigation.adapter.NavigationViewRecyclerAdapter;
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationView;
-import com.internship.supercoders.superchat.users.UsersActivity;
 import com.internship.supercoders.superchat.users.UsersFragment;
 
 import java.util.ArrayList;
