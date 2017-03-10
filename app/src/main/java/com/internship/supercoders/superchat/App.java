@@ -20,6 +20,7 @@ public class App extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         dbManager = new DBMethods(this);
+        fileManager = new FileManager(this);
 
     }
 

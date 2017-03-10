@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.api.ApiClient;
-import com.internship.supercoders.superchat.chat.ChatActivity;
 import com.internship.supercoders.superchat.chat.chat_model.MessageModel;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.points.Points;
@@ -104,14 +103,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
 
                 if (!previousDate.equals(currentDate)) {
-                    Log.d("stas", currentDate);
+                    Log.d("Date", currentDate);
                     messageList.add(new MessageModel(currentDate));
                 }
 
             }
 
             messageList.add(model);
-            Log.d("stas", model.getMessage());
+            //Log.d("stas", model.getMessage());
 
         }
         notifyDataSetChanged();
@@ -136,6 +135,29 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
     }
 
+    private String getMessageDate(String mDate) {
+        TimeZone serverTimeZone = TimeZone.getTimeZone("Etc/GMT-0");
+        TimeZone currentTimeZone = TimeZone.getDefault();
+        Calendar cal = Calendar.getInstance(currentTimeZone);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Date date = cal.getTime();
+        try {
+            if (mDate != null) {
+                cal.setTimeZone(serverTimeZone);
+                dateFormat.setCalendar(cal);
+                cal.setTime(dateFormat.parse(mDate));
+                cal.setTimeZone(currentTimeZone);
+                date = cal.getTime();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        String currentDate = formatter.format(date);
+
+        return currentDate;
+    }
+
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
@@ -146,7 +168,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
         } else if (!model.isDeleteMessage()) {
 
             holder.message.setText(model.getMessage());
-            holder.time.setText(model.getUpdated_at());
+            holder.time.setText(getMessageDate(model.getUpdated_at()));
 
 
             holder.bubble.setOnLongClickListener(view -> {

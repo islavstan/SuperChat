@@ -3,7 +3,6 @@ package com.internship.supercoders.superchat.chat.chat_model;
 import com.google.gson.annotations.SerializedName;
 
 
-
 public class MessageModel {
     @SerializedName("sender_id")
     int senderId;

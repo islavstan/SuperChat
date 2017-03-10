@@ -9,5 +9,5 @@ public class AppConsts {
     public static final String SIGNED_IN_PREFERENCES = "keepSignedIn";
     public static final long TOKEN_LIFETIME = 2 * 60 * 60 * 1000;
     final public static String SPLASH_TAG = "Splash";
-    final public static String AVATAR_DIR = "avatar";
+    final public static String AVATAR_DIR = "/SuperChat/Users/avatar";
 }

@@ -43,6 +43,6 @@ public class UsersInteractorImpl implements UsersInteractor {
 
     @Override
     public void writeAvatarToDisk(ResponseBody body, String id) throws IOException {
-        Log.i("writeAvatarToDisk: ", Boolean.toString(mFileManager.saveToInternalStorage(AppConsts.AVATAR_DIR, id, body)));
+        Log.i("writeAvatarToDisk: ", Boolean.toString(mFileManager.saveToFolder(AppConsts.AVATAR_DIR, body, id)));
     }
 }
