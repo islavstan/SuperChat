@@ -119,18 +119,25 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
 
     private String getDateforSeparator(String mDate) {
-        TimeZone tz = TimeZone.getTimeZone("Europe/Kiev");
-        Calendar cal = Calendar.getInstance(tz);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        sdf.setCalendar(cal);
+        TimeZone serverTimeZone = TimeZone.getTimeZone("Etc/GMT-0");
+        TimeZone currentTimeZone = TimeZone.getDefault();
+        Calendar cal = Calendar.getInstance(currentTimeZone);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Date date = cal.getTime();
         try {
-            cal.setTime(sdf.parse(mDate));
+            if (mDate != null) {
+                cal.setTimeZone(serverTimeZone);
+                dateFormat.setCalendar(cal);
+                cal.setTime(dateFormat.parse(mDate));
+                cal.setTimeZone(currentTimeZone);
+                date = cal.getTime();
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Date date = cal.getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
         String currentDate = formatter.format(date);
+
         return currentDate;
 
     }
