@@ -1,9 +1,9 @@
 package com.internship.supercoders.superchat.chats;
 
 import android.os.Bundle;
-
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +14,18 @@ import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.chats.adapters.ChatsViewPagerAdapter;
 import com.internship.supercoders.superchat.chats.views.ChatsView;
 import com.internship.supercoders.superchat.db.DBMethods;
+import com.internship.supercoders.superchat.ui.new_chat.NewChatFragment;
 
 
 public class ChatsFragment extends Fragment implements ChatsView {
     ChatsViewPagerAdapter adapter;
     DBMethods dbMethods;
     ViewPager viewPager;
+    FragmentManager fragmentManager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chats, container, false);
+        fragmentManager = getFragmentManager();
         dbMethods = new DBMethods(getActivity());
         FloatingActionButton fab = (FloatingActionButton)v. findViewById(R.id.fab);
         fab.setOnClickListener(view -> addNewChat());
@@ -59,6 +62,8 @@ public class ChatsFragment extends Fragment implements ChatsView {
 
     @Override
     public void addNewChat() {
+        NewChatFragment newChatFragment = new NewChatFragment();
+        fragmentManager.beginTransaction().replace(R.id.content, newChatFragment).commit();
 
     }
 

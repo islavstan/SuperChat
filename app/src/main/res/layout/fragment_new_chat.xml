@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:id="@+id/label_chat_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_chat_name"
+        android:textAppearance="@style/labelNewChat"
+        android:layout_marginTop="32dp"
+        android:paddingLeft="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:layout_width="0dp"
+            android:layout_height="58dp"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:layout_marginRight="17dp"
+            app:backgroundTint="#1f000000" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/userpic_group" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/label_privacy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_privacy"
+        android:textAppearance="@style/labelNewChat"
+        android:layout_marginTop="44dp" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_privacy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/radio_btn_public"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Public"
+            android:checked="true"
+            style="@style/RadioButtonStyle" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/radio_btn_private"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Private"
+            android:layout_marginLeft="42dp"
+            style="@style/RadioButtonStyle" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/label_select_members"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_select_members"
+        android:textAppearance="@style/labelNewChat"
+        android:layout_marginTop="46dp"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_user_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/btn_create_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/colorWhite"
+            android:textSize="13sp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="83dp"
+            android:paddingRight="83dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="40dp"
+            android:text="Create" />
+    </LinearLayout>
+
+</LinearLayout>

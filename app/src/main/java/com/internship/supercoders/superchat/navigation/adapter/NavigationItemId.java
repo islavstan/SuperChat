@@ -5,7 +5,7 @@ package com.internship.supercoders.superchat.navigation.adapter;
  */
 
 public enum NavigationItemId {
-    CREATE_NEW_CHAT,
+    CHATS,
     USERS,
     INVITE_USERS,
     SETTINGS,
