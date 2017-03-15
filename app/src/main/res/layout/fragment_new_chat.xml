@@ -33,6 +33,7 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/et_chat_name"
                     android:layout_width="0dp"
                     android:layout_height="58dp"
                     android:layout_weight="1"
@@ -41,6 +42,7 @@
                     app:backgroundTint="#1f000000" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/iv_chat_avatar"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/userpic_group" />
@@ -97,8 +99,7 @@
                     android:id="@+id/rv_user_list"
                     android:layout_width="match_parent"
                     android:layout_height="192dp"
-                    tools:listitem="@layout/user_list_item_checkbox"
-                    scroll />
+                    tools:listitem="@layout/user_list_item_checkbox" />
 
                 <Button
                     android:id="@+id/btn_create_chat"

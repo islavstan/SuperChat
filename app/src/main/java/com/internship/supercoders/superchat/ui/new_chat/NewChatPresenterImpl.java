@@ -5,6 +5,7 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.internship.supercoders.superchat.App;
+import com.internship.supercoders.superchat.data.ChatType;
 import com.internship.supercoders.superchat.models.user_info.UserDataPage;
 import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdapter;
 import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatPresenter;
@@ -72,7 +73,7 @@ public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements N
     }
 
     @Override
-    public void createNewChat() {
+    public void createNewChat(ChatType privacy, String name, SelectUserRvAdapter userListAdapter) {
 
     }
 

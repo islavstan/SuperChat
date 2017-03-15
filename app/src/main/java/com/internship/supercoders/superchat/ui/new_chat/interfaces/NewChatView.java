@@ -10,7 +10,9 @@ import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdap
 public interface NewChatView extends MvpView {
     void initUserList(SelectUserRvAdapter selectUserRvAdapter);
 
-    void chatCreated();
+    void createChat();
+
+    void goToCreatedChat();
 
     void updateUserList();
 }
