@@ -23,7 +23,7 @@ public class UsersInteractorImpl implements UsersInteractor {
     private DBMethods mDbManager;
     private FileManager mFileManager;
 
-    UsersInteractorImpl(DBMethods dbManager, FileManager fileManager) {
+    public UsersInteractorImpl(DBMethods dbManager, FileManager fileManager) {
         this.mDbManager = dbManager;
         this.mFileManager = fileManager;
 

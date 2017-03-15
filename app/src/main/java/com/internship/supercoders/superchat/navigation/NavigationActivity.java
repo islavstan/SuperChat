@@ -163,10 +163,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
             case SETTINGS:
                 break;
             case LOG_OUT:
-
                 mNavigationPresenter.logOut(dbMethods);
-
-
                 break;
         }
 

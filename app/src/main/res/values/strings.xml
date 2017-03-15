@@ -69,5 +69,6 @@
     <string name="label_chat_name">chat name</string>
     <string name="label_privacy">privacy</string>
     <string name="label_select_members">select members</string>
+    <string name="new_chat_title">NEW CHAT</string>
 
 </resources>

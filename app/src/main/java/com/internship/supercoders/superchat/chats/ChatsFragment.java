@@ -62,6 +62,7 @@ public class ChatsFragment extends Fragment implements ChatsView {
 
     @Override
     public void addNewChat() {
+        getActivity().setTitle(R.string.new_chat_title);
         NewChatFragment newChatFragment = new NewChatFragment();
         fragmentManager.beginTransaction().replace(R.id.content, newChatFragment).commit();
 

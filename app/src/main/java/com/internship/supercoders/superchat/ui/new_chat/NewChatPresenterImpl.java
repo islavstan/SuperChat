@@ -1,4 +1,4 @@
-package com.internship.supercoders.superchat.users;
+package com.internship.supercoders.superchat.ui.new_chat;
 
 import android.util.Log;
 
@@ -6,45 +6,53 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.internship.supercoders.superchat.App;
 import com.internship.supercoders.superchat.models.user_info.UserDataPage;
-import com.internship.supercoders.superchat.users.adapter.UserRvAdapter;
+import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdapter;
+import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatPresenter;
+import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatView;
+import com.internship.supercoders.superchat.users.UsersInteractorImpl;
 import com.internship.supercoders.superchat.users.interfaces.UsersInteractor;
-import com.internship.supercoders.superchat.users.interfaces.UsersPresenter;
-import com.internship.supercoders.superchat.users.interfaces.UsersView;
 
 import java.io.IOException;
 import java.util.List;
 
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Max on 17.02.2017.
+ * Created by Max on 13.03.2017.
  */
 @InjectViewState
-public class UsersPresenterImpl extends MvpPresenter<UsersView> implements UsersPresenter {
-    private UsersInteractor mUsersInteractor = new UsersInteractorImpl(App.getDataBaseManager(), App.getFileManager());
+public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements NewChatPresenter {
 
     private List<UserDataPage.UserDataList> userListInfo;
 
+    private UsersInteractor mUsersInteractor = new UsersInteractorImpl(App.getDataBaseManager(), App.getFileManager());
+
     @Override
-    public void getUsers() {
+    public void getUserList() {
+
         mUsersInteractor.getUsers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         userDataPage -> {
                             userListInfo = userDataPage.getUserList();
-                            getViewState().initUserList(new UserRvAdapter(userListInfo));
+                            SelectUserRvAdapter mAdapter = new SelectUserRvAdapter(userListInfo);
+                            getViewState().initUserList(mAdapter);
                             updateUserAvatarts();
                         },
-                        error -> Log.d("UserPresenter", "Error: " + error.toString()));
+                        error -> {
+                            error.printStackTrace();
+                            Log.d("NewChatPresenter", "Error: " + error.toString());
+
+                        });
 
     }
+
     private void updateUserAvatarts() {
-        Observable.from(userListInfo)
+        rx.Observable.from(userListInfo)
                 .subscribeOn(Schedulers.io())
-                .flatMap(userData -> Observable.just(userData.getItem()))
+                .flatMap(userData -> rx.Observable.just(userData.getItem()))
                 .filter(user -> user.getBlobId() != null)
                 .subscribe(user -> {
                     mUsersInteractor.getFile(user.getBlobId())
@@ -61,5 +69,15 @@ public class UsersPresenterImpl extends MvpPresenter<UsersView> implements Users
                                 getViewState().updateUserList();
                             }, error -> Log.d("UserPresenter", "updateUserAvatarError: " + error.getMessage()));
                 });
+    }
+
+    @Override
+    public void createNewChat() {
+
+    }
+
+    @Override
+    public void loadPhoto() {
+
     }
 }
