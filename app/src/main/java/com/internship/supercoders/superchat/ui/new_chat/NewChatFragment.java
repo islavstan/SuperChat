@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
@@ -30,6 +31,7 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
     SelectUserRvAdapter userListAdapter;
     EditText chatName;
     RadioGroup rgPrivacy;
+    Button createBtn;
 
 
     @Nullable
@@ -40,10 +42,12 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
         chatName = (EditText) v.findViewById(R.id.et_chat_name);
         rgPrivacy = (RadioGroup) v.findViewById(R.id.radio_group_privacy);
         recyclerView = (RecyclerView) v.findViewById(R.id.rv_user_list);
+        createBtn = (Button) v.findViewById(R.id.btn_create_chat);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        createBtn.setOnClickListener(view -> createChat());
         return v;
     }
 

@@ -74,6 +74,9 @@ public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements N
 
     @Override
     public void createNewChat(ChatType privacy, String name, SelectUserRvAdapter userListAdapter) {
+        String occupants;
+        occupants = userListAdapter.getSelectedUserId().toString();
+        Log.d("NewChat", "Occupants " + occupants);
 
     }
 

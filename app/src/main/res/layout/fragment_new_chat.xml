@@ -5,13 +5,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:isScrollContainer="true">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,10 +35,11 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/et_chat_name"
                     android:layout_width="0dp"
-                    android:layout_height="58dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginTop="16dp"
                     android:layout_weight="1"
                     android:textSize="16sp"
-                    android:layout_marginRight="17dp"
                     app:backgroundTint="#1f000000" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -52,9 +53,9 @@
                 android:id="@+id/label_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:text="@string/label_privacy"
-                android:textAppearance="@style/labelNewChat"
-                android:layout_marginTop="44dp" />
+                android:textAppearance="@style/labelNewChat" />
 
             <RadioGroup
                 android:id="@+id/radio_group_privacy"
@@ -76,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Private"
-                    android:layout_marginLeft="42dp"
+                    android:layout_marginLeft="32dp"
                     style="@style/RadioButtonStyle" />
 
             </RadioGroup>
@@ -87,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/label_select_members"
                 android:textAppearance="@style/labelNewChat"
-                android:layout_marginTop="46dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp" />
 
             <LinearLayout
@@ -98,7 +99,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_user_list"
                     android:layout_width="match_parent"
-                    android:layout_height="192dp"
+                    android:layout_height="129dp"
                     tools:listitem="@layout/user_list_item_checkbox" />
 
                 <Button
@@ -114,8 +115,10 @@
                     android:paddingRight="83dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="30dp"
-                    android:layout_marginTop="40dp"
-                    android:text="Create" />
+                    android:layout_marginTop="32dp"
+                    android:gravity="center"
+                    android:text="Create"
+                    android:onClick="createChat" />
             </LinearLayout>
 
         </LinearLayout>

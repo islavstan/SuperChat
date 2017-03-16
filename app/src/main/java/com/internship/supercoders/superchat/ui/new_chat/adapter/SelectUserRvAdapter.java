@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.models.user_info.UserDataPage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -21,9 +22,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapter.UserItemViewHolder> {
     private List<UserDataPage.UserDataList> mUserList;
+    private List<Integer> mSelectedUserListId;
 
     public SelectUserRvAdapter(List<UserDataPage.UserDataList> userDataList) {
         this.mUserList = userDataList;
+        this.mSelectedUserListId = new ArrayList<>();
     }
 
     @Override
@@ -34,10 +37,11 @@ public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapte
 
     @Override
     public void onBindViewHolder(SelectUserRvAdapter.UserItemViewHolder holder, int position) {
-        String userName = mUserList.get(position).getItem().getName();
-        byte[] imageSource = mUserList.get(position).getItem().getAvatarObj();
+        UserDataPage.UserDataList currentItem = mUserList.get(position);
+        String userName = currentItem.getItem().getName();
+        byte[] imageSource = currentItem.getItem().getAvatarObj();
         if (userName == null) {
-            userName = mUserList.get(position).getItem().getEmail();
+            userName = currentItem.getItem().getEmail();
         }
         holder.tvFullName.setText(userName);
         if (imageSource == null) {
@@ -45,11 +49,26 @@ public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapte
         } else {
             holder.ivAvatar.setImageBitmap(BitmapFactory.decodeByteArray(imageSource, 0, imageSource.length));
         }
+        holder.cbxSelectUser.setOnCheckedChangeListener(null);
+        holder.cbxSelectUser.setChecked(currentItem.isSelected());
+        holder.cbxSelectUser.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            currentItem.setSelected(isChecked);
+            if (isChecked) {
+                mSelectedUserListId.add(currentItem.getItem().getId());
+            } else {
+                int removeIndex = mSelectedUserListId.indexOf(currentItem.getItem().getId());
+                mSelectedUserListId.remove(removeIndex);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mUserList.size();
+    }
+
+    public List<Integer> getSelectedUserId() {
+        return mSelectedUserListId;
     }
 
     class UserItemViewHolder extends RecyclerView.ViewHolder {

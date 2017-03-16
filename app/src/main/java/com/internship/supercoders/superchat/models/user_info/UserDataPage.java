@@ -37,9 +37,18 @@ public class UserDataPage {
     public class UserDataList {
         @SerializedName("user")
         private UserDataFullProfile item;
+        private boolean isSelected;
 
         public UserDataFullProfile getItem() {
             return this.item;
+        }
+
+        public boolean isSelected() {
+            return this.isSelected;
+        }
+
+        public void setSelected(boolean value) {
+            this.isSelected = value;
         }
     }
 }
