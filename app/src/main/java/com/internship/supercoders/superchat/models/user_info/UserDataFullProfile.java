@@ -39,8 +39,17 @@ public class UserDataFullProfile {
     String tags;
     @Expose
     private byte[] avatarObj;
+    String photo_path;
 
-    public UserDataFullProfile(int id, String name, String email, String phone, String website, String blobId) {
+    public String getPhoto_path() {
+        return photo_path;
+    }
+
+    public void setPhoto_path(String photo_path) {
+        this.photo_path = photo_path;
+    }
+
+    public UserDataFullProfile(int id, String name, String email, String phone, String website, String blobId, String photo_path) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -48,6 +57,7 @@ public class UserDataFullProfile {
         this.phone = phone;
         this.website = website;
         this.blobId = blobId;
+        this.photo_path = photo_path;
     }
 
     public String getEmail() {

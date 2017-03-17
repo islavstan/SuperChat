@@ -135,8 +135,6 @@ public class DBMethods {
         cv.put("photo_path", photoPath);
         cv.put("signed_in", 1);
         db.insert("myInfo", null, cv);
-
-
     }
 
     public void getMyInfoForNavigation(CircleImageView imageView, TextView email, TextView fullName) {
@@ -176,6 +174,14 @@ public class DBMethods {
         db.execSQL(strSQL);
     }
 
+
+    public Observable<Void>saveImage(String path, String id) {
+        return Observable.create(subscriber -> {
+            String strSQL = "UPDATE myContacts SET photo_path = '" + path + "' WHERE my_id = '" + id + "'";
+            db.execSQL(strSQL);
+        });
+    }
+
     public String getEmail() {
         Cursor c = db.rawQuery("SELECT * FROM myInfo where signed_in = '1'", null);
         String email = null;
@@ -204,6 +210,16 @@ public class DBMethods {
             Cursor c = db.rawQuery("SELECT * FROM myChats where chat_id = '" + chatId + "'", null);
             subscriber.onNext(c.moveToFirst() ? 1 : 0);
             Log.d("stas1", c.getCount() + " c.getCount");
+            c.close();
+
+        });
+    }
+
+
+    public Observable<Integer>checkPhoto(String blob_id){
+        return Observable.create(subscriber -> {
+            Cursor c = db.rawQuery("SELECT photo_path FROM myContacts where blob_id = '" + blob_id + "'", null);
+            subscriber.onNext(c.moveToFirst() ? 1 : 0);
             c.close();
 
         });
@@ -297,7 +313,8 @@ public class DBMethods {
                     String phone = c.getString(c.getColumnIndex("phone"));
                     String website = c.getString(c.getColumnIndex("website"));
                     String blobId = c.getString(c.getColumnIndex("blob_id"));
-                    UserDataFullProfile profile = new UserDataFullProfile(id, name, email, phone, website, blobId);
+                    String photo_path = c.getString(c.getColumnIndex("photo_path"));
+                    UserDataFullProfile profile = new UserDataFullProfile(id, name, email, phone, website, blobId, photo_path);
                     list.add(profile);
                 } while (c.moveToNext());
 
