@@ -40,6 +40,16 @@ public class UserDataFullProfile {
     @Expose
     private byte[] avatarObj;
 
+    public UserDataFullProfile(int id, String name, String email, String phone, String website, String blobId) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+
+        this.phone = phone;
+        this.website = website;
+        this.blobId = blobId;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -58,5 +68,53 @@ public class UserDataFullProfile {
 
     public void setAvatarObj(byte[] avatarObj) {
         this.avatarObj = avatarObj;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public String getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public String getLastRequesrTime() {
+        return lastRequesrTime;
+    }
+
+    public int getExternalUserId() {
+        return externalUserId;
+    }
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public String getTwitterId() {
+        return twitterId;
+    }
+
+    public int getTwitterDigitId() {
+        return twitterDigitId;
+    }
+
+    public String getTags() {
+        return tags;
     }
 }

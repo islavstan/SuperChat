@@ -15,4 +15,5 @@ public interface NavigationInteractor {
     void getUserData();
 
     void signOut(DBMethods dbMethods, NavigationFinishedListener listener);
+    void loadUsers(DBMethods dbMethods);
 }

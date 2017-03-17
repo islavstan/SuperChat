@@ -7,4 +7,6 @@ public interface NavigationPresenter {
      void getUserInfo();
 
      void logOut(DBMethods dbMethods);
+
+     void loadUsers(DBMethods dbMethods);
 }

@@ -64,6 +64,9 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         fragmentManager = getSupportFragmentManager();
         mNavigationPresenter = new NavigationPresenterImpl(this);
 
+        mNavigationPresenter.loadUsers(dbMethods);
+
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -132,7 +135,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         navMenu.clear();
         switch (menuType) {
             case TOP:
-                navMenu.add(new NavMenuItem(R.drawable.ic_menu_add_chat, getString(R.string.chats_list), CREATE_NEW_CHAT));
+                navMenu.add(new NavMenuItem(R.drawable.chats, getString(R.string.chats_list), CREATE_NEW_CHAT));
                 navMenu.add(new NavMenuItem(R.drawable.ic_menu_users, getString(R.string.menu_users), NavigationItemId.USERS));
                 navMenu.add(new NavMenuItem(R.drawable.ic_menu_invite_users, getString(R.string.menu_invite_users), NavigationItemId.INVITE_USERS));
                 break;

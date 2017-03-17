@@ -33,6 +33,11 @@ public class NavigationPresenterImpl extends MvpPresenter<NavigationView> implem
 
     }
 
+    @Override
+    public void loadUsers(DBMethods dbMethods) {
+        navigationInteractor.loadUsers(dbMethods);
+    }
+
 
     @Override
     public void finishSignOut() {

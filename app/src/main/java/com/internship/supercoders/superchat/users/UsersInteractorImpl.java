@@ -36,6 +36,11 @@ public class UsersInteractorImpl implements UsersInteractor {
     }
 
     @Override
+    public void getUserList() {
+
+    }
+
+    @Override
     public Observable<ResponseBody> getFile(String blobId) {
         final Points.RxDownloadFile apiService = ApiClient.getRxRetrofit().create(Points.RxDownloadFile.class);
         return apiService.getFile(mDbManager.getToken(), blobId);

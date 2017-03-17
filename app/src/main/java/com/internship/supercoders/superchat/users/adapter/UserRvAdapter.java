@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.models.user_info.UserDataFullProfile;
 import com.internship.supercoders.superchat.models.user_info.UserDataPage.UserDataList;
 
 import java.util.List;
@@ -19,9 +20,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class UserRvAdapter extends RecyclerView.Adapter<UserRvAdapter.UserItemViewHolder> {
-    private List<UserDataList> mUserList;
+    private List<UserDataFullProfile> mUserList;
 
-    public UserRvAdapter(List<UserDataList> userDataList) {
+    public UserRvAdapter(List<UserDataFullProfile> userDataList) {
         this.mUserList = userDataList;
     }
 
@@ -33,17 +34,17 @@ public class UserRvAdapter extends RecyclerView.Adapter<UserRvAdapter.UserItemVi
 
     @Override
     public void onBindViewHolder(UserItemViewHolder holder, int position) {
-        String userName = mUserList.get(position).getItem().getName();
-        byte[] imageSource = mUserList.get(position).getItem().getAvatarObj();
+        String userName = mUserList.get(position).getName();
+       // byte[] imageSource = mUserList.get(position).getAvatarObj();
         if (userName == null) {
-            userName = mUserList.get(position).getItem().getEmail();
+            userName = mUserList.get(position).getEmail();
         }
         holder.tvFullName.setText(userName);
-        if (imageSource == null) {
+      //  if (imageSource == null) {
             holder.ivAvatar.setImageResource(R.drawable.ic_userpic_default);
-        } else {
-            holder.ivAvatar.setImageBitmap(BitmapFactory.decodeByteArray(imageSource, 0, imageSource.length));
-        }
+      //  } else {
+         //   holder.ivAvatar.setImageBitmap(BitmapFactory.decodeByteArray(imageSource, 0, imageSource.length));
+        //}
     }
 
     @Override

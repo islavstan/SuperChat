@@ -13,10 +13,12 @@ import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.data.AppConsts;
 import com.internship.supercoders.superchat.models.dialog.DialogData;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
+import com.internship.supercoders.superchat.models.user_info.UserDataFullProfile;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
@@ -201,7 +203,7 @@ public class DBMethods {
         return Observable.create(subscriber -> {
             Cursor c = db.rawQuery("SELECT * FROM myChats where chat_id = '" + chatId + "'", null);
             subscriber.onNext(c.moveToFirst() ? 1 : 0);
-           Log.d("stas1", c.getCount()+" c.getCount");
+            Log.d("stas1", c.getCount() + " c.getCount");
             c.close();
 
         });
@@ -234,12 +236,10 @@ public class DBMethods {
     }
 
 
-
-
     public Observable<Long> writeChatsData(DialogData dialogData, String occupants) {
         return Observable.create(subscriber -> {
             ContentValues contentValues = new ContentValues();
-            Log.d("stas",dialogData.getChatId()+" write id" );
+            Log.d("stas", dialogData.getChatId() + " write id");
             contentValues.put("chat_id", dialogData.getChatId());
             contentValues.put("last_message", dialogData.getLastMessage());
             contentValues.put("last_message_date_sent", dialogData.getLastMessageDateSent());
@@ -255,6 +255,62 @@ public class DBMethods {
 
 
     }
+
+
+    public Observable<Long> writeUserToDb(UserDataFullProfile profile) {
+        return Observable.create(subscriber -> {
+
+            Cursor c = db.rawQuery("SELECT * FROM myContacts where my_id = '" + profile.getId() + "'", null);
+            if (c.moveToNext()) {
+                Log.d("stas", "contact in db");
+            } else {
+                Log.d("stas", "write in db");
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("my_id", profile.getId());
+                contentValues.put("login", profile.getLogin());
+                contentValues.put("email", profile.getEmail());
+                contentValues.put("full_name", profile.getName());
+                contentValues.put("phone", profile.getPhone());
+                contentValues.put("website", profile.getWebsite());
+                contentValues.put("blob_id", profile.getBlobId());
+                contentValues.put("facebook_id", profile.getFacebookId());
+                subscriber.onNext(db.insert("myContacts", null, contentValues));
+            }
+
+            c.close();
+
+        });
+
+
+    }
+
+
+    public Observable<List<UserDataFullProfile>> getUserList() {
+        return Observable.create(subscriber -> {
+            List<UserDataFullProfile> list = new ArrayList<>();
+            Cursor c = db.rawQuery("SELECT * FROM myContacts", null);
+            if (c.moveToFirst()) {
+                do {
+                    int id = c.getInt(c.getColumnIndex("my_id"));
+                    String name = c.getString(c.getColumnIndex("full_name"));
+                    String email = c.getString(c.getColumnIndex("email"));
+                    String phone = c.getString(c.getColumnIndex("phone"));
+                    String website = c.getString(c.getColumnIndex("website"));
+                    String blobId = c.getString(c.getColumnIndex("blob_id"));
+                    UserDataFullProfile profile = new UserDataFullProfile(id, name, email, phone, website, blobId);
+                    list.add(profile);
+                } while (c.moveToNext());
+
+            }
+            c.close();
+            subscriber.onNext(list);
+
+
+        });
+
+
+    }
+
 
     public String[] convertStringToArray(String str) {
         String[] arr = str.split(",");

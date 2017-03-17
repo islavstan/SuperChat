@@ -5,6 +5,7 @@ import android.util.Log;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.internship.supercoders.superchat.App;
+import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.user_info.UserDataPage;
 import com.internship.supercoders.superchat.users.adapter.UserRvAdapter;
 import com.internship.supercoders.superchat.users.interfaces.UsersInteractor;
@@ -29,7 +30,14 @@ public class UsersPresenterImpl extends MvpPresenter<UsersView> implements Users
 
     @Override
     public void getUsers() {
-        mUsersInteractor.getUsers()
+        App.getDataBaseManager().getUserList().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(list -> getViewState().initUserList(new UserRvAdapter(list)),
+                        error -> Log.d("stas", "getUserList error" + error.toString()));
+
+
+
+       /* mUsersInteractor.getUsers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -37,8 +45,15 @@ public class UsersPresenterImpl extends MvpPresenter<UsersView> implements Users
                             userListInfo = userDataPage.getUserList();
                             getViewState().initUserList(new UserRvAdapter(userListInfo));
                             updateUserAvatarts();
+                            for (int i = 0; i < userListInfo.size(); i++) {
+                                App.getDataBaseManager().writeUserToDb(userListInfo.get(i).getItem())
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(result -> Log.d("stas", "writeUserToDb = " + result),
+                                                error -> Log.d("stas", "writeUserToDb error" + error.toString()));
+                            }
                         },
-                        error -> Log.d("UserPresenter", "Error: " + error.toString()));
+                        error -> Log.d("UserPresenter", "Error: " + error.toString()));*/
 
     }
 

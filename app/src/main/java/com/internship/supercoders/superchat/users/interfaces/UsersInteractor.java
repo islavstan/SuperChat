@@ -14,6 +14,8 @@ import rx.Observable;
 public interface UsersInteractor {
     Observable<UserDataPage> getUsers();
 
+    void getUserList();
+
     Observable<okhttp3.ResponseBody> getFile(String blobId);
 
     void writeAvatarToDisk(ResponseBody body, String id) throws IOException;

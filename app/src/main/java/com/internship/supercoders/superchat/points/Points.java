@@ -130,6 +130,9 @@ public interface Points {
         @GET("chat/Dialog.json")
         Call<DialogModel> retrieve(@Header("QB-Token") String token);
 
+        @GET("chat/Dialog.json")
+        Observable<DialogModel> retrieveDialogs(@Header("QB-Token") String token);
+
     }
 
     interface DownloadFilePoint {

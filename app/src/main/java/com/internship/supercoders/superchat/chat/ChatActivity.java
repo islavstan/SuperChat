@@ -51,7 +51,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         db = new DBMethods(this);
         Intent intent = getIntent();
         chatId = intent.getStringExtra("chatId");
-        Log.d("stas", chatId+" chatId");
+        Log.d("stas", chatId + " chatId");
         presenter = new ChatPresenterImpl(this);
         adapter = new ChatAdapter(messageModelList, this, db.getMyId(), db);
         messageRecyclerView = (RecyclerView) findViewById(R.id.list_msg);
@@ -131,6 +131,22 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         }
         this.sendBroadcast(intent);
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.unregisterReceiver(mReceiver);
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, SmackService.class));
+
     }
 
     @Override
