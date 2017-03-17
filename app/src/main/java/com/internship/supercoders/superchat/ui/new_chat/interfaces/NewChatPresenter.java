@@ -1,6 +1,5 @@
 package com.internship.supercoders.superchat.ui.new_chat.interfaces;
 
-import com.internship.supercoders.superchat.data.ChatType;
 import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdapter;
 
 /**
@@ -10,7 +9,7 @@ import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdap
 public interface NewChatPresenter {
     void getUserList();
 
-    void createNewChat(ChatType privacy, String name, SelectUserRvAdapter userListAdapter);
+    void createNewChat(boolean isPrivate, String name, SelectUserRvAdapter userListAdapter);
 
     void loadPhoto();
 

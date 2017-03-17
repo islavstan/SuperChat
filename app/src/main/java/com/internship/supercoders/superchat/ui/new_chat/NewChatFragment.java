@@ -1,5 +1,6 @@
 package com.internship.supercoders.superchat.ui.new_chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,11 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.internship.supercoders.superchat.R;
-import com.internship.supercoders.superchat.data.ChatType;
+import com.internship.supercoders.superchat.chat.ChatActivity;
 import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdapter;
 import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatView;
 
@@ -66,24 +68,25 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
 
     @Override
     public void createChat() {
-        ChatType privacy = ChatType.PRIVATE;
         String name = chatName.getText().toString();
+        boolean isPublic;
         switch (rgPrivacy.getCheckedRadioButtonId()) {
             case R.id.radio_btn_private:
-                privacy = ChatType.PRIVATE;
+                isPublic = false;
                 break;
-            case R.id.radio_btn_public:
-                privacy = ChatType.PUBLIC_GROUP;
-                break;
+            default:
+                isPublic = true;
         }
 
-        mPresenter.createNewChat(privacy, name, userListAdapter);
+        mPresenter.createNewChat(isPublic, name, userListAdapter);
 
     }
 
     @Override
-    public void goToCreatedChat() {
-
+    public void goToCreatedChat(String chatId) {
+        Intent intent = new Intent(getContext(), ChatActivity.class);
+        intent.putExtra("chatId", chatId);
+        startActivity(intent);
     }
 
 
@@ -91,5 +94,10 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
     public void updateUserList() {
         userListAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
     }
 }

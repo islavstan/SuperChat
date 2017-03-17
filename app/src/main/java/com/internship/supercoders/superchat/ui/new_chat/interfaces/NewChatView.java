@@ -12,7 +12,9 @@ public interface NewChatView extends MvpView {
 
     void createChat();
 
-    void goToCreatedChat();
+    void goToCreatedChat(String chatId);
 
     void updateUserList();
+
+    void showError(String errorMessage);
 }

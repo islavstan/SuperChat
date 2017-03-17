@@ -102,11 +102,11 @@
                     android:layout_height="129dp"
                     tools:listitem="@layout/user_list_item_checkbox" />
 
-                <Button
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_create_chat"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@color/colorCreateButton"
                     android:textColor="@color/colorWhite"
                     android:textSize="13sp"
                     android:paddingTop="15dp"
@@ -117,8 +117,7 @@
                     android:layout_marginBottom="30dp"
                     android:layout_marginTop="32dp"
                     android:gravity="center"
-                    android:text="Create"
-                    android:onClick="createChat" />
+                    android:text="@string/create_chat_btn" />
             </LinearLayout>
 
         </LinearLayout>

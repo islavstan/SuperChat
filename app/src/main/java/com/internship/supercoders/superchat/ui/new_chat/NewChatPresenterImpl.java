@@ -6,8 +6,10 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.internship.supercoders.superchat.App;
 import com.internship.supercoders.superchat.data.ChatType;
+import com.internship.supercoders.superchat.models.new_dialog.NewDialogBody;
 import com.internship.supercoders.superchat.models.user_info.UserDataPage;
 import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdapter;
+import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatInteractor;
 import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatPresenter;
 import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatView;
 import com.internship.supercoders.superchat.users.UsersInteractorImpl;
@@ -28,6 +30,7 @@ public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements N
     private List<UserDataPage.UserDataList> userListInfo;
 
     private UsersInteractor mUsersInteractor = new UsersInteractorImpl(App.getDataBaseManager(), App.getFileManager());
+    private NewChatInteractor mNewChatInteractor = new NewChatInteractorImpl();
 
     @Override
     public void getUserList() {
@@ -73,10 +76,28 @@ public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements N
     }
 
     @Override
-    public void createNewChat(ChatType privacy, String name, SelectUserRvAdapter userListAdapter) {
-        String occupants;
-        occupants = userListAdapter.getSelectedUserId().toString();
+    public void createNewChat(boolean isPublic, String name, SelectUserRvAdapter userListAdapter) {
+        List<Integer> occupants = null;
+        ChatType privacy;
+        if (isPublic) {
+            privacy = ChatType.PUBLIC_GROUP;
+        } else {
+            occupants = userListAdapter.getSelectedUserId();
+            if (occupants.size() > 1) {
+                privacy = ChatType.GROUP;
+            } else {
+                privacy = ChatType.PRIVATE;
+            }
+        }
+
         Log.d("NewChat", "Occupants " + occupants);
+        mNewChatInteractor.createChat(new NewDialogBody(privacy, name, null, occupants))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        dialogData -> getViewState().goToCreatedChat(dialogData.getChatId()),
+                        error -> getViewState().showError(error.getMessage())
+                );
 
     }
 
