@@ -89,16 +89,15 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
     @Override
     public void authorization(DBMethods db, String token, final File file, final String email, final String password, final String fullname, final String phone, final String website, String facebookId, final RegistrationFinishedListener listener) {
-       /* if (token != null) {
+        if (token != null) {
             registration(db, file, token, email, password, fullname, phone, website, facebookId, listener);
-        } else {*/
+        } else {
 
 
             String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
                     ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.RANDOM_ID, ApiConstant.TS);
             try {
                 signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, ApiConstant.AUTH_SECRET);
-//            Log.d("stas", "signat = " + signature);
             } catch (SignatureException e) {
                 e.printStackTrace();
             } catch (NoSuchAlgorithmException e) {
@@ -149,7 +148,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             });
         }
 
-
+    }
 
 
     @Override

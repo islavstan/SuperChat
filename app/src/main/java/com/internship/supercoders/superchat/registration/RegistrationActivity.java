@@ -109,7 +109,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
 
         db = new DBMethods(this);
-        token = db.getToken();
 
 
      //   Log.d("stas",token);

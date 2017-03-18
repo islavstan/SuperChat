@@ -67,4 +67,12 @@
     <string name="menu_search">Search</string>
     <string name="full_name_default">Full Name</string>
 
+
+    <!--CHAT-->
+
+    <string name="dialog_message">Do you really want to delete message?</string>
+    <string name="dialog_title">Delete</string>
+    <string name="cancel_delete_dialog">Cancel</string>
+    <string name="yes">Yes</string>
+
 </resources>

@@ -1,13 +1,17 @@
 package com.internship.supercoders.superchat.chat.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -89,11 +93,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
         if (messageList.get(position).getDate() != null) {
             return DATE;
-        }
-        else if (messageList.get(position).getSenderId() == myId) {
+        } else if (messageList.get(position).getSenderId() == myId) {
             return MY_MESSAGE;
-        }
-        else return NO_MY_MESSAGE;
+        } else return NO_MY_MESSAGE;
     }
 
 
@@ -115,7 +117,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
             }
 
             messageList.add(model);
-            //Log.d("stas", model.getMessage());
+
 
         }
         notifyDataSetChanged();
@@ -196,10 +198,31 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
 
             holder.bubble.setOnLongClickListener(view -> {
-                deleteMessage(model, position);
+                showDeleteMessageDialog(model, position);
                 return true;
             });
         }
+
+    }
+
+
+    private void showDeleteMessageDialog(MessageModel model, int position) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(context.getResources().getString(R.string.dialog_title));
+        alertDialogBuilder.setMessage(context.getResources().getString(R.string.dialog_message));
+        alertDialogBuilder.setPositiveButton(context.getResources().getString(R.string.yes), (dialogInterface, i) -> {
+
+            deleteMessage(model, position);
+
+        }).setNegativeButton(context.getResources().getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+
+
+        AlertDialog dialog = alertDialogBuilder.create();
+        dialog.show();
+        Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        button.setTextColor(Color.BLACK);
+        Button button2 = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        button2.setTextColor(Color.BLACK);
 
     }
 

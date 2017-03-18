@@ -107,7 +107,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                         }
                         break;
                 }
-                //edLog.setText(log);
 
             }
         };

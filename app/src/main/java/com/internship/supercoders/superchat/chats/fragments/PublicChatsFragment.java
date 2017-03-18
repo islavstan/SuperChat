@@ -44,7 +44,7 @@ public class PublicChatsFragment extends Fragment implements FragmentChatView {
     @Override
     public void loadUI(View v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
-        adapter = new ChatsRecyclerAdapter(chatsList, listener);
+        adapter = new ChatsRecyclerAdapter(chatsList, listener, db);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
