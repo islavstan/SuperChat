@@ -37,6 +37,7 @@
                     android:padding="8dp"
                     android:id="@+id/name"
                     android:textSize="14sp"
+                    android:maxLines="1"
                     android:textColor="#BDBDBD"
                     android:layout_alignStart="@+id/txt_msg"
                     android:text="Stas"/>

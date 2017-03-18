@@ -89,9 +89,9 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
     @Override
     public void authorization(DBMethods db, String token, final File file, final String email, final String password, final String fullname, final String phone, final String website, String facebookId, final RegistrationFinishedListener listener) {
-        if (token != null) {
+       /* if (token != null) {
             registration(db, file, token, email, password, fullname, phone, website, facebookId, listener);
-        } else {
+        } else {*/
 
 
             String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
@@ -149,7 +149,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             });
         }
 
-    }
+
 
 
     @Override

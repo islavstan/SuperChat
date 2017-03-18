@@ -1,6 +1,8 @@
 package com.internship.supercoders.superchat.chat.adapter;
 
 import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +16,11 @@ import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.chat.chat_model.MessageModel;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.points.Points;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,6 +47,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     public static final int DELETE_NO_MY_MESSAGE = 4;
     int myId;
     DBMethods dbMethods;
+    String root = Environment.getExternalStorageDirectory().toString();
 
     public ChatAdapter(List<MessageModel> messageList, Context context, int myId, DBMethods dbMethods) {
 
@@ -176,6 +181,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
             holder.message.setText(model.getMessage());
             holder.time.setText(getMessageDate(model.getUpdated_at()));
+            dbMethods.getUserEmail(model.getSenderId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(email -> holder.userName.setText(email),
+                            error -> Log.d("stas", " dbMethods.getUserEmail error = " + error.getMessage()));
+
+            dbMethods.getUserPhotoPath(model.getSenderId())
+                    .map(path -> root + "/SuperChat/ava/" + path)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(path -> Picasso.with(context).load(Uri.fromFile(new File(path))).placeholder(R.drawable.userpic).into(holder.userPhoto),
+                            error -> Log.d("stas", " dbMethods.getUserPhotoPath error = " + error.getMessage()));
 
 
             holder.bubble.setOnLongClickListener(view -> {

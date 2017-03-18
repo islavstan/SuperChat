@@ -205,6 +205,26 @@ public class DBMethods {
         });
     }
 
+    public Observable<String> getUserEmail(int userId) {
+        return Observable.create(subscriber -> {
+            String email;
+            Cursor c = db.rawQuery("SELECT email FROM myContacts where my_id = '" + userId + "'", null);
+            subscriber.onNext(c.moveToFirst() ? email = c.getString(c.getColumnIndex("email")) : null);
+            c.close();
+
+        });
+    }
+    public Observable<String> getUserPhotoPath(int userId) {
+        return Observable.create(subscriber -> {
+            String photo_path;
+            Cursor c = db.rawQuery("SELECT photo_path FROM myContacts where my_id = '" + userId + "'", null);
+            subscriber.onNext(c.moveToFirst() ? photo_path = c.getString(c.getColumnIndex("photo_path")) : null);
+            c.close();
+
+        });
+    }
+
+
     public Observable<Integer> checkChat(String chatId) {
         return Observable.create(subscriber -> {
             Cursor c = db.rawQuery("SELECT * FROM myChats where chat_id = '" + chatId + "'", null);
