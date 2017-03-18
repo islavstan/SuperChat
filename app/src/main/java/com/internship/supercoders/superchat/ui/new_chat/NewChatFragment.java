@@ -18,8 +18,11 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.chat.ChatActivity;
+import com.internship.supercoders.superchat.models.user_info.UserDataPage;
 import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdapter;
 import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatView;
+
+import java.util.List;
 
 /**
  * Created by Max on 11.03.2017.
@@ -45,11 +48,14 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
         rgPrivacy = (RadioGroup) v.findViewById(R.id.radio_group_privacy);
         recyclerView = (RecyclerView) v.findViewById(R.id.rv_user_list);
         createBtn = (Button) v.findViewById(R.id.btn_create_chat);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        initUserList();
         createBtn.setOnClickListener(view -> createChat());
+        rgPrivacy.setOnCheckedChangeListener((radioGroup, i) -> {
+            if (i == R.id.radio_btn_public) {
+                userListAdapter.setAllItemsEnable(false);
+            } else userListAdapter.setAllItemsEnable(true);
+        });
+        rgPrivacy.check(R.id.radio_btn_public);
         return v;
     }
 
@@ -57,13 +63,20 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter.getUserList();
+        userListAdapter = new SelectUserRvAdapter();
     }
 
     @Override
-    public void initUserList(SelectUserRvAdapter adapter) {
-        userListAdapter = adapter;
+    public void initUserList() {
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(userListAdapter);
+    }
 
+    @Override
+    public void setUserList(List<UserDataPage.UserDataList> userInfo) {
+        userListAdapter.setUserList(userInfo);
     }
 
     @Override
@@ -78,7 +91,7 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
                 isPublic = true;
         }
 
-        mPresenter.createNewChat(isPublic, name, userListAdapter);
+        mPresenter.createNewChat(isPublic, name, userListAdapter, null);
 
     }
 

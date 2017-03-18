@@ -28,4 +28,20 @@ public class NewDialogBody {
         this.photo = photo;
         this.name = chatName;
     }
+
+    public int getType() {
+        return type;
+    }
+
+    public String getOccupantsId() {
+        return occupantsId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
 }

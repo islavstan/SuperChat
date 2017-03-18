@@ -9,7 +9,7 @@ import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdap
 public interface NewChatPresenter {
     void getUserList();
 
-    void createNewChat(boolean isPrivate, String name, SelectUserRvAdapter userListAdapter);
+    void createNewChat(boolean isPublic, String name, SelectUserRvAdapter userListAdapter, String photo);
 
     void loadPhoto();
 

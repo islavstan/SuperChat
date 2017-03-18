@@ -5,13 +5,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:isScrollContainer="true">
+    android:isScrollContainer="true"
+    android:clickable="true">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin">
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:clickable="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,7 +71,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Public"
-                    android:checked="true"
                     style="@style/RadioButtonStyle" />
 
                 <android.support.v7.widget.AppCompatRadioButton
@@ -94,13 +95,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_user_list"
                     android:layout_width="match_parent"
                     android:layout_height="129dp"
-                    tools:listitem="@layout/user_list_item_checkbox" />
+                    tools:listitem="@layout/user_list_item_checkbox"
+                    android:clickable="true" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_create_chat"
@@ -119,8 +122,6 @@
                     android:gravity="center"
                     android:text="@string/create_chat_btn" />
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
 </LinearLayout>

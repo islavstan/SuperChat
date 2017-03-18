@@ -41,8 +41,7 @@ public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements N
                 .subscribe(
                         userDataPage -> {
                             userListInfo = userDataPage.getUserList();
-                            SelectUserRvAdapter mAdapter = new SelectUserRvAdapter(userListInfo);
-                            getViewState().initUserList(mAdapter);
+                            getViewState().setUserList(userListInfo);
                             updateUserAvatarts();
                         },
                         error -> {
@@ -76,22 +75,14 @@ public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements N
     }
 
     @Override
-    public void createNewChat(boolean isPublic, String name, SelectUserRvAdapter userListAdapter) {
-        List<Integer> occupants = null;
-        ChatType privacy;
-        if (isPublic) {
-            privacy = ChatType.PUBLIC_GROUP;
-        } else {
-            occupants = userListAdapter.getSelectedUserId();
-            if (occupants.size() > 1) {
-                privacy = ChatType.GROUP;
-            } else {
-                privacy = ChatType.PRIVATE;
-            }
+    public void createNewChat(boolean isPublic, String name, SelectUserRvAdapter userListAdapter, String photo) {
+        List<Integer> occupants = userListAdapter.getSelectedUserId();
+        ChatType chatType = identifyChatType(isPublic, occupants);
+        if (!isValid(chatType, occupants, name)) {
+            return;
         }
-
         Log.d("NewChat", "Occupants " + occupants);
-        mNewChatInteractor.createChat(new NewDialogBody(privacy, name, null, occupants))
+        mNewChatInteractor.createChat(new NewDialogBody(chatType, name, null, occupants))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -103,6 +94,41 @@ public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements N
 
     @Override
     public void loadPhoto() {
+        //TODO: LOAD PHOTO
 
+    }
+
+    private ChatType identifyChatType(boolean isPublic, List<Integer> occupants) {
+        ChatType chatType;
+        if (isPublic) {
+            chatType = ChatType.PUBLIC_GROUP;
+        } else {
+            if (occupants.size() > 1) {
+                chatType = ChatType.GROUP;
+            } else {
+                chatType = ChatType.PRIVATE;
+            }
+        }
+        return chatType;
+    }
+
+    private boolean isValid(ChatType type, List<Integer> occupants, String name) {
+        boolean isValid = true;
+        switch (type) {
+            case PUBLIC_GROUP:
+            case GROUP:
+                if (name.trim().equals("")) {
+                    getViewState().showError("Fill CHAT NAME, please");//TODO beautiful validation
+                    isValid = false;
+                }
+                break;
+            case PRIVATE:
+                if (occupants.size() < 1) {
+                    getViewState().showError("SELECT MEMBERS, please");
+                    isValid = false;
+                }
+                break;
+        }
+        return isValid;
     }
 }

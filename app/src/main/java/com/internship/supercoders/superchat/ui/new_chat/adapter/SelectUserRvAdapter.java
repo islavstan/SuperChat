@@ -23,10 +23,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapter.UserItemViewHolder> {
     private List<UserDataPage.UserDataList> mUserList;
     private List<Integer> mSelectedUserListId;
+    private boolean allItemsEnable = true;
 
-    public SelectUserRvAdapter(List<UserDataPage.UserDataList> userDataList) {
-        this.mUserList = userDataList;
+    public SelectUserRvAdapter() {
         this.mSelectedUserListId = new ArrayList<>();
+        this.mUserList = new ArrayList<>();
     }
 
     @Override
@@ -40,6 +41,7 @@ public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapte
         UserDataPage.UserDataList currentItem = mUserList.get(position);
         String userName = currentItem.getItem().getName();
         byte[] imageSource = currentItem.getItem().getAvatarObj();
+        holder.cbxSelectUser.setEnabled(allItemsEnable);
         if (userName == null) {
             userName = currentItem.getItem().getEmail();
         }
@@ -69,6 +71,16 @@ public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapte
 
     public List<Integer> getSelectedUserId() {
         return mSelectedUserListId;
+    }
+
+    public void setAllItemsEnable(boolean allItemsEnable) {
+        this.allItemsEnable = allItemsEnable;
+        notifyItemRangeChanged(0, getItemCount());
+    }
+
+    public void setUserList(List<UserDataPage.UserDataList> userInfo) {
+        mUserList = userInfo;
+        notifyDataSetChanged();
     }
 
     class UserItemViewHolder extends RecyclerView.ViewHolder {

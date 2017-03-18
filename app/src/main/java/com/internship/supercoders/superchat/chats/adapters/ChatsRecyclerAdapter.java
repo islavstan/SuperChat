@@ -12,7 +12,6 @@ import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.chat.ChatActivity;
 import com.internship.supercoders.superchat.chat.service.SmackService;
 import com.internship.supercoders.superchat.chats.UserActionsListener;
-import com.internship.supercoders.superchat.chats.chat_model.ChatModel;
 import com.internship.supercoders.superchat.models.dialog.DialogData;
 
 import java.util.List;
@@ -54,11 +53,6 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
             holder.cardView.getContext().startService(intent);
             Intent intent1 = new Intent(holder.cardView.getContext(), ChatActivity.class);
             intent1.putExtra("chatId", model.getChatId());
-
-
-
-
-
             holder.cardView.getContext().startActivity(intent1);
         });
 
