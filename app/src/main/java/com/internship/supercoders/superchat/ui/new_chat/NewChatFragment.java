@@ -53,7 +53,9 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
         rgPrivacy.setOnCheckedChangeListener((radioGroup, i) -> {
             if (i == R.id.radio_btn_public) {
                 userListAdapter.setAllItemsEnable(false);
-            } else userListAdapter.setAllItemsEnable(true);
+            } else {
+                userListAdapter.setAllItemsEnable(true);
+            }
         });
         rgPrivacy.check(R.id.radio_btn_public);
         return v;

@@ -118,7 +118,7 @@ public class NewChatPresenterImpl extends MvpPresenter<NewChatView> implements N
             case PUBLIC_GROUP:
             case GROUP:
                 if (name.trim().equals("")) {
-                    getViewState().showError("Fill CHAT NAME, please");//TODO beautiful validation
+                    getViewState().showError("Fill CHAT NAME, please");
                     isValid = false;
                 }
                 break;

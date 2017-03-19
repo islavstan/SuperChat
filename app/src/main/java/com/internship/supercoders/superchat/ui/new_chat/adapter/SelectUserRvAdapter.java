@@ -1,6 +1,7 @@
 package com.internship.supercoders.superchat.ui.new_chat.adapter;
 
 import android.graphics.BitmapFactory;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,26 @@ public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapte
         UserDataPage.UserDataList currentItem = mUserList.get(position);
         String userName = currentItem.getItem().getName();
         byte[] imageSource = currentItem.getItem().getAvatarObj();
+
+        holder.cbxSelectUser.setChecked(false);
         holder.cbxSelectUser.setEnabled(allItemsEnable);
+        holder.cbxSelectUser.setOnCheckedChangeListener(null);
+        holder.cbxSelectUser.setChecked(currentItem.isSelected());
+        holder.cbxSelectUser.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            currentItem.setSelected(isChecked);
+            if (isChecked) {
+                mSelectedUserListId.add(currentItem.getItem().getId());
+                holder.tvFullName.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorTextBlack)); //change TextView color when item check
+            } else {
+                holder.tvFullName.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorTextGray));
+                int removeIndex = mSelectedUserListId.indexOf(currentItem.getItem().getId());
+                if (removeIndex != -1) {
+                    mSelectedUserListId.remove(removeIndex);
+                }
+            }
+        });
+
+
         if (userName == null) {
             userName = currentItem.getItem().getEmail();
         }
@@ -51,17 +71,6 @@ public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapte
         } else {
             holder.ivAvatar.setImageBitmap(BitmapFactory.decodeByteArray(imageSource, 0, imageSource.length));
         }
-        holder.cbxSelectUser.setOnCheckedChangeListener(null);
-        holder.cbxSelectUser.setChecked(currentItem.isSelected());
-        holder.cbxSelectUser.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            currentItem.setSelected(isChecked);
-            if (isChecked) {
-                mSelectedUserListId.add(currentItem.getItem().getId());
-            } else {
-                int removeIndex = mSelectedUserListId.indexOf(currentItem.getItem().getId());
-                mSelectedUserListId.remove(removeIndex);
-            }
-        });
     }
 
     @Override

@@ -27,7 +27,8 @@
         android:layout_weight="1"
         android:maxLines="1"
         android:layout_marginRight="16dp"
-        android:textAppearance="@style/menuListFont" />
+        android:textAppearance="@style/menuListFont"
+        android:textColor="@color/colorTextGray" />
 
     <CheckBox
         android:id="@+id/cbx_user_select"
