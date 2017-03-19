@@ -60,6 +60,9 @@ public class UserDataFullProfile {
         this.photo_path = photo_path;
     }
 
+    public int getId() {
+        return id;
+    }
     public String getEmail() {
         return email;
     }

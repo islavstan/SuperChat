@@ -56,7 +56,6 @@ public class UsersPresenterImpl extends MvpPresenter<UsersView> implements Users
                         error -> Log.d("UserPresenter", "Error: " + error.toString()));*/
 
     }
-
     private void updateUserAvatarts() {
         Observable.from(userListInfo)
                 .subscribeOn(Schedulers.io())

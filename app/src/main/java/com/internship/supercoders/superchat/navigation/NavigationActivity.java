@@ -36,7 +36,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.internship.supercoders.superchat.navigation.adapter.NavigationItemId.CREATE_NEW_CHAT;
+import static com.internship.supercoders.superchat.navigation.adapter.NavigationItemId.CHATS;
 
 public class NavigationActivity extends MvpAppCompatActivity implements NavigationView, NavigationItemClickListener {
 
@@ -86,7 +86,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
 
         loadMyInfo();
 
-        menuItemOnClick(CREATE_NEW_CHAT);
+        menuItemOnClick(CHATS);
 
 
     }
@@ -137,7 +137,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         navMenu.clear();
         switch (menuType) {
             case TOP:
-                navMenu.add(new NavMenuItem(R.drawable.chats, getString(R.string.chats_list), CREATE_NEW_CHAT));
+                navMenu.add(new NavMenuItem(R.drawable.chats, getString(R.string.chats_list), CHATS));
                 navMenu.add(new NavMenuItem(R.drawable.ic_menu_users, getString(R.string.menu_users), NavigationItemId.USERS));
                 navMenu.add(new NavMenuItem(R.drawable.ic_menu_invite_users, getString(R.string.menu_invite_users), NavigationItemId.INVITE_USERS));
                 break;
@@ -152,7 +152,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     public void menuItemOnClick(NavigationItemId id) {
         drawer.closeDrawer(GravityCompat.START);
         switch (id) {
-            case CREATE_NEW_CHAT:
+            case CHATS:
                 setTitle(getResources().getString(R.string.chats));
                 ChatsFragment fragment = new ChatsFragment();
                 fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
@@ -168,10 +168,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
             case SETTINGS:
                 break;
             case LOG_OUT:
-
                 mNavigationPresenter.logOut(dbMethods);
-
-
                 break;
         }
 

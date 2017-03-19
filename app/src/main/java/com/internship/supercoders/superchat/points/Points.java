@@ -5,18 +5,19 @@ import android.app.Dialog;
 import com.internship.supercoders.superchat.chat.chat_model.Message;
 import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.blob.Blob;
+import com.internship.supercoders.superchat.models.dialog.DialogData;
 import com.internship.supercoders.superchat.models.dialog.DialogModel;
+import com.internship.supercoders.superchat.models.new_dialog.NewDialogBody;
 import com.internship.supercoders.superchat.models.registration_request.ReqUser;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.models.user_info.UserDataPage;
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUser;
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
-import okhttp3.ResponseBody;
 
 import java.util.Map;
-import java.util.Objects;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -142,8 +143,14 @@ public interface Points {
     }
 
     interface CreateDialog {
+        @Headers({
+                "Content-Type: application/json"
+        })
         @POST("chat/Dialog.json")
         Call<Void> createDialog(@Header("Content-Type") String cont, @Header("QB-Token") String token, @Body Dialog dialog);
+
+        @POST("chat/Dialog.json")
+        Observable<DialogData> createRxDialog(@Header("QB-Token") String token, @Body NewDialogBody dialog);
 
     }
 
