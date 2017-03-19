@@ -44,4 +44,12 @@ public interface AuthView {
     void navigateToLogin(String token);
 
     Context getContext();
+
+    void hideError(int layout);
+
+    void showPasswordLengthError();
+    void showEmailError();
+    void disableLogin();
+    void enableLogin();
+    void showPasswordError();
 }

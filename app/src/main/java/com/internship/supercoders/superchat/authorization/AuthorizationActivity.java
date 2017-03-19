@@ -38,7 +38,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
     RelativeLayout relativeLayout;
 
     @BindView(R.id.btn_sign_in)
-    Button  btnSignIn;
+    Button btnSignIn;
     @BindView(R.id.signup_btn)
     Button btnSignUp;
 
@@ -73,66 +73,16 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
         setContentView(R.layout.activity_authorization);
         ButterKnife.bind(this);
         db = new DBMethods(this);
-         token = db.getToken();
+        token = db.getToken();
         Log.i(AppConsts.LOG_TAG, "Session token " + token);
 
         viewUtils = new ViewUtils(this);
         authPresenter = new AuthPresenterImpl(this);
-        authInteractor = new AuthInteractorImpl(/*this*/);
+        authInteractor = new AuthInteractorImpl();
 
-//        viewUtils.hideKeyboard();
+        authPresenter.validateUserInfo(etEmail, etPassword);
 
-    /*    etEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                authInteractor.validateEmail(s.toString());
-            }
-        });
-
-        etEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    authInteractor.validateEmail(((EditText) v).getText().toString());
-                }
-            }
-        });
-
-        etPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                authInteractor.validatePassword(s.toString());
-            }
-        });
-
-        etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    authInteractor.validatePassword(((EditText) v).getText().toString());
-                }
-            }
-        });*/
     }
 
 
@@ -201,8 +151,8 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
     @Override
     public void showChangePasswordDialog() {
         FragmentManager fm = this.getFragmentManager();
-        ForgotPasswordDialog forgotPasswordDialog =new ForgotPasswordDialog();
-        forgotPasswordDialog.show(fm,"dialog");
+        ForgotPasswordDialog forgotPasswordDialog = new ForgotPasswordDialog();
+        forgotPasswordDialog.show(fm, "dialog");
     }
 
     @OnClick(R.id.btn_sign_in)
@@ -223,8 +173,8 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
             setUserSignedIn();
             Log.i(AppConsts.LOG_TAG, "Check Sign IN: " + Boolean.toString(authPresenter.userPreferences.isUserSignedIn()));
         }*/
-        String email = etEmail.getText().toString();
-        String password = etPassword.getText().toString();
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
         authPresenter.signIn(db, token, email, password);
     }
 
@@ -233,7 +183,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
     public void onBtnSignUp() {
         Intent intent;
         intent = new Intent(this, RegistrationActivity.class);
-        intent.putExtra("token",token);
+        intent.putExtra("token", token);
         startActivity(intent);
     }
 
@@ -241,7 +191,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
     @Override
     public void navigateToLogin(String token) {
         Intent intent = new Intent(this, NavigationActivity.class);
-        intent.putExtra("token",token);
+        intent.putExtra("token", token);
         startActivity(intent);
     }
 
@@ -252,4 +202,50 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
         return this;
     }
 
+    @Override
+    public void hideError(int layout) {
+        switch (layout) {
+            case 1:
+                ilEmail.setError(null);
+                break;
+            case 2:
+                ilPassword.setError(null);
+                break;
+
+        }
+    }
+
+    @Override
+    public void showPasswordLengthError() {
+        ilPassword.setError(getResources().getString(R.string.password_length_error));
+    }
+
+    @Override
+    public void showPasswordError() {
+        ilPassword.setError(getResources().getString(R.string.password_is_weak));
+    }
+
+
+    @Override
+    public void showEmailError() {
+        ilEmail.setError(getResources().getString(R.string.invalid_email));
+    }
+
+
+    @Override
+    public void enableLogin() {
+        btnSignIn.setEnabled(true);
+    }
+
+    @Override
+    public void disableLogin() {
+        btnSignIn.setEnabled(false);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        authPresenter.unsubscribe();
+    }
 }

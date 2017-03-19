@@ -80,14 +80,16 @@
                     android:layout_marginTop="20dp"
                     app:hintTextAppearance="@style/MyHintText"
                     android:layout_height="wrap_content">
+
                     <EditText
                         android:id="@+id/input_password"
                         android:layout_width="match_parent"
-                        android:theme="@style/MyEditText"
-                        android:textColor="@color/colorWhite"
                         android:layout_height="wrap_content"
+                        android:hint="@string/hint_password"
+                        android:inputType="textPassword"
+                        android:textColor="@color/colorWhite"
                         android:textSize="14sp"
-                        android:hint="@string/hint_password" />
+                        android:theme="@style/MyEditText" />
 
                 </android.support.design.widget.TextInputLayout>
 

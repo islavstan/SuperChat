@@ -167,7 +167,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
         registrationPresenter.unsubscribe();
     }

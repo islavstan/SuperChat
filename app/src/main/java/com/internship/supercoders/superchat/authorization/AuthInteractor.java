@@ -1,5 +1,7 @@
 package com.internship.supercoders.superchat.authorization;
 
+import android.widget.EditText;
+
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
@@ -10,7 +12,19 @@ public interface AuthInteractor {
     interface AuthFinishedListener {
         void onSuccess(String token);
 
+        void hideError(int item);
+
         void onError(String error);
+
+        void enableLogin();
+
+        void disableLogin();
+
+        void showEmailError();
+
+        void showPasswordLengthError();
+
+        void showPasswordError();
 
     }
 
@@ -31,5 +45,8 @@ public interface AuthInteractor {
 
     void userAthorization(DBMethods db, String password, String email, AuthFinishedListener listener);
 
+    void validateUserInfo(EditText email, EditText password, AuthFinishedListener listener);
+
+    void unsubscribe();
 
 }

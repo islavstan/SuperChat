@@ -3,6 +3,7 @@ package com.internship.supercoders.superchat.authorization;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.internship.supercoders.superchat.api.ApiClient;
 import com.internship.supercoders.superchat.api.ApiConstant;
@@ -14,6 +15,7 @@ import com.internship.supercoders.superchat.models.user_update_request.UpdateUse
 import com.internship.supercoders.superchat.models.user_update_request.UpdateUserData;
 import com.internship.supercoders.superchat.points.Points;
 import com.internship.supercoders.superchat.utils.HmacSha1Signature;
+import com.jakewharton.rxbinding.widget.RxTextView;
 
 import org.json.JSONObject;
 
@@ -26,20 +28,30 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 
 public class AuthInteractorImpl implements AuthInteractor {
 
     AuthView authView;
     private String signature;
-
+    CompositeSubscription compositeSubscription;
+    Matcher matcher;
+    private Pattern pattern = android.util.Patterns.EMAIL_ADDRESS;
     AuthInteractorImpl() {
 
+        compositeSubscription = new CompositeSubscription();
     }
 
 
@@ -52,35 +64,6 @@ public class AuthInteractorImpl implements AuthInteractor {
         db.writeAuthData(verificationData);
     }
 
-    @Override
-    public boolean validateEmail(String email) {
-        // TODO: 1/30/17 [Code Review] Due to method name, it shall only return true or false if email is valid
-        // (why is this logic in View layer???), but this one also sets error messages. This is wrong.
-        // setting error strings = View layer
-        // validation = model/interactor layer
-        if (TextUtils.isEmpty(email)) {
-            authView.setEmailIsEmptyError();
-            return false;
-        } else {
-            if (!email.contains("@")) {
-                authView.setEmailIsInvalidError();
-                return false;
-            }
-        }
-
-        authView.hideEmailError();
-        return true;
-    }
-
-    @Override
-    public boolean validatePassword(String password) {
-        if (TextUtils.isEmpty(password)) {
-            authView.setPasswordIsEmptyError();
-            return false;
-        }
-        authView.hidePasswordError();
-        return true;
-    }
 
     @Override
     public boolean isAuthDataValid(String password, String email) {
@@ -135,6 +118,99 @@ public class AuthInteractorImpl implements AuthInteractor {
             }
         });
 
+    }
+
+    @Override
+    public void validateUserInfo(EditText email, EditText password, AuthFinishedListener listener) {
+        Observable<CharSequence> emailChangeObservable = RxTextView.textChanges(email);
+        Observable<CharSequence> passwordChangeObservable = RxTextView.textChanges(password);
+
+        Subscription emailSubscription = emailChangeObservable
+                .doOnNext(next -> listener.hideError(1))
+                .debounce(400, TimeUnit.MILLISECONDS)
+                .filter(charSequence -> !TextUtils.isEmpty(charSequence))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(charSequence -> {
+
+                    boolean isEmailValid = validateEmail(charSequence.toString());
+                    if (!isEmailValid) {
+                        listener.showEmailError();
+                    } else {
+                        listener.hideError(1);
+                    }
+
+                });
+
+
+        Subscription passwordSubscrioption = passwordChangeObservable.doOnNext(next -> listener.hideError(2))
+                .debounce(400, TimeUnit.MILLISECONDS)
+                .filter(charSequence -> !TextUtils.isEmpty(charSequence))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(charSequence -> {
+                    boolean isPasswordValid = validatePassword(charSequence.toString());
+                    if (charSequence.toString().length() < 8) {
+                        listener.showPasswordLengthError();
+                    } else if (!isPasswordValid) {
+                        listener.showPasswordError();
+                    } else {
+                        listener.hideError(2);
+                    }
+
+
+                });
+
+
+        Subscription signInFieldsSubscription = Observable.combineLatest(emailChangeObservable, passwordChangeObservable,  (em, pas) -> {
+            boolean isEmailValid = validateEmail(em.toString());
+            boolean isPasswordLengthValid = pas.toString().length() >= 8;
+            boolean isPasswordValid = validatePassword(pas.toString());
+
+
+            return isEmailValid && isPasswordLengthValid && isPasswordValid ;
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(validFields -> {
+
+                    if (validFields) {
+                        listener.enableLogin();
+                    } else {
+                        listener.disableLogin();
+                    }
+
+
+                });
+
+
+
+
+        compositeSubscription.add(passwordSubscrioption);
+        compositeSubscription.add(emailSubscription);
+        compositeSubscription.add(signInFieldsSubscription);
+
+
+    }
+
+
+    @Override
+    public boolean validatePassword(String password) {
+        if (TextUtils.isEmpty(password))
+            return false;
+        final Pattern pattern = Pattern.compile("^(?=.{8,12}$)(?=(.*[A-Z]){2})(?=(.*[a-z]){0,})(?=(.*[0-9]){2})(?=\\S+$).*$");
+        matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+
+
+    @Override
+    public boolean validateEmail(String email) {
+        if (TextUtils.isEmpty(email))
+            return false;
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    @Override
+    public void unsubscribe() {
+        compositeSubscription.unsubscribe();
     }
 
 

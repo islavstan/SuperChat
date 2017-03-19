@@ -582,19 +582,16 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 });
 
 
-        Subscription signInFieldsSubscription = Observable.combineLatest(emailChangeObservable, passwordChangeObservable, confirmPassChangeObservable, new Func3<CharSequence, CharSequence, CharSequence, Boolean>() {
-            @Override
-            public Boolean call(CharSequence email, CharSequence password, CharSequence confPass) {
-                boolean isEmailValid = validateEmail(email.toString());
-                boolean isPasswordLengthValid = password.toString().length() >= 8;
-                boolean isPasswordValid = validatePassword(password.toString());
-                boolean isConfirmPasswordLengthValid = confPass.toString().length() >= 8;
-                boolean isConfirmPasswordValid = validatePassword(confPass.toString());
-                boolean isSamePass = password.toString().equals(confPass.toString());
+        Subscription signInFieldsSubscription = Observable.combineLatest(emailChangeObservable, passwordChangeObservable, confirmPassChangeObservable, (email, password, confPass) -> {
+            boolean isEmailValid = validateEmail(email.toString());
+            boolean isPasswordLengthValid = password.toString().length() >= 8;
+            boolean isPasswordValid = validatePassword(password.toString());
+            boolean isConfirmPasswordLengthValid = confPass.toString().length() >= 8;
+            boolean isConfirmPasswordValid = validatePassword(confPass.toString());
+            boolean isSamePass = password.toString().equals(confPass.toString());
 
 
-                return isEmailValid && isPasswordLengthValid && isPasswordValid && isConfirmPasswordLengthValid && isConfirmPasswordValid && isSamePass;
-            }
+            return isEmailValid && isPasswordLengthValid && isPasswordValid && isConfirmPasswordLengthValid && isConfirmPasswordValid && isSamePass;
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(validFields -> {
 
