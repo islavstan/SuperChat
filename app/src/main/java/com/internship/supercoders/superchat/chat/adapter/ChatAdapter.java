@@ -21,6 +21,7 @@ import com.internship.supercoders.superchat.chat.chat_model.MessageModel;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.points.Points;
 import com.squareup.picasso.Picasso;
+import com.vanniktech.emoji.EmojiTextView;
 
 import org.json.JSONObject;
 
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -142,7 +144,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("d MMMM");
+        SimpleDateFormat formatter = new SimpleDateFormat("d MMMM", Locale.ENGLISH);
         String currentDate = formatter.format(date);
 
         return currentDate;
@@ -280,7 +282,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         CircleImageView userPhoto;
         RelativeLayout bubble;
-        TextView message;
+        EmojiTextView message;
         TextView userName;
         TextView time;
         TextView date;
@@ -293,7 +295,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
                 case 0:
                     userPhoto = (CircleImageView) v.findViewById(R.id.user_photo);
                     bubble = (RelativeLayout) v.findViewById(R.id.message_block);
-                    message = (TextView) v.findViewById(R.id.txt_msg);
+                    message = (EmojiTextView) v.findViewById(R.id.txt_msg);
                     userName = (TextView) v.findViewById(R.id.name);
                     time = (TextView) v.findViewById(R.id.time);
                     break;
@@ -301,7 +303,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
                 case 1:
                     userPhoto = (CircleImageView) v.findViewById(R.id.user_photo);
                     bubble = (RelativeLayout) v.findViewById(R.id.message_block);
-                    message = (TextView) v.findViewById(R.id.txt_msg);
+                    message = (EmojiTextView) v.findViewById(R.id.txt_msg);
                     userName = (TextView) v.findViewById(R.id.name);
                     time = (TextView) v.findViewById(R.id.time);
                     break;

@@ -333,6 +333,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 if (response.isSuccessful()) {
                     Session session = response.body();
                     String token = session.getData().getToken();
+
                     //createFile(token,listener);
 
                 } else {
@@ -365,6 +366,8 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             @Override
             public void onResponse(Call<UpdateUserData> call, Response<UpdateUserData> response) {
                 if (response.isSuccessful()) {
+
+                    db.writeToken(token);
 
                     if (file == null) {
                         listener.onSuccess(token);

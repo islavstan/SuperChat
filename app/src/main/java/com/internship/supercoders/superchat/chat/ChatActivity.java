@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -21,6 +23,9 @@ import com.internship.supercoders.superchat.chat.chat_model.MessageModel;
 import com.internship.supercoders.superchat.chat.service.SmackConnection;
 import com.internship.supercoders.superchat.chat.service.SmackService;
 import com.internship.supercoders.superchat.db.DBMethods;
+import com.vanniktech.emoji.EmojiEditText;
+import com.vanniktech.emoji.EmojiPopup;
+import com.vanniktech.emoji.listeners.OnSoftKeyboardCloseListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +36,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     List<MessageModel> messageModelList = new ArrayList<>();
     Toolbar toolbar;
     RecyclerView messageRecyclerView;
-    EditText editTxtMessage;
+    EmojiEditText editTxtMessage;
     ImageButton sendMessageBtn;
     ChatAdapter adapter;
     ChatPresenter presenter;
@@ -40,8 +45,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     LinearLayoutManager linearLayoutManager;
     DBMethods db;
     String chatId;
-
-
+    private ViewGroup rootView;
+    ImageButton stickerBtn;
+    private EmojiPopup emojiPopup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +62,21 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         presenter = new ChatPresenterImpl(this);
         adapter = new ChatAdapter(messageModelList, this, db.getMyId(), db);
         messageRecyclerView = (RecyclerView) findViewById(R.id.list_msg);
-        editTxtMessage = (EditText) findViewById(R.id.msg_type);
+        editTxtMessage = (EmojiEditText) findViewById(R.id.msg_type);
         sendMessageBtn = (ImageButton) findViewById(R.id.btn_chat_send);
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         messageRecyclerView.setLayoutManager(linearLayoutManager);
+        rootView = (ViewGroup) findViewById(R.id.root);
+        stickerBtn = (ImageButton)findViewById(R.id.btn_sticker);
+         emojiPopup = EmojiPopup.Builder.fromRootView(rootView).setOnSoftKeyboardCloseListener(new OnSoftKeyboardCloseListener() {
+             @Override
+             public void onKeyboardClose() {
+                 emojiPopup.dismiss();
+             }
+         }).build(editTxtMessage);
+
+
 
         messageRecyclerView.setAdapter(adapter);
 
@@ -72,6 +88,11 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             sendMessage();
             editTxtMessage.setText("");
         });
+
+        stickerBtn.setOnClickListener(v -> {
+       emojiPopup.toggle();
+        });
+
 
     }
 
@@ -176,5 +197,15 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             finish();
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (emojiPopup != null && emojiPopup.isShowing()) {
+            Log.d("stas", "  emojiPopup.dismiss()");
+            emojiPopup.dismiss();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

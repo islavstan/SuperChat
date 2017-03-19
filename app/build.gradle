@@ -26,6 +26,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // Enabling multidex support.
+        multiDexEnabled true
 
     }
     buildTypes {
@@ -106,4 +108,8 @@ dependencies {
     compile 'org.igniterealtime.smack:smack-tcp:4.1.6'
     compile 'org.igniterealtime.smack:smack-im:4.1.6'
     compile 'org.igniterealtime.smack:smack-extensions:4.1.6'
+
+    compile 'com.vanniktech:emoji-one:0.4.0'
+
+    compile 'com.android.support:multidex:1.0.1'
 }

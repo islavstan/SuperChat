@@ -109,6 +109,10 @@ public class DBMethods {
         readFromDB();
     }
 
+
+
+
+
     public String getToken() {
         String token;
         Cursor c = db.query(dbInfo.authTableName, null, null, null, null, null, null);

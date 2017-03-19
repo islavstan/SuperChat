@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
     <RelativeLayout android:layout_width="fill_parent"
@@ -30,12 +31,13 @@
             android:layout_toRightOf="@+id/user_photo"
             android:layout_height="wrap_content">
 
-                <TextView
+                <com.vanniktech.emoji.EmojiTextView
                     android:id="@+id/txt_msg"
                     android:textSize="18sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                   android:padding="8dp"
+                    app:emojiSize="24sp"
                     android:text="Hello"
                     />
 

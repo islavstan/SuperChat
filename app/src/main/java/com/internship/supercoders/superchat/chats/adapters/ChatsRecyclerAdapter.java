@@ -16,6 +16,7 @@ import com.internship.supercoders.superchat.chats.UserActionsListener;
 import com.internship.supercoders.superchat.chats.chat_model.ChatModel;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.dialog.DialogData;
+import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
         CircleImageView userPhoto;
         TextView groupName;
         TextView lastMessageUserName;
-        TextView message;
+        EmojiTextView message;
         TextView date;
         CardView cardView;
         private UserActionsListener mItemListener;
@@ -101,7 +102,7 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
             userPhoto = (CircleImageView) itemView.findViewById(R.id.photo);
             groupName = (TextView) itemView.findViewById(R.id.groupName);
             lastMessageUserName = (TextView) itemView.findViewById(R.id.userName);
-            message = (TextView) itemView.findViewById(R.id.lastMessage);
+            message = (EmojiTextView) itemView.findViewById(R.id.lastMessage);
             date = (TextView) itemView.findViewById(R.id.date);
 
 

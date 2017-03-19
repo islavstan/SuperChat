@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v7.widget.Toolbar
@@ -49,13 +50,15 @@
             android:src="@drawable/emodji"
             android:tint="@color/colorPrimary"
             android:background="?selectableItemBackgroundBorderless"/>
-        <EditText
+        <com.vanniktech.emoji.EmojiEditText
             android:inputType="textCapSentences|textMultiLine"
             android:id="@+id/msg_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:maxLines="5"
+            android:maxLines="4"
+            app:emojiSize="24sp"
+            android:imeOptions="actionSend"
             android:hint="Type your message"
             android:textSize="14sp"
             android:textColor="@android:color/black"

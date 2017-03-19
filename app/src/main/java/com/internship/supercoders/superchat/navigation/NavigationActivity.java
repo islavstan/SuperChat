@@ -28,6 +28,8 @@ import com.internship.supercoders.superchat.navigation.adapter.NavigationViewRec
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationView;
 import com.internship.supercoders.superchat.users.UsersFragment;
+import com.vanniktech.emoji.EmojiManager;
+import com.vanniktech.emoji.one.EmojiOneProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +60,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        EmojiManager.install(new EmojiOneProvider());
         dbMethods = new DBMethods(this);
 
         fragmentManager = getSupportFragmentManager();
