@@ -43,10 +43,14 @@ public class SelectUserRvAdapter extends RecyclerView.Adapter<SelectUserRvAdapte
         String userName = currentItem.getItem().getName();
         byte[] imageSource = currentItem.getItem().getAvatarObj();
 
-        holder.cbxSelectUser.setChecked(false);
         holder.cbxSelectUser.setEnabled(allItemsEnable);
         holder.cbxSelectUser.setOnCheckedChangeListener(null);
         holder.cbxSelectUser.setChecked(currentItem.isSelected());
+        if (currentItem.isSelected()) {
+            holder.tvFullName.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorTextBlack));
+        } else {
+            holder.tvFullName.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorTextGray));
+        }
         holder.cbxSelectUser.setOnCheckedChangeListener((buttonView, isChecked) -> {
             currentItem.setSelected(isChecked);
             if (isChecked) {

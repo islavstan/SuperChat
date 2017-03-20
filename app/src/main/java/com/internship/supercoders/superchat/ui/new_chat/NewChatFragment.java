@@ -18,6 +18,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.chat.ChatActivity;
+import com.internship.supercoders.superchat.chat.service.SmackService;
 import com.internship.supercoders.superchat.models.user_info.UserDataPage;
 import com.internship.supercoders.superchat.ui.new_chat.adapter.SelectUserRvAdapter;
 import com.internship.supercoders.superchat.ui.new_chat.interfaces.NewChatView;
@@ -99,9 +100,12 @@ public class NewChatFragment extends MvpAppCompatFragment implements NewChatView
 
     @Override
     public void goToCreatedChat(String chatId) {
-        Intent intent = new Intent(getContext(), ChatActivity.class);
-        intent.putExtra("chatId", chatId);
-        startActivity(intent);
+        Intent intentService = new Intent(getContext(), SmackService.class);
+        intentService.putExtra("id", chatId);
+        Intent intentActivity = new Intent(getContext(), ChatActivity.class);
+        intentActivity.putExtra("chatId", chatId);
+        getContext().startService(intentService);
+        startActivity(intentActivity);
     }
 
 
