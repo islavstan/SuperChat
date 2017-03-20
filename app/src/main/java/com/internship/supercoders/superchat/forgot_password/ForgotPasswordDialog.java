@@ -13,29 +13,39 @@ import android.widget.Toast;
 
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.api.ApiClient;
+import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.db.DBMethods;
+import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.points.Points;
+import com.internship.supercoders.superchat.utils.HmacSha1Signature;
 
 
 import org.json.JSONObject;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 public class ForgotPasswordDialog extends DialogFragment {
 
-    private DBMethods db;
+
     Context context;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        db = new DBMethods(getActivity());
+
         context = getActivity();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getActivity());
         LayoutInflater inflater = this.getActivity().getLayoutInflater();
@@ -45,7 +55,7 @@ public class ForgotPasswordDialog extends DialogFragment {
         dialogBuilder.setTitle(getResources().getString(R.string.title));
         dialogBuilder.setPositiveButton(getResources().getString(R.string.send), (dialogInterface, i) -> {
 
-            changePassword(email);
+            authorization(email);
 
         }).setNegativeButton(getResources().getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
 
@@ -68,9 +78,62 @@ public class ForgotPasswordDialog extends DialogFragment {
     }
 
 
-    void changePassword(EditText emailET) {
+    private void authorization(EditText email) {
+        String signature = null;
+        String signatureParams = String.format("application_id=%s&auth_key=%s&nonce=%s&timestamp=%s",
+                ApiConstant.APPLICATION_ID, ApiConstant.AUTH_KEY, ApiConstant.RANDOM_ID, ApiConstant.TS);
+        try {
+            signature = HmacSha1Signature.calculateRFC2104HMAC(signatureParams, ApiConstant.AUTH_SECRET);
+        } catch (SignatureException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+
+
+        final Points.AuthorizationPoint apiService = ApiClient.getRetrofit().create(Points.AuthorizationPoint.class);
+        Map<String, String> params = new HashMap<>();
+        params.put("application_id", ApiConstant.APPLICATION_ID);
+        params.put("auth_key", ApiConstant.AUTH_KEY);
+        params.put("timestamp", ApiConstant.TS);
+        params.put("nonce", Integer.toString(ApiConstant.RANDOM_ID));
+        params.put("signature", signature);
+        Call<Session> call = apiService.getSession(params);
+        call.enqueue(new Callback<Session>() {
+            @Override
+            public void onResponse(Call<Session> call, Response<Session> response) {
+                if (response.isSuccessful()) {
+                    Session session = response.body();
+                    String token = session.getData().getToken();
+                    Log.d("stas", "token = " + token);
+
+                    changePassword(email, token);
+
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("stas", "authorization error = " + jObjError.getString("errors"));
+
+                    } catch (Exception e) {
+                         Log.d("stas", e.getMessage());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Session> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    void changePassword(EditText emailET, String token) {
         String email = emailET.getText().toString().trim();
-        String token = db.getToken();
         final Points.ResetPasswordPoint apiResetPassword = ApiClient.getRetrofit().create(Points.ResetPasswordPoint.class);
         Call<Void> call = apiResetPassword.resetPassword("application/json", token, email);
         call.enqueue(new Callback<Void>() {
@@ -78,7 +141,7 @@ public class ForgotPasswordDialog extends DialogFragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
 
                 if (response.isSuccessful()) {
-                    showToast();
+                    destroySession(token);
 
                 } else {
                     try {
@@ -98,6 +161,22 @@ public class ForgotPasswordDialog extends DialogFragment {
             }
         });
 
+
+    }
+
+
+    void destroySession(String token) {
+        final Points.SignOut signOut = ApiClient.getRxRetrofit().create(Points.SignOut.class);
+        signOut.destroySession(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    if (response.isSuccessful()) {
+                        showToast();
+
+
+                    }
+                }, error -> Log.d("stas", "destroySession error = " + error.getMessage()));
 
     }
 }

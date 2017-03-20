@@ -37,6 +37,7 @@
 
     <style name="editTextThemeForForgotPassword">
         <item name="colorAccent">@color/grey</item>
+        <item name="android:textColorHint">@color/gray</item>
     </style>
 
     <style name="menuListFont" parent="TextAppearance.AppCompat.Medium">

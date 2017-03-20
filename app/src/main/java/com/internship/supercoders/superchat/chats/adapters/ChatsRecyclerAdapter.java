@@ -52,21 +52,20 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
         DialogData model = chatsList.get(position);
         holder.groupName.setText(model.getName());
         holder.message.setText(model.getLastMessage());
-        dbMethods.getUserEmail(Integer.parseInt(model.getLastMessageUserId()))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(email -> holder.lastMessageUserName.setText(email),
-                        error -> Log.d("stas", " dbMethods.getUserEmail error = " + error.getMessage()));
+        if (model.getLastMessageUserId() != null) {
+            dbMethods.getUserEmail(Integer.parseInt(model.getLastMessageUserId()))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(email -> holder.lastMessageUserName.setText(email),
+                            error -> Log.d("stas", " dbMethods.getUserEmail error = " + error.getMessage()));
+        }
 
         holder.cardView.setOnClickListener(v -> {
-            Intent intent =new Intent(holder.cardView.getContext(), SmackService.class);
+            Intent intent = new Intent(holder.cardView.getContext(), SmackService.class);
             intent.putExtra("id", model.getChatId());
             holder.cardView.getContext().startService(intent);
             Intent intent1 = new Intent(holder.cardView.getContext(), ChatActivity.class);
             intent1.putExtra("chatId", model.getChatId());
-
-
-
 
 
             holder.cardView.getContext().startActivity(intent1);

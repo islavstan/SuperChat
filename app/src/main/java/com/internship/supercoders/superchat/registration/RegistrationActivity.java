@@ -111,7 +111,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         db = new DBMethods(this);
 
 
-     //   Log.d("stas",token);
         callbackManager = CallbackManager.Factory.create();
         logBtn = (LoginButton) findViewById(R.id.login_button);
         facebookBtn = (Button) findViewById(R.id.link_facebook_btn);
@@ -150,7 +149,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
 
         signupBtn.setOnClickListener(view -> {
-            // TODO: 1/30/17 [Code Review] part of business logic
             if (InternetConnection.hasConnection(this)) {
                 String email = emailET.getText().toString().trim();
                 String password = passwordET.getText().toString().trim();
@@ -343,9 +341,25 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            if (token != null) {
+                registrationPresenter.destroySession(token);
+                token = null;
+            }
+
+
             finish();
         }
         return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (token != null) {
+            registrationPresenter.destroySession(token);
+            token = null;
+        }
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
@@ -364,24 +378,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
 
-    private void saveFileToFolder(File file) throws IOException {
-        Log.d("Stas", "save file...");
-        String root = Environment.getExternalStorageDirectory().toString();
-        File dir = new File(root + "/SuperChat/ava/");
-        if (!dir.exists()) dir.mkdirs();
-        File fTo = new File(root + "/SuperChat/ava/" + "sasask");
-        InputStream in = new FileInputStream(file.getAbsolutePath());
-        OutputStream out = new FileOutputStream(fTo);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close(); // Закрываем потоки
-        out.close();
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -394,7 +390,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
                 actualImage = new File(getRealPathFromURI(this, selectedImageUri));
                 photoFile = Compressor.getDefault(this).compressToFile(actualImage);
-
 
 
             }

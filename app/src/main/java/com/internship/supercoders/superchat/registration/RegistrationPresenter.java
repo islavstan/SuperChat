@@ -25,5 +25,7 @@ public interface RegistrationPresenter {
 
     void makePhotoFromCamera(Intent data, File cacheDir);
 
+    void destroySession(String token);
+
 
 }

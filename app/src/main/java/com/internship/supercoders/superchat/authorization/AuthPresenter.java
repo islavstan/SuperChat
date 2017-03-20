@@ -5,10 +5,8 @@ import android.widget.EditText;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 
-/**
- * Created by RON on 05.02.2017.
- */
-public interface AuthPresenter {
+
+ interface AuthPresenter {
 
     void onError();
 
