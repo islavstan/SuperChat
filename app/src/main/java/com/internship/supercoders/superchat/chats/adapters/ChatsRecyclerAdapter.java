@@ -16,6 +16,7 @@ import com.internship.supercoders.superchat.chats.UserActionsListener;
 import com.internship.supercoders.superchat.chats.chat_model.ChatModel;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.dialog.DialogData;
+import com.internship.supercoders.superchat.utils.InternetConnection;
 import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.List;
@@ -61,14 +62,18 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
         }
 
         holder.cardView.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.cardView.getContext(), SmackService.class);
+            mItemListener.openChat(model.getChatId());
+
+
+
+         /*   Intent intent = new Intent(holder.cardView.getContext(), SmackService.class);
             intent.putExtra("id", model.getChatId());
             holder.cardView.getContext().startService(intent);
             Intent intent1 = new Intent(holder.cardView.getContext(), ChatActivity.class);
             intent1.putExtra("chatId", model.getChatId());
+            holder.cardView.getContext().startActivity(intent1);*/
 
 
-            holder.cardView.getContext().startActivity(intent1);
         });
 
 
@@ -109,7 +114,8 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
 
         @Override
         public void onClick(View view) {
-         mItemListener.openChat();
+
+
         }
     }
 }

@@ -112,4 +112,5 @@ dependencies {
     compile 'com.vanniktech:emoji-one:0.4.0'
 
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.github.florent37:viewanimator:1.0.5'
 }
