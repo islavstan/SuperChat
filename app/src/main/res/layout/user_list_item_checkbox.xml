@@ -33,6 +33,7 @@
     <CheckBox
         android:id="@+id/cbx_user_select"
         android:layout_width="wrap_content"
+        android:theme="@style/radio_group_theme"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

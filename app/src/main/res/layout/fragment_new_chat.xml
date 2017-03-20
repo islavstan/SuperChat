@@ -42,6 +42,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_weight="1"
                     android:textSize="16sp"
+                    android:theme="@style/radio_group_theme"
                     app:backgroundTint="#1f000000" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -63,6 +64,7 @@
                 android:id="@+id/radio_group_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:theme="@style/radio_group_theme"
                 android:orientation="horizontal"
                 android:layout_marginTop="16dp">
 

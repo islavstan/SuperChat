@@ -66,6 +66,7 @@
             android:layout_marginTop="4dp"
             android:background="@android:color/white"
             android:minHeight="44dp"
+            android:theme="@style/radio_group_theme"
             android:layout_toLeftOf="@+id/btn_chat_send"
             android:layout_toRightOf="@id/btn_sticker"/>
 
