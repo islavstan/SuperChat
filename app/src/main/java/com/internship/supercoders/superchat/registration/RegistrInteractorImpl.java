@@ -73,6 +73,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func3;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class RegistrInteractorImpl implements RegistrationInteractor {
@@ -521,6 +522,23 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
 
     }
+
+    @Override
+    public void destroySession(String token) {
+        final Points.SignOut signOut = ApiClient.getRxRetrofit().create(Points.SignOut.class);
+        signOut.destroySession(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    if (response.isSuccessful()) {
+                          Log.d("stas", "destroySession");
+
+                    }
+                }, error -> Log.d("stas", "destroySession error = " + error.getMessage()));
+
+    }
+
+
 
 
     @Override

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.api.ApiClient;
+import com.internship.supercoders.superchat.chat.ChatActivity;
 import com.internship.supercoders.superchat.chat.chat_model.MessageModel;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.points.Points;
@@ -44,7 +45,7 @@ import rx.schedulers.Schedulers;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> {
 
     List<MessageModel> messageList;
-    Context context;
+    ChatActivity context;
     LayoutInflater layoutInflater;
     public static final int MY_MESSAGE = 0;
     public static final int NO_MY_MESSAGE = 1;
@@ -59,7 +60,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.messageList = messageList;
-        this.context = context;
+        this.context =(ChatActivity)context;
         this.myId = myId;
         this.dbMethods = dbMethods;
 
@@ -262,9 +263,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
 
     public void addNewMessage(String message, String from, String messageId) {
-        messageList.add(new MessageModel(getSenderId(from), message, messageId));
+        int id = getSenderId(from);
+        messageList.add(new MessageModel(id, message, messageId));
         notifyItemInserted(messageList.size() - 1);
-
+        if (id != myId) {
+            context.playSound();
+        }
 
     }
 

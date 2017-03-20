@@ -47,8 +47,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:padding="8dp"
-            android:src="@drawable/emodji"
-            android:tint="@color/colorPrimary"
+            android:src="@drawable/emodji_disable"
             android:background="?selectableItemBackgroundBorderless"/>
         <com.vanniktech.emoji.EmojiEditText
             android:inputType="textCapSentences|textMultiLine"
@@ -79,7 +78,7 @@
             android:padding="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
-            android:src="@drawable/send_btn"
+            android:src="@drawable/send_btn_disable"
             android:background="?selectableItemBackgroundBorderless"/>
     </RelativeLayout>
 

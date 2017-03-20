@@ -296,6 +296,22 @@ public class DBMethods {
 
     }
 
+    public Observable<Void> refreshChatData(DialogData dialogData,String chatId) {
+        return Observable.create(subscriber -> {
+            String strSQL = "UPDATE myChats SET last_message = '" + dialogData.getLastMessage() +
+                    "', last_message_date_sent = '"
+                    + dialogData.getLastMessageDateSent() + "', last_message_user_id = '" + dialogData.getLastMessageUserId() +
+                    "' WHERE chat_id = '" + chatId + "'";
+            db.execSQL(strSQL);
+        });
+    }
+
+
+
+
+
+
+
 
     public Observable<Long> writeUserToDb(UserDataFullProfile profile) {
         return Observable.create(subscriber -> {
@@ -351,6 +367,67 @@ public class DBMethods {
 
 
     }
+
+
+    public Observable<List<DialogData>> getChatsList() {
+        return Observable.create(subscriber -> {
+            List<DialogData> list = new ArrayList<>();
+            Cursor c = db.rawQuery("SELECT * FROM myChats where type = '1'", null);
+            if (c.moveToFirst()) {
+                do {
+
+                    String chatId = c.getString(c.getColumnIndex("chat_id"));
+                    String lastMessage = c.getString(c.getColumnIndex("last_message"));
+                    String last_message_date_sent = c.getString(c.getColumnIndex("last_message_date_sent"));
+                    String last_message_user_id = c.getString(c.getColumnIndex("last_message_user_id"));
+                    String name = c.getString(c.getColumnIndex("name"));
+                    DialogData dialogData = new DialogData(lastMessage, last_message_date_sent, last_message_user_id, name, chatId);
+
+                    list.add(dialogData);
+                } while (c.moveToNext());
+
+            }
+            c.close();
+            subscriber.onNext(list);
+
+
+        });
+
+
+    }
+
+
+
+
+    public Observable<List<DialogData>> getPrivateChatsList() {
+        return Observable.create(subscriber -> {
+            List<DialogData> list = new ArrayList<>();
+            Cursor c = db.rawQuery("SELECT * FROM myChats where type = '2' OR type = '3' ", null);
+            if (c.moveToFirst()) {
+                do {
+
+                    String chatId = c.getString(c.getColumnIndex("chat_id"));
+                    String lastMessage = c.getString(c.getColumnIndex("last_message"));
+                    String last_message_date_sent = c.getString(c.getColumnIndex("last_message_date_sent"));
+                    String last_message_user_id = c.getString(c.getColumnIndex("last_message_user_id"));
+                    String name = c.getString(c.getColumnIndex("name"));
+                    DialogData dialogData = new DialogData(lastMessage, last_message_date_sent, last_message_user_id, name, chatId);
+
+                    list.add(dialogData);
+                } while (c.moveToNext());
+
+            }
+            c.close();
+            subscriber.onNext(list);
+
+
+        });
+
+
+    }
+
+
+
 
 
     public String[] convertStringToArray(String str) {

@@ -144,6 +144,11 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
         regInteractor.makePhotoFromCamera(data, cacheDir, this);
     }
 
+    @Override
+    public void destroySession(String token) {
+        regInteractor.destroySession(token);
+    }
+
 
     @Override
     public void setPhotoFromCamera(File photoFile, Bitmap photoBitmap) {

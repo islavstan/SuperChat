@@ -74,6 +74,8 @@ public interface RegistrationInteractor {
     void makePhotoFromCamera(Intent data, File dir, RegistrationFinishedListener listener);
 
     void updateUserAva(DBMethods db, File file, String image_id, String userId, String token, RegistrationFinishedListener listener);
+
+    void destroySession(String token);
 }
 
 
