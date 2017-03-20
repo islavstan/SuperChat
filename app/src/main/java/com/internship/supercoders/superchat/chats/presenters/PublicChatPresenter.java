@@ -6,6 +6,9 @@ import com.internship.supercoders.superchat.db.DBMethods;
 
 public interface PublicChatPresenter {
     void loadData(DBMethods dbMethods, ChatsRecyclerAdapter adapter);
+    void loadPrivateData(DBMethods dbMethods, ChatsRecyclerAdapter adapter);
+
+    void loadPrivateDataWithOutInternet(DBMethods dbMethods, ChatsRecyclerAdapter adapter);
 
     void loadDataWithOutInternet(DBMethods dbMethods, ChatsRecyclerAdapter adapter);
 

@@ -1,19 +1,13 @@
 package com.internship.supercoders.superchat.chats.interactors;
 
-import android.graphics.LightingColorFilter;
 import android.util.Log;
 
 import com.internship.supercoders.superchat.api.ApiClient;
-import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.chats.adapters.ChatsRecyclerAdapter;
 import com.internship.supercoders.superchat.db.DBMethods;
-import com.internship.supercoders.superchat.models.authorization_response.Session;
 import com.internship.supercoders.superchat.models.dialog.DialogData;
 import com.internship.supercoders.superchat.models.dialog.DialogModel;
-import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
-import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.points.Points;
-import com.internship.supercoders.superchat.utils.InternetConnection;
 
 import org.json.JSONObject;
 
@@ -23,12 +17,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 
 public class PublicChatInteractorImpl implements PublicChatInteractor {
@@ -171,7 +161,7 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
 
 
                     if (model.getList().size() > 0)
-                        adapter.loadChats(getPrivateDialogs(model.getList()));
+                        adapter.loadChats(getPublicDialogs(model.getList()));
 
 
                 } else {
@@ -192,7 +182,35 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
         });
 
 
+    }
 
+    @Override
+    public void loadPrivateData(ChatsRecyclerAdapter adapter, DBMethods dbMethods) {
+        final Points.RetrieveDialogs retrieveDialogs = ApiClient.getRetrofit().create(Points.RetrieveDialogs.class);
+        Call<DialogModel> call = retrieveDialogs.retrieve(dbMethods.getToken());
+        call.enqueue(new Callback<DialogModel>() {
+            @Override
+            public void onResponse(Call<DialogModel> call, Response<DialogModel> response) {
+                if (response.isSuccessful()) {
+                    DialogModel model = response.body();
+                    List<DialogData> dataList = model.getList();
+                    adapter.loadChats(getPrivateDialogs(dataList));
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("stas", "loadPrivateData error = " + jObjError.getString("errors"));
+
+                    } catch (Exception e) {
+                        Log.d("stas", e.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DialogModel> call, Throwable t) {
+
+            }
+        });
 
 
     }
@@ -206,8 +224,18 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
                         "getChatsList error = " + error.getMessage()));
     }
 
+    @Override
+    public void loadDataForPrivateChatsWithOutInternet(ChatsRecyclerAdapter adapter, DBMethods dbMethods) {
+        dbMethods.getPrivateChatsList().
+                subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(adapter::loadChats, error -> Log.d("stas",
+                        "getChatsList error = " + error.getMessage()));
 
-    private List<DialogData> getPrivateDialogs(List<DialogData> allChatsList) {
+    }
+
+
+    private List<DialogData> getPublicDialogs(List<DialogData> allChatsList) {
         List<DialogData> list = new ArrayList<>();
         for (int i = 0; i < allChatsList.size(); i++) {
             if (allChatsList.get(i).getType() == 1) {
@@ -220,7 +248,18 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
 
     }
 
+    private List<DialogData> getPrivateDialogs(List<DialogData> allChatsList) {
+        List<DialogData> list = new ArrayList<>();
+        for (int i = 0; i < allChatsList.size(); i++) {
+            if (allChatsList.get(i).getType() == 2 || allChatsList.get(i).getType() == 3) {
+                list.add(allChatsList.get(i));
+            }
 
+        }
+        return list;
+
+
+    }
 
 
 }

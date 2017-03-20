@@ -24,6 +24,16 @@ public class PublicChatPresenterImpl implements PublicChatPresenter {
     }
 
     @Override
+    public void loadPrivateData(DBMethods dbMethods, ChatsRecyclerAdapter adapter) {
+        publicChatInteractor.loadPrivateData(adapter, dbMethods);
+    }
+
+    @Override
+    public void loadPrivateDataWithOutInternet(DBMethods dbMethods, ChatsRecyclerAdapter adapter) {
+        publicChatInteractor.loadDataForPrivateChatsWithOutInternet(adapter, dbMethods);
+    }
+
+    @Override
     public void loadDataWithOutInternet(DBMethods dbMethods, ChatsRecyclerAdapter adapter) {
         publicChatInteractor.loadDataWithOutInternet(adapter, dbMethods);
     }

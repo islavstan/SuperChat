@@ -9,6 +9,10 @@ import com.internship.supercoders.superchat.db.DBMethods;
 public interface PublicChatInteractor {
     void loadData(ChatsRecyclerAdapter adapter, DBMethods dbMethods);
 
+    void loadPrivateData(ChatsRecyclerAdapter adapter, DBMethods dbMethods);
+
     void loadDataWithOutInternet(ChatsRecyclerAdapter adapter, DBMethods dbMethods);
+
+    void loadDataForPrivateChatsWithOutInternet(ChatsRecyclerAdapter adapter, DBMethods dbMethods);
 }
 
