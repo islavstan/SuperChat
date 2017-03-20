@@ -47,6 +47,15 @@ public class DialogData {
         this.occupants = occupants;
     }
 
+
+    public DialogData(String lastMessage, String lastMessageDateSent, String lastMessageUserId, String name, String chatId) {
+        this.lastMessage = lastMessage;
+        this.lastMessageDateSent = lastMessageDateSent;
+        this.lastMessageUserId = lastMessageUserId;
+        this.name = name;
+        this.chatId = chatId;
+    }
+
     public String getLastMessageDateSent() {
         return lastMessageDateSent;
     }

@@ -18,6 +18,7 @@ import com.internship.supercoders.superchat.chats.presenters.PublicChatPresenter
 import com.internship.supercoders.superchat.chats.views.FragmentChatView;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.models.dialog.DialogData;
+import com.internship.supercoders.superchat.utils.InternetConnection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +60,10 @@ public class PublicChatsFragment extends Fragment implements FragmentChatView {
 
     @Override
     public void loadData() {
-        presenter.loadData(db, adapter);
-
+        if (!InternetConnection.hasConnection(getActivity()))
+            presenter.loadDataWithOutInternet(db, adapter);
+        else
+            presenter.loadData(db, adapter);
     }
 
     @Override

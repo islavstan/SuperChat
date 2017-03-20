@@ -13,9 +13,11 @@ import com.internship.supercoders.superchat.models.dialog.DialogModel;
 import com.internship.supercoders.superchat.models.user_authorization_response.ALog;
 import com.internship.supercoders.superchat.models.user_authorization_response.VerificationData;
 import com.internship.supercoders.superchat.points.Points;
+import com.internship.supercoders.superchat.utils.InternetConnection;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,7 +43,7 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
 //http://stackoverflow.com/questions/36785090/chaining-requests-in-retrofit-rxjava
         //http://stackoverflow.com/questions/38974960/rxjava-running-multiple-observables-after-another-like-concat-but-with-oncom
 
-       // final Points.RetrieveDialogs retrieveDialog = ApiClient.getRxRetrofit().create(Points.RetrieveDialogs.class);
+        // final Points.RetrieveDialogs retrieveDialog = ApiClient.getRxRetrofit().create(Points.RetrieveDialogs.class);
        /* retrieveDialog.retrieveDialogs(db.getToken()).map(DialogModel::getList)
                 .doOnNext(adapter::loadChats)
                 .flatMap(new Func1<List<DialogData>, Observable<DialogData>>() {
@@ -119,24 +121,6 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
 */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         final Points.RetrieveDialogs retrieveDialogs = ApiClient.getRetrofit().create(Points.RetrieveDialogs.class);
         Call<DialogModel> call = retrieveDialogs.retrieve(db.getToken());
         call.enqueue(new Callback<DialogModel>() {
@@ -164,12 +148,20 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(integer -> {
                                     Log.d("stas", integer + " integer");
-                                            if (integer == 0) {
+                                    if (integer == 1) {
+                                        db.refreshChatData(data, chatId)
+                                                .subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(aVoid -> Log.d("stas", "ok"), error ->
+                                                        Log.d("stas", "refreshChatData error" + error.getMessage()));
+
+                                    } else if (integer == 0) {
 
                                                 db.writeChatsData(data, finalOccupants).
                                                         subscribeOn(Schedulers.io())
                                                         .observeOn(AndroidSchedulers.mainThread())
-                                                        .subscribe(result -> Log.d("stas", result + " - write chat in db"));
+                                                        .subscribe(result -> Log.d("stas",
+                                                                result + " - write chat in db"));
                                             } else Log.d("stas", "chat exists in db");
                                         }
 
@@ -178,9 +170,10 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
                     }
 
 
+                    if (model.getList().size() > 0)
+                        adapter.loadChats(getPrivateDialogs(model.getList()));
 
 
-                    adapter.loadChats(model.getList());
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -199,7 +192,35 @@ public class PublicChatInteractorImpl implements PublicChatInteractor {
         });
 
 
+
+
+
     }
+
+    @Override
+    public void loadDataWithOutInternet(ChatsRecyclerAdapter adapter, DBMethods dbMethods) {
+        dbMethods.getChatsList().
+                subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(adapter::loadChats, error -> Log.d("stas",
+                        "getChatsList error = " + error.getMessage()));
+    }
+
+
+    private List<DialogData> getPrivateDialogs(List<DialogData> allChatsList) {
+        List<DialogData> list = new ArrayList<>();
+        for (int i = 0; i < allChatsList.size(); i++) {
+            if (allChatsList.get(i).getType() == 1) {
+                list.add(allChatsList.get(i));
+            }
+
+        }
+        return list;
+
+
+    }
+
+
 
 
 }
