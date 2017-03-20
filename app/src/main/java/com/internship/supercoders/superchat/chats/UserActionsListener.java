@@ -5,5 +5,5 @@ package com.internship.supercoders.superchat.chats;
  */
 
 public interface UserActionsListener {
-    void openChat();
+    void openChat(String id);
 }
