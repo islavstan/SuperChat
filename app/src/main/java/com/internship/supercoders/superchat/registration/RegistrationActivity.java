@@ -37,6 +37,7 @@ import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.navigation.NavigationActivity;
 import com.internship.supercoders.superchat.utils.InternetConnection;
+import com.internship.supercoders.superchat.utils.MarshMallowPermission;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.squareup.picasso.Picasso;
 import com.vicmikhailau.maskededittext.MaskedEditText;
@@ -94,7 +95,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     String facebookId;
     String token;
     private DBMethods db;
-
+    MarshMallowPermission marshMallowPermission;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +107,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         setTitle("");
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-
+        marshMallowPermission = new MarshMallowPermission(this);
 
         db = new DBMethods(this);
 
@@ -130,7 +131,20 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
 
         userPhoto = (CircleImageView) findViewById(R.id.photo);
-        userPhoto.setOnClickListener(view -> showDialogForCameraOrGallery());
+        userPhoto.setOnClickListener(view -> {
+            if (!marshMallowPermission.checkPermissionForCamera()) {
+                marshMallowPermission.requestPermissionForCamera();
+            } else {
+                if (!marshMallowPermission.checkPermissionForExternalStorage()) {
+                    marshMallowPermission.requestPermissionForExternalStorage();
+                } else {
+
+
+                    showDialogForCameraOrGallery();
+
+                }
+            }
+        });
 
         registrationPresenter = new RegistrationPresenterImpl(this, new RegistrInteractorImpl());
 

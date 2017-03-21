@@ -170,6 +170,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
         intent = new Intent(this, RegistrationActivity.class);
         intent.putExtra("token", token);
         startActivity(intent);
+        finish();
     }
 
 
