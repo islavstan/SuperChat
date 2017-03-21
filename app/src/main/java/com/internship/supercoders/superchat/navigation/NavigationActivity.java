@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.internship.supercoders.superchat.R;
@@ -31,6 +32,7 @@ import com.internship.supercoders.superchat.navigation.adapter.NavigationViewRec
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationItemClickListener;
 import com.internship.supercoders.superchat.navigation.interfaces.NavigationView;
 import com.internship.supercoders.superchat.users.UsersFragment;
+import com.internship.supercoders.superchat.utils.InternetConnection;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.one.EmojiOneProvider;
 
@@ -189,7 +191,9 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
             case SETTINGS:
                 break;
             case LOG_OUT:
+                if(InternetConnection.hasConnection(this))
                 mNavigationPresenter.logOut(dbMethods);
+                else Toast.makeText(this, "Connection problem", Toast.LENGTH_SHORT).show();
                 break;
         }
 

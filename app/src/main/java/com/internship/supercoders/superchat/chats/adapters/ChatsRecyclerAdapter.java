@@ -19,7 +19,12 @@ import com.internship.supercoders.superchat.models.dialog.DialogData;
 import com.internship.supercoders.superchat.utils.InternetConnection;
 import com.vanniktech.emoji.EmojiTextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,6 +58,8 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
         DialogData model = chatsList.get(position);
         holder.groupName.setText(model.getName());
         holder.message.setText(model.getLastMessage());
+        if (model.getLastMessageDateSent() != null)
+            holder.date.setText(getTime(model.getLastMessageDateSent()));
         if (model.getLastMessageUserId() != null) {
             dbMethods.getUserEmail(Integer.parseInt(model.getLastMessageUserId()))
                     .subscribeOn(Schedulers.io())
@@ -65,19 +72,18 @@ public class ChatsRecyclerAdapter extends RecyclerView.Adapter<ChatsRecyclerAdap
             mItemListener.openChat(model.getChatId());
 
 
-
-         /*   Intent intent = new Intent(holder.cardView.getContext(), SmackService.class);
-            intent.putExtra("id", model.getChatId());
-            holder.cardView.getContext().startService(intent);
-            Intent intent1 = new Intent(holder.cardView.getContext(), ChatActivity.class);
-            intent1.putExtra("chatId", model.getChatId());
-            holder.cardView.getContext().startActivity(intent1);*/
-
-
         });
 
 
     }
+
+   public String getTime(String time) {
+       long updatedTime = Long.parseLong(time);
+       long minute = (updatedTime / 60) % 60;
+       long hour = (updatedTime / (60 * 60)) % 24;
+       return String.format("%02d:%02d", hour, minute);
+   }
+
 
     public void loadChats(List<DialogData> chatsList){
         this.chatsList.addAll(chatsList);
