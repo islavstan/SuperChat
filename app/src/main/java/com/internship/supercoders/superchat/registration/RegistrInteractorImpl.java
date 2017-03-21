@@ -486,6 +486,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
     @Override
     public void updateUserAva(DBMethods db, File file, String image_id, String userId, String token, RegistrationFinishedListener listener) {
+        Log.d("stas", "userId = "+userId );
         final Points.UpdateUserPoint updateUserPoint = ApiClient.getRetrofit().create(Points.UpdateUserPoint.class);
         Call<UpdateUser> call = updateUserPoint.update(userId, "application/json", "0.1.0", token, new UpdateUser(new UpdateUserData(image_id)));
         call.enqueue(new Callback<UpdateUser>() {

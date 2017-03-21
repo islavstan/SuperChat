@@ -220,7 +220,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="30dp" />
 
-                <ProgressBar
+              <!--  <ProgressBar
                     android:layout_width="24dp"
                     android:layout_centerInParent="true"
                     android:id="@+id/progressbar"
@@ -228,7 +228,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="24dp"
                     android:theme="@style/CircularProgress"
-                    android:layout_height="24dp" />
+                    android:layout_height="24dp" />-->
 
             </LinearLayout>
 
