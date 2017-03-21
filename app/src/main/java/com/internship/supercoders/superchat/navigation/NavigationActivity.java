@@ -1,14 +1,17 @@
 package com.internship.supercoders.superchat.navigation;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -53,6 +56,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     TextView email;
     DBMethods dbMethods;
     FragmentManager fragmentManager;
+    UsersFragment usersFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,25 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation, menu);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(usersFragment!=null)
+                usersFragment.findUser(newText);
+
+
+
+                return false;
+            }
+        });
         return true;
     }
 
@@ -116,9 +139,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -159,7 +180,7 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
                 break;
             case USERS:
                 setTitle(getResources().getString(R.string.users));
-                UsersFragment usersFragment = new UsersFragment();
+                 usersFragment = new UsersFragment();
                 fragmentManager.beginTransaction().replace(R.id.content, usersFragment).commit();
                 break;
 
@@ -173,6 +194,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         }
 
     }
+
+
 
 
     @Override

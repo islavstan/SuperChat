@@ -429,6 +429,35 @@ public class DBMethods {
 
 
 
+    public Observable <List<UserDataFullProfile>> getSearchUsers(String textSearch) {
+        return Observable.create(subscriber -> {
+            List<UserDataFullProfile> list = new ArrayList<>();
+            Cursor c;
+            if (textSearch.length() != 0)
+                c = db.rawQuery("SELECT * FROM myContacts WHERE myContacts.email LIKE '%" + textSearch + "%' OR myContacts.full_name LIKE '%" + textSearch + "%' ", null);
+            else
+                c = db.rawQuery("SELECT * FROM myContacts", null);
+            if (c.moveToFirst()) {
+                do {
+                    int id = c.getInt(c.getColumnIndex("my_id"));
+                    String name = c.getString(c.getColumnIndex("full_name"));
+                    String email = c.getString(c.getColumnIndex("email"));
+                    String phone = c.getString(c.getColumnIndex("phone"));
+                    String website = c.getString(c.getColumnIndex("website"));
+                    String blobId = c.getString(c.getColumnIndex("blob_id"));
+                    String photo_path = c.getString(c.getColumnIndex("photo_path"));
+                    UserDataFullProfile profile = new UserDataFullProfile(id, name, email, phone, website, blobId, photo_path);
+                    list.add(profile);
+                } while (c.moveToNext());
+
+            }
+            c.close();
+            subscriber.onNext(list);
+
+
+        });
+    }
+
 
     public String[] convertStringToArray(String str) {
         String[] arr = str.split(",");

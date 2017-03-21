@@ -3,6 +3,7 @@ package com.internship.supercoders.superchat.users.adapter;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +28,23 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserRvAdapter extends RecyclerView.Adapter<UserRvAdapter.UserItemViewHolder> {
     private List<UserDataFullProfile> mUserList;
     String root = Environment.getExternalStorageDirectory().toString();
+    public Handler hRefresh;
 
     public UserRvAdapter(List<UserDataFullProfile> userDataList) {
 
         this.mUserList = userDataList;
+        hRefresh = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                notifyDataSetChanged();
+            }
+        };
     }
+
+    public void setNewData(List<UserDataFullProfile> newList) {
+        mUserList = newList;
+        hRefresh.sendEmptyMessage(1);
+    }
+
 
     @Override
     public UserItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

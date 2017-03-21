@@ -158,21 +158,6 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
     @OnClick(R.id.btn_sign_in)
     @Override
     public void onBtnSignIn() {
-        // TODO: 1/30/17 [Code Review] This is a part of business logic, move it to interactors/model layer
-        // all the validation should not be here
-     /*   String email = etEmail.getText().toString();
-        String password = etPassword.getText().toString();
-        VerificationData verificationData = new VerificationData(email, password);
-
-
-        if(authInteractor.isAuthDataValid(password, email)){
-            authPresenter.validateData(verificationData);
-            hidePasswordError();
-            hideEmailError();
-            authInteractor.writeUserAuthDataToDB(verificationData);
-            setUserSignedIn();
-            Log.i(AppConsts.LOG_TAG, "Check Sign IN: " + Boolean.toString(authPresenter.userPreferences.isUserSignedIn()));
-        }*/
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         authPresenter.signIn(db, token, email, password);
@@ -193,6 +178,7 @@ public class AuthorizationActivity extends AppCompatActivity implements AuthView
         Intent intent = new Intent(this, NavigationActivity.class);
         intent.putExtra("token", token);
         startActivity(intent);
+        finish();
     }
 
     @Override

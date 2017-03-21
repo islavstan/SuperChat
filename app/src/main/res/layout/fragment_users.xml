@@ -5,12 +5,7 @@
     android:id="@+id/activity_users"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.internship.supercoders.superchat.users.UsersActivity"
     android:orientation="vertical">
-
-
-
-
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
