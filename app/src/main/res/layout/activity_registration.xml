@@ -98,6 +98,7 @@
                         android:maxLines="1"
                         android:textColor="@color/colorWhite"
                         android:layout_height="wrap_content"
+                        android:inputType="textPassword"
                         android:hint="@string/hint_password" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -116,6 +117,7 @@
                         android:maxLines="1"
                         android:textColor="@color/colorWhite"
                         android:layout_height="wrap_content"
+                        android:inputType="textPassword"
                         android:hint="@string/hint_password2" />
 
                 </android.support.design.widget.TextInputLayout>
