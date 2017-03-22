@@ -238,7 +238,34 @@ public class DBMethods {
 
         });
     }
+    public Observable<Integer> checkError() {
+        return Observable.create(subscriber -> {
+            Cursor c = db.rawQuery("SELECT * FROM Error where type = '1' ", null);
+            subscriber.onNext(c.moveToFirst() ? 1 : 0);
+            Log.d("stas1", c.getCount() + " c.getCount");
+            c.close();
 
+        });
+    }
+
+
+    public Observable<Long> writeError() {
+        return Observable.create(subscriber -> {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("type", 1);
+            contentValues.put("id", 1);
+            subscriber.onNext(db.insert("Error", null, contentValues));
+        });
+
+
+    }
+
+    public Observable<Void>removeError() {
+        return Observable.create(subscriber -> {
+            String strSQL = "UPDATE Error SET type = '0' WHERE id = '1'";
+            db.execSQL(strSQL);
+        });
+    }
 
     public Observable<Integer>checkPhoto(String blob_id){
         return Observable.create(subscriber -> {

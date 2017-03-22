@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.internship.supercoders.superchat.R;
+import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.chat.adapter.ChatAdapter;
 import com.internship.supercoders.superchat.chat.chat_model.MessageModel;
 import com.internship.supercoders.superchat.chat.service.SmackConnection;
@@ -191,7 +192,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         Intent intent = new Intent(SmackService.SEND_MESSAGE);
         intent.setPackage(this.getPackageName());
         intent.putExtra(SmackService.BUNDLE_MESSAGE_BODY, editTxtMessage.getText().toString());
-        intent.putExtra(SmackService.BUNDLE_TO, "52822_" + chatId + "@muc.chat.quickblox.com");
+        intent.putExtra(SmackService.BUNDLE_TO, ApiConstant.APPLICATION_ID+"_" + chatId + "@muc.chat.quickblox.com");
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         }

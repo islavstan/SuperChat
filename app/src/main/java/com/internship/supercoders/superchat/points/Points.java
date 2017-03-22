@@ -123,7 +123,7 @@ public interface Points {
 
     interface UpdateUserPoint {
 
-        @PUT("/users/{id}.json")
+        @PUT("users/{id}.json")
         Call<UpdateUser> update(@Path("id") String id, @Header("Content-Type") String cont, @Header("QuickBlox-REST-API-Version") String version, @Header("QB-Token") String token, @Body UpdateUser user);
     }
 

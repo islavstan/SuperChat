@@ -35,6 +35,8 @@ public interface RegistrationInteractor {
 
         void showEmailError();
 
+        void uploadPhotoError();
+
         void enableSignUp();
 
         void disableSignUp();

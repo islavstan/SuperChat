@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import com.github.florent37.viewanimator.ViewAnimator;
@@ -30,6 +32,9 @@ import com.internship.supercoders.superchat.utils.InternetConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 
 public class PublicChatsFragment extends Fragment implements FragmentChatView {
     List<DialogData> chatsList = new ArrayList<>();
@@ -38,6 +43,8 @@ public class PublicChatsFragment extends Fragment implements FragmentChatView {
     PublicChatPresenter presenter;
     private DBMethods db;
     RelativeLayout conProblemBlock;
+    RelativeLayout photoProblemBlock;
+    TextView problem;
 
 
     @Override
@@ -47,12 +54,38 @@ public class PublicChatsFragment extends Fragment implements FragmentChatView {
         db = new DBMethods(getActivity());
         loadUI(v);
         loadData();
+
+
+        db.checkError()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    if (result == 1) {
+                        showUploadPhotoError();
+
+                        db.removeError()
+
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aVoid -> {
+                                }, error -> Log.d("stas",
+                                        "removeError error = " + error.getMessage()));
+
+                    }
+
+
+                }, error -> Log.d("stas",
+                        "checkError error = " + error.getMessage()));
+
+
         return v;
     }
 
     @Override
     public void loadUI(View v) {
+        problem = (TextView)v.findViewById(R.id.problem);
         conProblemBlock = (RelativeLayout) v.findViewById(R.id.conProblemBlock);
+        photoProblemBlock = (RelativeLayout) v.findViewById(R.id.photoProblemBlock);
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
         adapter = new ChatsRecyclerAdapter(chatsList, listener, db);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -91,11 +124,18 @@ public class PublicChatsFragment extends Fragment implements FragmentChatView {
     }
 
     public void showConnectError() {
+
         conProblemBlock.setVisibility(View.VISIBLE);
         conProblemBlock.postDelayed(() ->
                 conProblemBlock.setVisibility(View.GONE), 2000);
 
     }
 
+    public void showUploadPhotoError() {
+        photoProblemBlock.setVisibility(View.VISIBLE);
+        photoProblemBlock.postDelayed(() ->
+                photoProblemBlock.setVisibility(View.GONE), 5000);
+
+    }
 
 }

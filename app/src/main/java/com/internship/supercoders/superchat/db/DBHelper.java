@@ -21,6 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
         createMyInfoTable(db);
         createMyContactsTable(db);
         createMyChatsTable(db);
+        createMyErrorTable(db);
     }
 
     @Override
@@ -58,5 +59,9 @@ public class DBHelper extends SQLiteOpenHelper {
         "last_message_user_id text, occupants_ids text, name text, photo text, type integer, unread_messages_count integer, xmpp_room_jid text );");
     }
 
+    private void createMyErrorTable(SQLiteDatabase db) {
+        db.execSQL("create table Error ("
+                + "id integer , type integer);");
+    }
 
 }

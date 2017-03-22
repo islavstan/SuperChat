@@ -435,7 +435,6 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
             protected void onPostExecute(okhttp3.Response response) {
                 if (response != null) {
                     long fileSize = file.length();
-                    Log.d("stas", "file size = " + Long.toString(fileSize));
                     declaringFileUploaded(db, userId, image_id, token, file, listener);
 
 
@@ -458,7 +457,6 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("stas", response + "");
                 if (response.isSuccessful()) {
 
 
@@ -468,7 +466,13 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("stas", "declaringFileUploaded error = " + jObjError);
-                        listener.onError();
+                        db.writeError()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aVoid -> {
+                                }, error -> Log.d("stas",
+                                        "writeError error = " + error.getMessage()));
+                        listener.uploadPhotoError();
                     } catch (Exception e) {
                         Log.d("stas", e.getMessage());
                     }
@@ -486,7 +490,7 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
     @Override
     public void updateUserAva(DBMethods db, File file, String image_id, String userId, String token, RegistrationFinishedListener listener) {
-        Log.d("stas", "userId = "+userId );
+        Log.d("stas", "userId = " + userId);
         final Points.UpdateUserPoint updateUserPoint = ApiClient.getRetrofit().create(Points.UpdateUserPoint.class);
         Call<UpdateUser> call = updateUserPoint.update(userId, "application/json", "0.1.0", token, new UpdateUser(new UpdateUserData(image_id)));
         call.enqueue(new Callback<UpdateUser>() {
@@ -495,13 +499,14 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 if (response.isSuccessful()) {
 
                     String fileName = randomName();
-                    try {
-                        saveFileToFolder(file, fileName);
-                        db.saveImagePath(fileName, userId);
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    saveFileToFolder(file, fileName)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(aVoid -> {
+                            }, error -> Log.d("stas",
+                                    "saveFileToFolder error = " + error.getMessage()));
+                    db.saveImagePath(fileName, userId);
 
 
                     listener.onSuccess(token);
@@ -509,7 +514,13 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("stas", "updateUserAva error = " + jObjError);
-                        listener.onError();
+                        db.writeError()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aVoid -> {
+                                }, error -> Log.d("stas",
+                                        "writeError error = " + error.getMessage()));
+                        listener.uploadPhotoError();
                     } catch (Exception e) {
                         Log.d("stas", e.getMessage());
                     }
@@ -532,14 +543,12 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                     if (response.isSuccessful()) {
-                          Log.d("stas", "destroySession");
+                        Log.d("stas", "destroySession");
 
                     }
                 }, error -> Log.d("stas", "destroySession error = " + error.getMessage()));
 
     }
-
-
 
 
     @Override
@@ -677,24 +686,33 @@ public class RegistrInteractorImpl implements RegistrationInteractor {
 
     }
 
-    private void saveFileToFolder(File file, String name) throws IOException {
-        Log.d("Stas", "save file...");
-        String root = Environment.getExternalStorageDirectory().toString();
-        File dir = new File(root + "/SuperChat/ava/");
-        if (!dir.exists()) dir.mkdirs();
-        File fTo = new File(root + "/SuperChat/ava/" + name);
-        InputStream in = new FileInputStream(file.getAbsolutePath());
-        OutputStream out = new FileOutputStream(fTo);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
+    private Observable<Void> saveFileToFolder(File file, String name) {
+        return Observable.create(subscriber -> {
+            try {
+                Log.d("Stas", "save file...");
+                String root = Environment.getExternalStorageDirectory().toString();
+                File dir = new File(root + "/SuperChat/ava/");
+                if (!dir.exists()) dir.mkdirs();
+                File fTo = new File(root + "/SuperChat/ava/" + name);
+                InputStream in = new FileInputStream(file.getAbsolutePath());
+                OutputStream out = new FileOutputStream(fTo);
+                byte[] buf = new byte[1024];
+                int len;
+
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+
+                in.close();
+                out.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+
     }
-
-
 }
 
 

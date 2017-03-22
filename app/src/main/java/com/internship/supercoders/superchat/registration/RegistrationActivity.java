@@ -101,6 +101,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     private DBMethods db;
     MarshMallowPermission marshMallowPermission;
     ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +120,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         progressDialog = new ProgressDialog(this, R.style.ProgressBar);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setIndeterminate(true);
-       // progressDialog.setProgress(0);
+        // progressDialog.setProgress(0);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
         progressDialog.setProgressNumberFormat(null);
@@ -141,7 +142,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         inputPasswordLayout = (TextInputLayout) findViewById(R.id.input_layout_password);
         inputConfPassLayout = (TextInputLayout) findViewById(R.id.input_layout_password2);
         inputEmailLayout = (TextInputLayout) findViewById(R.id.input_layout_email);
-       // progressbar = (ProgressBar) findViewById(R.id.progressbar);
+        // progressbar = (ProgressBar) findViewById(R.id.progressbar);
 
         userPhoto = (CircleImageView) findViewById(R.id.photo);
         userPhoto.setOnClickListener(view -> {
@@ -200,6 +201,16 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     public void showProgress() {
         //progressbar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void uploadPhotoError() {
+        progressDialog.dismiss();
+      //  Toast.makeText(this, "Registration was successful but there was a problem uploading the photo, sorry", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(RegistrationActivity.this, NavigationActivity.class);
+        intent.putExtra("token", token);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -419,7 +430,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
                 selectedImageUri = data.getData();
                 Picasso.with(this).load(selectedImageUri).into(userPhoto);
-               // actualImage = new File(getRealPathFromURI(this, selectedImageUri));
+                // actualImage = new File(getRealPathFromURI(this, selectedImageUri));
                 actualImage = new File(MarshMallowPermission.getPath(this, selectedImageUri));
 
                 photoFile = Compressor.getDefault(this).compressToFile(actualImage);
@@ -432,7 +443,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             }
         }
     }
-
 
 
 }

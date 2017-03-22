@@ -110,6 +110,11 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
     }
 
     @Override
+    public void uploadPhotoError() {
+        registrationView.uploadPhotoError();
+    }
+
+    @Override
     public void enableSignUp() {
         if (registrationView != null) {
             registrationView.enableSignUp();
@@ -136,7 +141,7 @@ public class RegistrationPresenterImpl implements RegistrationPresenter,Registra
     public void onDestroy() {
       registrationView = null;
 
-        // TODO: 1/30/17 [Code Review] nullify view reference here
+
     }
 
     @Override

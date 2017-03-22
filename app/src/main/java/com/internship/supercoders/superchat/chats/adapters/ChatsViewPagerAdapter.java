@@ -33,6 +33,9 @@ public class ChatsViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
 
+
+
+
     @Override
     public int getItemPosition(Object object) {
       /*  if (object instanceof MyCardsFragment) {

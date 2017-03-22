@@ -59,6 +59,8 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
     DBMethods dbMethods;
     FragmentManager fragmentManager;
     UsersFragment usersFragment;
+    ChatsFragment fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,10 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         loadMyInfo();
 
         menuItemOnClick(CHATS);
+
+
+
+
 
 
     }
@@ -177,8 +183,9 @@ public class NavigationActivity extends MvpAppCompatActivity implements Navigati
         switch (id) {
             case CHATS:
                 setTitle(getResources().getString(R.string.chats));
-                ChatsFragment fragment = new ChatsFragment();
+                 fragment = new ChatsFragment();
                 fragmentManager.beginTransaction().replace(R.id.content, fragment).commit();
+
                 break;
             case USERS:
                 setTitle(getResources().getString(R.string.users));

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
+import com.internship.supercoders.superchat.api.ApiConstant;
 import com.internship.supercoders.superchat.db.DBMethods;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -60,7 +61,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
 
     public void connect() throws IOException, XMPPException, SmackException {
         XMPPTCPConnectionConfiguration builder = XMPPTCPConnectionConfiguration.builder()
-                .setUsernameAndPassword(dbMethods.getMyId() + "-52822", dbMethods.getPassword())
+                .setUsernameAndPassword(dbMethods.getMyId() + "-"+ ApiConstant.APPLICATION_ID, dbMethods.getPassword())
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setServiceName(service)
                 .setPort(5222)
@@ -72,7 +73,7 @@ public class SmackConnection implements ConnectionListener, ChatManagerListener,
         mConnection.login();
 
         manager = MultiUserChatManager.getInstanceFor(mConnection);
-        muc = manager.getMultiUserChat("52822_" + chatId + "@muc.chat.quickblox.com");
+        muc = manager.getMultiUserChat(ApiConstant.APPLICATION_ID+"_" + chatId + "@muc.chat.quickblox.com");
         muc.join(mConnection.getUser());
 
         Log.d("stas1", mConnection.getUser() + " getUser");

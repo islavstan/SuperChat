@@ -12,6 +12,8 @@ public interface RegistrationView {
 
     void showProgress();
 
+    void uploadPhotoError();
+
     void hideProgress();
 
     void navigateToLogin(String token);

@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import com.github.clans.fab.FloatingActionButton;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.chats.adapters.ChatsViewPagerAdapter;
+import com.internship.supercoders.superchat.chats.fragments.PublicChatsFragment;
 import com.internship.supercoders.superchat.chats.views.ChatsView;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.ui.new_chat.NewChatFragment;
@@ -22,17 +24,18 @@ public class ChatsFragment extends Fragment implements ChatsView {
     DBMethods dbMethods;
     ViewPager viewPager;
     FragmentManager fragmentManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chats, container, false);
         fragmentManager = getFragmentManager();
         dbMethods = new DBMethods(getActivity());
-        FloatingActionButton fab = (FloatingActionButton)v. findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
         fab.setOnClickListener(view -> addNewChat());
-          TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.public_chats)));
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.private_chats)));
-        viewPager = (ViewPager)v. findViewById(R.id.pager);
+        viewPager = (ViewPager) v.findViewById(R.id.pager);
         viewPager.setOffscreenPageLimit(2);
         adapter = new ChatsViewPagerAdapter
                 (getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
@@ -72,4 +75,6 @@ public class ChatsFragment extends Fragment implements ChatsView {
     public void loadUI() {
 
     }
+
+
 }
