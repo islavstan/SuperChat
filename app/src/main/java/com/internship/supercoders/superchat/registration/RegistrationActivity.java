@@ -1,81 +1,40 @@
 package com.internship.supercoders.superchat.registration;
 
 import android.app.ProgressDialog;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.internship.supercoders.superchat.MainActivity;
 import com.internship.supercoders.superchat.R;
 import com.internship.supercoders.superchat.db.DBMethods;
 import com.internship.supercoders.superchat.navigation.NavigationActivity;
 import com.internship.supercoders.superchat.utils.InternetConnection;
 import com.internship.supercoders.superchat.utils.MarshMallowPermission;
-import com.jakewharton.rxbinding.widget.RxTextView;
 import com.squareup.picasso.Picasso;
 import com.vicmikhailau.maskededittext.MaskedEditText;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import id.zelory.compressor.Compressor;
-import io.fabric.sdk.android.Fabric;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func3;
-import rx.subscriptions.CompositeSubscription;
-
-import static android.R.attr.theme;
-import static android.R.attr.thumbnail;
+import id.zelory.compressor.Compressor;
+import io.fabric.sdk.android.Fabric;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationView {
     private EditText emailET, passwordET, confPassET, fullnameET, websiteET;
@@ -147,15 +106,12 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         userPhoto.setOnClickListener(view -> {
             if (!marshMallowPermission.checkPermissionForCamera()) {
                 marshMallowPermission.requestPermissionForCamera();
-            } else {
-                if (!marshMallowPermission.checkPermissionForExternalStorage()) {
+            }
+            if (!marshMallowPermission.checkPermissionForExternalStorage()) {
                     marshMallowPermission.requestPermissionForExternalStorage();
-                } else {
-
-
-                    showDialogForCameraOrGallery();
-
-                }
+            }
+            if (marshMallowPermission.checkPermissionForCamera() && marshMallowPermission.checkPermissionForExternalStorage()) {
+                showDialogForCameraOrGallery();
             }
         });
 
@@ -353,6 +309,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
     @Override
     public void openCamera() {
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
