@@ -1,6 +1,7 @@
 package com.internship.supercoders.superchat.splash_screen;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         TextView tvLogoLabel = (TextView) findViewById(R.id.tv_logo_label);
         Typeface font = Typeface.createFromAsset(getAssets(), "font/FortuneCity.ttf");

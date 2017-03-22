@@ -3,6 +3,7 @@ package com.internship.supercoders.superchat.registration;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -64,6 +65,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_registration);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
